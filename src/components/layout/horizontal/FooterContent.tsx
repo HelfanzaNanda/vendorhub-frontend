@@ -6,15 +6,11 @@ import Link from 'next/link'
 // Third-party Imports
 import classnames from 'classnames'
 
-// Hook Imports
-import useHorizontalNav from '@menu/hooks/useHorizontalNav'
-
 // Util Imports
 import { horizontalLayoutClasses } from '@layouts/utils/layoutClasses'
 
 const FooterContent = () => {
   // Hooks
-  const { isBreakpointReached } = useHorizontalNav()
 
   return (
     <div
@@ -24,11 +20,11 @@ const FooterContent = () => {
         <span className='text-textSecondary'>{`© ${new Date().getFullYear()}, Made with `}</span>
         <span>{`❤️`}</span>
         <span className='text-textSecondary'>{` by `}</span>
-        <Link href='https://pixinvent.com/' target='_blank' className='text-primary uppercase'>
-          Pixinvent
+        <Link href='https://helfanzananda.vercel.app' target='_blank' className='text-primary uppercase'>
+          Elfan Nanda
         </Link>
       </p>
-      {!isBreakpointReached && (
+      {/* {!isBreakpointReached && (
         <div className='flex items-center gap-4'>
           <Link href='https://themeforest.net/licenses/standard' target='_blank' className='text-primary'>
             License
@@ -47,7 +43,7 @@ const FooterContent = () => {
             Support
           </Link>
         </div>
-      )}
+      )} */}
     </div>
   )
 }

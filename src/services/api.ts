@@ -31,8 +31,8 @@ export const api = {
     return response.data
   },
 
-  delete: async <T>(url: string): Promise<ApiResponse<T>> => {
-    const response = await apiClient.delete<ApiResponse<T>>(url)
+  delete: async <T>(url: string, data?: any): Promise<ApiResponse<T>> => {
+    const response = await apiClient.delete<ApiResponse<T>>(url, { data })
 
     return response.data
   },

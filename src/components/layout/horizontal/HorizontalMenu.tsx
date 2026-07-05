@@ -80,6 +80,12 @@ const HorizontalMenu = () => {
           Dashboard
         </MenuItem>
 
+        <SubMenu label='Vendor' icon={<i className='ri-store-2-line' />}>
+          <MenuItem href='/vendor/update' icon={<i className='ri-edit-box-line' />}>
+            Update Vendor
+          </MenuItem>
+        </SubMenu>
+
         <SubMenu label='Master' icon={<i className='ri-database-2-line' />}>
           <MenuItem href='/master/countries' icon={<i className='ri-global-line' />}>
             Countries
