@@ -77,13 +77,13 @@ export const localVendorSchema: VendorRegistrationSchema = {
       label: 'User Access',
       icon: 'ri-shield-user-line',
       type: 'datatable',
-      tabEndpoint: '/vendor-user-access-temps',
+      tabEndpoint: '/vendor-user-temps',
       datatableConfigs: [
         {
           id: 'USER_ACCESS',
           title: 'User Access',
           description: 'Manage portal access users, roles, and areas.',
-          apiEndpoint: '/vendor-user-access-temps',
+          apiEndpoint: '/vendor-user-temps',
           canDelete: true,
           modalFormSchema: userAccessModalSchema,
           columns: [
@@ -101,12 +101,12 @@ export const localVendorSchema: VendorRegistrationSchema = {
       label: 'Bank Accounts',
       icon: 'ri-bank-card-line',
       type: 'datatable',
-      tabEndpoint: '/vendor-banks-temps',
+      tabEndpoint: '/vendor-bank-temps',
       datatableConfigs: [
         {
           id: 'BANK_ACCOUNT',
           title: 'Bank Accounts',
-          apiEndpoint: '/vendor-banks-temps',
+          apiEndpoint: '/vendor-bank-temps',
           canDelete: true,
           modalFormSchema: bankModalSchema,
           columns: [
@@ -123,12 +123,12 @@ export const localVendorSchema: VendorRegistrationSchema = {
       label: 'Affiliations',
       icon: 'ri-organization-chart',
       type: 'datatable',
-      tabEndpoint: '/vendor-affiliate-temps',
+      tabEndpoint: '/vendor-affiliation-temps',
       datatableConfigs: [
         {
           id: 'AFFILIATE',
           title: 'Company Affiliations',
-          apiEndpoint: '/vendor-affiliate-temps',
+          apiEndpoint: '/vendor-affiliation-temps',
           canDelete: true,
           modalFormSchema: affiliateModalSchema,
           columns: [
@@ -150,7 +150,7 @@ export const localVendorSchema: VendorRegistrationSchema = {
         {
           id: 'BUSINESS_LICENSE',
           title: 'Business Licenses',
-          apiEndpoint: '/vendor-capability-temps',
+          apiEndpoint: '/vendor-business-license-temps',
           canDelete: true,
           modalFormSchema: businessLicenseModalSchema,
           columns: [
@@ -186,12 +186,12 @@ export const localVendorSchema: VendorRegistrationSchema = {
       label: 'Financials',
       icon: 'ri-line-chart-line',
       type: 'datatable',
-      tabEndpoint: '/vendor-financial-reports-temps',
+      tabEndpoint: '/vendor-financial-report-temps',
       datatableConfigs: [
         {
           id: 'FINANCIAL_REPORT',
           title: 'Financial Reports',
-          apiEndpoint: '/vendor-financial-reports-temps',
+          apiEndpoint: '/vendor-financial-report-temps',
           canDelete: true,
           modalFormSchema: financialModalSchema,
           columns: [
