@@ -24,7 +24,6 @@ export const personnelModalSchema: FormSchema = {
           label: 'Full Name',
           type: 'text',
           required: true,
-          validation: z.string().min(1, 'Name is required'),
           grid: { xs: 12, md: 6 }
         },
         {

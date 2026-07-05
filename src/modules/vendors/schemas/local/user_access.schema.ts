@@ -16,7 +16,6 @@ export const userAccessModalSchema: FormSchema = {
           label: 'First Name',
           type: 'text',
           required: true,
-          validation: z.string().min(1, 'First name is required'),
           grid: { xs: 12, md: 6 }
         },
         {
@@ -25,7 +24,6 @@ export const userAccessModalSchema: FormSchema = {
           label: 'Last Name',
           type: 'text',
           required: true,
-          validation: z.string().min(1, 'Last name is required'),
           grid: { xs: 12, md: 6 }
         },
         {

@@ -16,7 +16,6 @@ export const affiliateModalSchema: FormSchema = {
           label: 'Affiliate Type',
           type: 'select',
           required: true,
-          validation: z.string().min(1, 'Affiliate Type is required'),
           grid: { xs: 12, md: 6 },
           lookupEndpoint: 'affiliate-types',
         },
@@ -26,7 +25,6 @@ export const affiliateModalSchema: FormSchema = {
           label: 'Business Entity Type',
           type: 'select',
           required: true,
-          validation: z.string().min(1, 'Entity type is required'),
           grid: { xs: 12, md: 6 },
           lookupEndpoint: 'business-types',
         },
@@ -36,7 +34,6 @@ export const affiliateModalSchema: FormSchema = {
           label: 'Company Name',
           type: 'text',
           required: true,
-          validation: z.string().min(1, 'Company name is required'),
           grid: { xs: 12, md: 6 }
         },
         {
@@ -54,7 +51,6 @@ export const affiliateModalSchema: FormSchema = {
           label: 'Business Field',
           type: 'text',
           required: true,
-          validation: z.string().min(1, 'Business field is required'),
           grid: { xs: 12 }
         },
       ]

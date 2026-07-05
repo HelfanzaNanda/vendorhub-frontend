@@ -15,10 +15,14 @@ export type FieldType =
   | 'file'
   | 'currency'
   | 'percentage'
+  | 'field-array'
+  | 'autocomplete'
+  | 'display'
 
 export interface FieldOption {
   label: string
   value: string | number
+  data?: any
 }
 
 export interface FieldSchema {
@@ -48,6 +52,19 @@ export interface FieldSchema {
   /** Old field — kept for backward compatibility */
   apiEndpoint?: string
   visibility?: (values: any) => boolean
+
+  /** Array items configuration (only used if type === 'field-array') */
+  arrayFields?: FieldSchema[]
+  arrayItemLabel?: string
+
+  /** Auto-populate mapped fields from an autocomplete's raw data */
+  populateFields?: Record<string, string>
+
+  /** Dependency on another field's value (its name) */
+  dependsOn?: string
+  
+  /** Query parameter key to use when fetching dependent lookups (e.g., 'countryId') */
+  dependencyParam?: string
 }
 
 export interface FormSectionSchema {
@@ -93,9 +110,9 @@ export interface VendorTabSchema {
   id: string
   label: string
   icon: string
-  type: 'form' | 'datatable' | 'documents'
+  type: 'form' | 'datatable' | 'documents' | 'business_license' | 'mixed' | 'terms_conditions'
 
-  /** Only required if type === 'form' */
+  /** Only required if type === 'form' or 'mixed' */
   schema?: FormSchema
 
   /** API endpoint for form type tabs (POST {tabEndpoint}/save) */
@@ -105,7 +122,7 @@ export interface VendorTabSchema {
   datatableConfigs?: DatatableConfig[]
 }
 
-export interface VendorRegistrationSchema {
+export interface VendorProfileSchema {
   vendorType: string
   tabs: VendorTabSchema[]
 }

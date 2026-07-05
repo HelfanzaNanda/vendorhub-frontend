@@ -11,19 +11,29 @@ export interface LookupItem {
  * The API is expected to return { data: { label, value }[] }
  */
 export const lookupService = {
-  getLookup: async (module: string): Promise<FieldOption[]> => {
+  getLookup: async (module: string, params?: Record<string, any>): Promise<FieldOption[]> => {
     try {
-      const response = await api.get<LookupItem[]>(`/lookups/${module}`)
+      const response = await api.get<LookupItem[]>(`/lookups/${module}`, { params })
 
       // Handle both { data: [...] } and bare array responses
       const items = Array.isArray(response.data)
         ? response.data
         : (response as any)?.data?.data || []
 
-      return items.map((item: any) => ({
-        label: item.label ?? item.name ?? String(item.value),
-        value: item.value ?? item.id ?? item.code,
-      }))
+      return items.map((item: any) => {
+        let label = item.label ?? item.name ?? String(item.value ?? item.id ?? item.code);
+        
+        // Handle Industry Classification specific formatting
+        if (module === 'industry-classifications' && item.label && item.name) {
+          label = `${item.label} - ${item.name}`
+        }
+
+        return {
+          label,
+          value: item.value ?? item.id ?? item.code,
+          data: item,
+        }
+      })
     } catch {
       return []
     }

@@ -1,15 +1,23 @@
-import type { VendorRegistrationSchema } from '../types'
+import type { VendorProfileSchema } from '../types'
+import { termsSchema } from './terms.schema'
 import { localCompanySchema } from './company.schema'
 import { personnelModalSchema } from './personnel.schema'
 import { userAccessModalSchema } from './user_access.schema'
 import { bankModalSchema } from './bank.schema'
 import { affiliateModalSchema } from './affiliate.schema'
-import { businessLicenseModalSchema, competencyModalSchema } from './capability.schema'
+import { competencyModalSchema, capabilityFormSchema } from './capability.schema'
 import { financialModalSchema } from './financial.schema'
 
-export const localVendorSchema: VendorRegistrationSchema = {
+export const localVendorSchema: VendorProfileSchema = {
   vendorType: 'local',
   tabs: [
+    {
+      id: 'terms_conditions',
+      label: 'Terms & Conditions',
+      icon: 'ri-file-list-3-line',
+      type: 'terms_conditions',
+      schema: termsSchema,
+    },
     {
       id: 'vendor_company',
       label: 'Company Info',
@@ -128,6 +136,7 @@ export const localVendorSchema: VendorRegistrationSchema = {
         {
           id: 'AFFILIATE',
           title: 'Company Affiliations',
+          description: 'Kindly list any other companies, if any, that have common ownership with the company being registered.',
           apiEndpoint: '/vendor-affiliation-temps',
           canDelete: true,
           modalFormSchema: affiliateModalSchema,
@@ -143,23 +152,11 @@ export const localVendorSchema: VendorRegistrationSchema = {
     {
       id: 'vendor_capability',
       label: 'Capability & Portfolio',
-      icon: 'ri-briefcase-4-line',
-      type: 'datatable',
+      icon: 'ri-award-line',
+      type: 'mixed',
+      schema: capabilityFormSchema,
       tabEndpoint: '/vendor-capability-temps',
       datatableConfigs: [
-        {
-          id: 'BUSINESS_LICENSE',
-          title: 'Business Licenses',
-          apiEndpoint: '/vendor-business-license-temps',
-          canDelete: true,
-          modalFormSchema: businessLicenseModalSchema,
-          columns: [
-            { id: 'licenseName', header: 'License Name', accessorKey: 'licenseName' },
-            { id: 'licenseNumber', header: 'License Number', accessorKey: 'licenseNumber' },
-            { id: 'issueDate', header: 'Issue Date', accessorKey: 'issueDate', cell: 'date' },
-            { id: 'expiryDate', header: 'Expiry Date', accessorKey: 'expiryDate', cell: 'date' },
-          ],
-        },
         {
           id: 'COMPETENCY',
           title: 'Competencies',

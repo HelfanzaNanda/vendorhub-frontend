@@ -2,58 +2,6 @@ import { z } from 'zod'
 
 import type { FormSchema } from '../types'
 
-export const businessLicenseModalSchema: FormSchema = {
-  id: 'business_license_modal',
-  title: 'Business License',
-  sections: [
-    {
-      id: 'license_details',
-      title: 'License Details',
-      fields: [
-        {
-          id: 'licenseName',
-          name: 'licenseName',
-          label: 'License Name',
-          type: 'text',
-          required: true,
-          validation: z.string().min(1, 'License name is required'),
-          grid: { xs: 12, md: 6 }
-        },
-        {
-          id: 'licenseNumber',
-          name: 'licenseNumber',
-          label: 'License Number',
-          type: 'text',
-          required: true,
-          validation: z.string().min(1, 'License number is required'),
-          grid: { xs: 12, md: 6 }
-        },
-        {
-          id: 'issueDate',
-          name: 'issueDate',
-          label: 'Issue Date',
-          type: 'date',
-          grid: { xs: 12, md: 6 }
-        },
-        {
-          id: 'expiryDate',
-          name: 'expiryDate',
-          label: 'Expiry Date',
-          type: 'date',
-          grid: { xs: 12, md: 6 }
-        },
-        {
-          id: 'fileId',
-          name: 'fileId',
-          label: 'License Document',
-          type: 'file',
-          grid: { xs: 12 }
-        },
-      ]
-    }
-  ]
-}
-
 export const competencyModalSchema: FormSchema = {
   id: 'competency_modal',
   title: 'Company Competency',
@@ -68,7 +16,6 @@ export const competencyModalSchema: FormSchema = {
           label: 'Competency Area',
           type: 'text',
           required: true,
-          validation: z.string().min(1, 'Competency area is required'),
           grid: { xs: 12, md: 6 }
         },
         {
@@ -92,6 +39,90 @@ export const competencyModalSchema: FormSchema = {
           type: 'file',
           grid: { xs: 12 }
         },
+      ]
+    }
+  ]
+}
+
+export const capabilityFormSchema: FormSchema = {
+  id: 'vendor_capability_form',
+  title: 'Business License',
+  description: 'Upload your NIB document and define your industry classifications.',
+  sections: [
+    {
+      id: 'license_details',
+      title: 'License Details',
+      fields: [
+        {
+          id: 'nibFileId',
+          name: 'nibFileId',
+          label: 'NIB Document',
+          type: 'file',
+          required: true,
+          grid: { xs: 12 }
+        }
+      ]
+    },
+    {
+      id: 'industry_classifications_section',
+      title: 'Industry Classifications',
+      fields: [
+        {
+          id: 'industryClassifications',
+          name: 'industryClassifications',
+          label: 'Industry Classifications',
+          type: 'field-array',
+          required: true,
+          arrayItemLabel: 'Industry Classification',
+          validation: z.array(z.object({
+            industryClassificationId: z.union([z.number(), z.string()]).nullable().refine((val) => val !== null && val !== undefined && val !== '', 'Industry Classification is required'),
+            number: z.string().optional(),
+            title: z.string().optional(),
+            description: z.string().optional(),
+          }))
+          .min(1, 'At least one Industry Classification is required')
+          .refine((items) => {
+            const ids = items.map(item => item.industryClassificationId).filter(Boolean);
+            return new Set(ids).size === ids.length;
+          }, { message: 'Duplicate Industry Classifications are not allowed' }),
+          arrayFields: [
+            {
+              id: 'industryClassificationId',
+              name: 'industryClassificationId',
+              label: 'Industry Classification Lookup',
+              type: 'autocomplete',
+              lookupEndpoint: 'industry-classifications',
+              populateFields: {
+                label: 'number',
+                name: 'title',
+                description: 'description'
+              },
+              required: true,
+              grid: { xs: 12 }
+            },
+            {
+              id: 'number',
+              name: 'number',
+              label: 'Number',
+              type: 'display',
+              grid: { xs: 12, md: 4 }
+            },
+            {
+              id: 'title',
+              name: 'title',
+              label: 'Title',
+              type: 'display',
+              grid: { xs: 12, md: 8 }
+            },
+            {
+              id: 'description',
+              name: 'description',
+              label: 'Description',
+              type: 'display',
+              grid: { xs: 12 }
+            }
+          ]
+        }
       ]
     }
   ]

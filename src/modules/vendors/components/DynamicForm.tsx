@@ -62,10 +62,52 @@ return {
       section.fields.forEach((field) => {
         if (field.validation) {
           shape[field.name] = field.validation
-        } else if (field.required && !field.disabled) {
-          shape[field.name] = z.string().min(1, 'This field is required')
         } else {
-          shape[field.name] = z.any().optional()
+          // Base type according to field.type
+          let fieldSchema: z.ZodTypeAny
+          
+          switch (field.type) {
+            case 'number':
+              fieldSchema = z.number()
+              break
+            case 'checkbox':
+            case 'switch':
+              fieldSchema = z.boolean()
+              break
+            case 'autocomplete':
+            case 'select':
+              fieldSchema = z.union([z.number(), z.string()])
+              break
+            case 'multi-select':
+            case 'field-array':
+              fieldSchema = z.array(z.any())
+              break
+            case 'date':
+            case 'file':
+              fieldSchema = z.any()
+              break
+            default:
+              fieldSchema = z.string()
+          }
+
+          if (field.required && !field.disabled) {
+            const requiredMsg = `${field.label} is required`
+            if (field.type === 'text' || field.type === 'textarea' || field.type === 'email' || field.type === 'phone' || field.type === 'currency' || field.type === 'percentage') {
+              fieldSchema = z.string().min(1, requiredMsg)
+            } else if (field.type === 'multi-select' || field.type === 'field-array') {
+              fieldSchema = z.array(z.any()).min(1, requiredMsg)
+            } else {
+              fieldSchema = fieldSchema.nullable().refine((val) => val !== null && val !== undefined && val !== '', requiredMsg)
+            }
+          } else {
+            if (field.type === 'autocomplete' || field.type === 'select' || field.type === 'date' || field.type === 'file' || field.type === 'number') {
+              fieldSchema = fieldSchema.nullable().optional()
+            } else {
+              fieldSchema = fieldSchema.optional()
+            }
+          }
+
+          shape[field.name] = fieldSchema
         }
       })
     })
@@ -75,24 +117,33 @@ return {
 
   // Get default values
   const defaultValues = useMemo(() => {
-    if (propDefaultValues) {
-      return propDefaultValues
-    }
-
     const defaults: Record<string, any> = {}
     
-    // First apply schema defaults
+    // First apply schema defaults based on field type
     processedSchema.sections.forEach((section) => {
       section.fields.forEach((field) => {
         if (field.defaultValue !== undefined) {
           defaults[field.name] = field.defaultValue
+        } else if (field.type === 'field-array') {
+          defaults[field.name] = []
+        } else if (field.type === 'number') {
+          defaults[field.name] = null
+        } else if (field.type === 'checkbox' || field.type === 'switch') {
+          defaults[field.name] = false
+        } else if (field.type === 'date' || field.type === 'file' || field.type === 'select' || field.type === 'autocomplete') {
+          defaults[field.name] = null
         } else {
           defaults[field.name] = ''
         }
       })
     })
 
-    // Then override with drafts
+    // Then override with propDefaultValues
+    if (propDefaultValues && Object.keys(propDefaultValues).length > 0) {
+      Object.assign(defaults, propDefaultValues)
+    }
+
+    // Finally override with drafts
     const savedDraft = formDrafts[processedSchema.id]
 
     if (savedDraft) {
@@ -111,7 +162,28 @@ return {
   const { handleSubmit, watch, formState: { isSubmitting } } = methods
   const formValues = watch()
 
-  const handleFormSubmit = async (data: any) => {
+  const stripFileObjects = (data: any): any => {
+    if (!data) return data
+    if (Array.isArray(data)) return data.map(stripFileObjects)
+    if (typeof data === 'object') {
+      const result: any = {}
+      for (const key in data) {
+        const val = data[key]
+        // Identify FileData objects from fileService
+        if (val && typeof val === 'object' && 'id' in val && 'filename' in val && 'size' in val) {
+          result[key] = val.id
+        } else {
+          result[key] = stripFileObjects(val)
+        }
+      }
+      return result
+    }
+    return data
+  }
+
+  const handleFormSubmit = async (rawData: any) => {
+    const data = stripFileObjects(rawData)
+
     if (onSubmit) {
       onSubmit(data)
       
@@ -187,7 +259,7 @@ return
               disabled={isSaving}
               startIcon={isSaving ? <i className="ri-loader-4-line animate-spin" /> : <i className="ri-save-line" />}
             >
-              {onCancel ? 'Save' : 'Save & Continue'}
+              {onCancel ? 'Save' : 'Save'}
             </Button>
           )}
         </CardActions>

@@ -16,7 +16,6 @@ export const financialModalSchema: FormSchema = {
           label: 'Report Type',
           type: 'select',
           required: true,
-          validation: z.string().min(1, 'Report type is required'),
           grid: { xs: 12, md: 6 },
           lookupEndpoint: 'report-types',
         },

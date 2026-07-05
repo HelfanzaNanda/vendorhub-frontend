@@ -1,6 +1,7 @@
 'use client'
 
-import { Controller, useFormContext } from 'react-hook-form'
+import { useEffect, useRef, useMemo } from 'react'
+import { Controller, useFormContext, useFieldArray } from 'react-hook-form'
 import { 
   TextField, 
   MenuItem, 
@@ -13,19 +14,46 @@ import {
   InputAdornment,
   Box,
   Typography,
-  Button
+  Button,
+  CircularProgress
 } from '@mui/material'
 
 import type { FieldSchema } from '../schemas/types'
 import { useLookup } from '../hooks/useLookup'
+import FileUpload from './FileUpload'
 
 export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
-  const { control, formState: { errors } } = useFormContext()
+  const { control, setValue, watch, formState: { errors } } = useFormContext()
   const error = errors[field.name]
 
-  // Fetch dynamic lookup options if lookupEndpoint is defined
-  const { options: lookupOptions, isLoading: isLoadingLookups } = useLookup(field.lookupEndpoint)
+  // Dependency logic
+  const dependencyValue = field.dependsOn ? watch(field.dependsOn) : undefined
+  const previousDependencyValue = useRef(dependencyValue)
+
+  useEffect(() => {
+    if (field.dependsOn && previousDependencyValue.current !== undefined && previousDependencyValue.current !== dependencyValue) {
+      // Clear the value when dependency changes
+      setValue(field.name, null, { shouldValidate: true })
+    }
+    previousDependencyValue.current = dependencyValue
+  }, [dependencyValue, field.name, field.dependsOn, setValue])
+
+  const lookupParams = useMemo(() => {
+    if (field.dependsOn && field.dependencyParam && dependencyValue !== undefined && dependencyValue !== null && dependencyValue !== '') {
+      return { [field.dependencyParam]: dependencyValue }
+    }
+    return undefined
+  }, [field.dependsOn, field.dependencyParam, dependencyValue])
+
+  // Fetch dynamic lookup options
+  const shouldFetchLookup = field.lookupEndpoint && (!field.dependsOn || (field.dependsOn && dependencyValue))
+  const { options: lookupOptions, isLoading: isLoadingLookups } = useLookup(shouldFetchLookup ? field.lookupEndpoint : undefined, lookupParams)
+  
   const options = field.lookupEndpoint ? lookupOptions : (field.options || [])
+
+  if (field.type === 'field-array') {
+    return <FieldArrayRenderer field={field} />
+  }
 
   return (
     <Controller
@@ -84,31 +112,51 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
             )
 
           case 'select':
+          case 'autocomplete': {
+            const selectedOption = options.find(opt => String(opt.value) === String(value)) || null
             return (
-              <TextField
-                {...baseProps}
-                select
-                value={value || ''}
-                onChange={onChange}
-                onBlur={onBlur}
-                InputLabelProps={{ shrink: value !== undefined && value !== '' }}
-              >
-                <MenuItem value="" disabled>
-                  <em>Select {field.label}</em>
-                </MenuItem>
-                {isLoadingLookups ? (
-                  <MenuItem disabled value="">
-                    Loading options...
-                  </MenuItem>
-                ) : (
-                  options.map((opt) => (
-                    <MenuItem key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </MenuItem>
-                  ))
-                )}
-              </TextField>
+              <Autocomplete
+                id={field.id}
+                options={options}
+                getOptionLabel={(option) => option.label || String(option.value)}
+                isOptionEqualToValue={(option, val) => String(option.value) === String(val.value)}
+                value={selectedOption}
+                onChange={(_, newValue) => {
+                  onChange(newValue ? newValue.value : null)
+                  if (field.populateFields && newValue?.data) {
+                    Object.entries(field.populateFields).forEach(([sourceKey, targetRelativePath]) => {
+                      const lastDot = field.name.lastIndexOf('.')
+                      const basePath = lastDot !== -1 ? field.name.substring(0, lastDot) : ''
+                      const targetPath = basePath ? `${basePath}.${targetRelativePath}` : targetRelativePath
+                      setValue(targetPath, newValue.data[sourceKey], { shouldValidate: true })
+                    })
+                  }
+                }}
+                disabled={Boolean(field.disabled || isLoadingLookups || (field.dependsOn && !dependencyValue))}
+                renderInput={(params) => {
+                  const { inputRef: _, ...restBaseProps } = baseProps
+                  return (
+                    <TextField
+                      {...params}
+                      {...restBaseProps}
+                      InputProps={{
+                        ...params.InputProps,
+                        ...restBaseProps.InputProps,
+                        endAdornment: (
+                          <>
+                            {isLoadingLookups ? <CircularProgress color="inherit" size={20} /> : null}
+                            {params.InputProps.endAdornment}
+                          </>
+                        ),
+                      }}
+                      label={field.required ? `${field.label} *` : field.label}
+                      placeholder={field.placeholder || 'Select...'}
+                    />
+                  )
+                }}
+              />
             )
+          }
 
           case 'multi-select': {
             const currentValues = Array.isArray(value) ? value : []
@@ -119,20 +167,34 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
                 multiple
                 id={field.id}
                 options={options}
-                getOptionLabel={(option) => option.label}
+                getOptionLabel={(option) => option.label || String(option.value)}
+                isOptionEqualToValue={(option, val) => String(option.value) === String(val.value)}
                 value={selectedOptions}
                 onChange={(_, newValue) => {
                   onChange(newValue.map(v => v.value))
                 }}
-                disabled={field.disabled || isLoadingLookups}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    {...baseProps}
-                    label={field.required ? `${field.label} *` : field.label}
-                    placeholder={field.placeholder || 'Select multiple...'}
-                  />
-                )}
+                disabled={Boolean(field.disabled || isLoadingLookups || (field.dependsOn && !dependencyValue))}
+                renderInput={(params) => {
+                  const { inputRef: _, ...restBaseProps } = baseProps
+                  return (
+                    <TextField
+                      {...params}
+                      {...restBaseProps}
+                      InputProps={{
+                        ...params.InputProps,
+                        ...restBaseProps.InputProps,
+                        endAdornment: (
+                          <>
+                            {isLoadingLookups ? <CircularProgress color="inherit" size={20} /> : null}
+                            {params.InputProps.endAdornment}
+                          </>
+                        ),
+                      }}
+                      label={field.required ? `${field.label} *` : field.label}
+                      placeholder={field.placeholder || 'Select multiple...'}
+                    />
+                  )
+                }}
               />
             )
           }
@@ -166,6 +228,18 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
                 />
                 {error && <FormHelperText>{error.message as string}</FormHelperText>}
               </FormControl>
+            )
+
+          case 'display':
+            return (
+              <Box className="w-full mt-2">
+                <Typography variant="caption" color="text.secondary">
+                  {field.label}
+                </Typography>
+                <Typography variant="body1" className="whitespace-pre-wrap mt-1">
+                  {value || '-'}
+                </Typography>
+              </Box>
             )
 
           case 'checkbox':
@@ -218,61 +292,20 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
             )
 
           case 'file': {
-            const hasFile = !!value
-            
             return (
               <FormControl error={!!error} fullWidth>
-                <Box className="flex flex-col gap-2 p-4 border border-dashed border-gray-300 dark:border-gray-700 rounded-md bg-zinc-50 dark:bg-zinc-900/50">
-                  <Box className="flex items-center justify-between gap-4">
-                    <Box className="flex items-center gap-2">
-                      <i className={`ri-file-text-line text-2xl ${hasFile ? 'text-primary' : 'text-zinc-400'}`} />
-                      <Box>
-                        <Typography variant="body2" fontWeight="semibold">
-                          {hasFile ? `Document (ID: ${value})` : 'No document selected'}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {hasFile ? 'Click remove to change' : 'Upload PDF, JPG, PNG up to 5MB'}
-                        </Typography>
-                      </Box>
-                    </Box>
-                    
-                    {hasFile ? (
-                      <Button
-                        variant="outlined"
-                        color="error"
-                        size="small"
-                        onClick={() => onChange('')}
-                        startIcon={<i className="ri-delete-bin-line" />}
-                      >
-                        Remove
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="contained"
-                        component="label"
-                        size="small"
-                        startIcon={<i className="ri-upload-cloud-line" />}
-                      >
-                        Upload
-                        <input
-                          type="file"
-                          hidden
-                          accept=".pdf,.jpg,.jpeg,.png"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0]
-
-                            if (file) {
-                              // Simulate successful upload and return a dummy ID
-                              const mockFileId = `file-${Math.floor(100000 + Math.random() * 900000)}`
-
-                              onChange(mockFileId)
-                            }
-                          }}
-                        />
-                      </Button>
-                    )}
-                  </Box>
-                </Box>
+                <Typography variant="body2" fontWeight="medium" mb={1}>
+                  {field.required ? `${field.label} *` : field.label}
+                </Typography>
+                
+                <FileUpload 
+                  value={value}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  disabled={field.disabled}
+                  error={!!error}
+                />
+                
                 {error && <FormHelperText>{error.message as string}</FormHelperText>}
               </FormControl>
             )
@@ -291,5 +324,92 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
         }
       }}
     />
+  )
+}
+
+function FieldArrayRenderer({ field }: { field: FieldSchema }) {
+  const { control, formState: { errors } } = useFormContext()
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: field.name,
+  })
+
+  // We can treat errors[field.name] as an array of errors if it exists.
+  const fieldErrors = errors[field.name] as any
+
+  return (
+    <Box className="w-full">
+      <Box className="flex justify-between items-center mb-4">
+        <Typography variant="subtitle1" fontWeight="bold">
+          {field.label}
+        </Typography>
+        {!field.disabled && field.arrayItemLabel && (
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<i className="ri-add-line" />}
+            onClick={() => {
+              // Append an empty object with keys based on arrayFields
+              const emptyItem: Record<string, any> = {}
+              field.arrayFields?.forEach((f) => {
+                emptyItem[f.name] = f.defaultValue !== undefined ? f.defaultValue : ''
+                if (f.type === 'checkbox' || f.type === 'switch' || f.type === 'radio') {
+                  emptyItem[f.name] = f.defaultValue !== undefined ? f.defaultValue : false
+                }
+              })
+              append(emptyItem)
+            }}
+          >
+            Add {field.arrayItemLabel}
+          </Button>
+        )}
+      </Box>
+
+      {fieldErrors?.root && (
+        <Typography color="error" variant="body2" className="mb-4">
+          {fieldErrors.root.message}
+        </Typography>
+      )}
+      
+      {/* Fallback for zod array level errors if root isn't populated */}
+      {fieldErrors?.message && !Array.isArray(fieldErrors) && (
+        <Typography color="error" variant="body2" className="mb-4">
+          {fieldErrors.message}
+        </Typography>
+      )}
+
+      <div className="flex flex-col gap-4">
+        {fields.map((item, index) => (
+          <div key={item.id} className="flex flex-col md:flex-row gap-4 items-start border p-4 rounded-md border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-zinc-900/50">
+            <div className="flex-grow w-full md:w-auto flex flex-col md:flex-row gap-4">
+              {field.arrayFields?.map((subField) => (
+                <div key={subField.name} className="flex-grow">
+                  <FormFieldRenderer
+                    field={{
+                      ...subField,
+                      name: `${field.name}.${index}.${subField.name}`,
+                      disabled: field.disabled || subField.disabled,
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+            
+            {!field.disabled && (
+              <div className="flex items-center justify-between w-full md:w-auto mt-2 md:mt-0 md:pt-2">
+                <Button
+                  variant="text"
+                  color="error"
+                  onClick={() => remove(index)}
+                  disabled={fields.length === 1 && field.required}
+                >
+                  Remove
+                </Button>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </Box>
   )
 }

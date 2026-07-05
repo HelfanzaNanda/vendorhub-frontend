@@ -19,8 +19,8 @@ export const api = {
     return response.data
   },
 
-  post: async <T>(url: string, data?: any): Promise<ApiResponse<T>> => {
-    const response = await apiClient.post<ApiResponse<T>>(url, data)
+  post: async <T>(url: string, data?: any, config?: any): Promise<ApiResponse<T>> => {
+    const response = await apiClient.post<ApiResponse<T>>(url, data, config)
 
     return response.data
   },

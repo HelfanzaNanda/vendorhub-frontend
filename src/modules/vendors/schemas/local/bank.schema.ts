@@ -16,7 +16,6 @@ export const bankModalSchema: FormSchema = {
           label: 'Bank Branch',
           type: 'select',
           required: true,
-          validation: z.string().min(1, 'Bank branch is required'),
           grid: { xs: 12, md: 6 },
           lookupEndpoint: 'bank-branches',
         },
@@ -26,7 +25,6 @@ export const bankModalSchema: FormSchema = {
           label: 'Currency',
           type: 'select',
           required: true,
-          validation: z.string().min(1, 'Currency is required'),
           grid: { xs: 12, md: 6 },
           lookupEndpoint: 'currencies',
         },
@@ -36,7 +34,6 @@ export const bankModalSchema: FormSchema = {
           label: 'Account Name',
           type: 'text',
           required: true,
-          validation: z.string().min(1, 'Account name is required'),
           grid: { xs: 12, md: 6 }
         },
         {
