@@ -10,6 +10,7 @@ export type FieldType =
   | 'multi-select'
   | 'date'
   | 'checkbox'
+  | 'checkbox-group'
   | 'radio'
   | 'switch'
   | 'file'
@@ -66,6 +67,12 @@ export interface FieldSchema {
   
   /** Query parameter key to use when fetching dependent lookups (e.g., 'countryId') */
   dependencyParam?: string
+
+  /** Exclude this field from the submitted payload */
+  excludeFromPayload?: boolean
+
+  /** If true, the field will be submitted as an object `{ id: value }` instead of a primitive value */
+  submitAsObject?: boolean
 }
 
 export interface FormSectionSchema {

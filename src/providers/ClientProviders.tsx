@@ -4,11 +4,32 @@ import { useEffect } from 'react'
 
 import { Backdrop, CircularProgress } from '@mui/material'
 import { Toaster } from 'sonner'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import React, { Suspense } from 'react'
 
 import { useLoadingStore } from '@/store/loadingStore'
 import { useAuthStore } from '@/features/auth/store'
 import { useProfile } from '@/features/auth/hooks'
 import QueryProvider from './QueryProvider'
+
+function PreRegistrationGuard() {
+  const user = useAuthStore((state) => state.user)
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (user && user.type === 'EXTERNAL' && user.vendor?.vendorStatus?.code === 'PRE_REGISTRATION') {
+      const isTermsTab = pathname === '/vendor/update' && searchParams.get('tab') === 'terms_conditions'
+      
+      if (!isTermsTab) {
+        router.replace('/vendor/update?tab=terms_conditions')
+      }
+    }
+  }, [user, pathname, searchParams, router])
+
+  return null
+}
 
 function AuthSync({ children }: { children: React.ReactNode }) {
   const initializeAuth = useAuthStore((state) => state.initializeAuth)
@@ -58,6 +79,9 @@ export default function ClientProviders({ children }: { children: React.ReactNod
   return (
     <QueryProvider>
       <AuthSync>
+        <Suspense fallback={null}>
+          <PreRegistrationGuard />
+        </Suspense>
         {children}
         <Toaster position="top-right" richColors />
         <Backdrop

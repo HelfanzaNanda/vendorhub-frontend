@@ -26,7 +26,7 @@ export const affiliateModalSchema: FormSchema = {
           type: 'select',
           required: true,
           grid: { xs: 12, md: 6 },
-          lookupEndpoint: 'business-types',
+          lookupEndpoint: 'business-entity-types',
         },
         {
           id: 'companyName',

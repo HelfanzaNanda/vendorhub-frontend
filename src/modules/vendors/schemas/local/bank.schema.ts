@@ -11,13 +11,37 @@ export const bankModalSchema: FormSchema = {
       title: 'Account Details',
       fields: [
         {
+          id: 'countryId',
+          name: 'countryId',
+          label: 'Country',
+          type: 'autocomplete',
+          required: true,
+          grid: { xs: 12, md: 6 },
+          lookupEndpoint: 'countries',
+          excludeFromPayload: true,
+        },
+        {
+          id: 'bankId',
+          name: 'bankId',
+          label: 'Bank',
+          type: 'autocomplete',
+          required: true,
+          grid: { xs: 12, md: 6 },
+          lookupEndpoint: 'banks',
+          dependsOn: 'countryId',
+          dependencyParam: 'countryId',
+          excludeFromPayload: true,
+        },
+        {
           id: 'bankBranchId',
           name: 'bankBranchId',
           label: 'Bank Branch',
-          type: 'select',
+          type: 'autocomplete',
           required: true,
           grid: { xs: 12, md: 6 },
-          lookupEndpoint: 'bank-branches',
+          lookupEndpoint: 'bank-branchs',
+          dependsOn: 'bankId',
+          dependencyParam: 'bankId',
         },
         {
           id: 'currencyId',
@@ -50,7 +74,7 @@ export const bankModalSchema: FormSchema = {
           name: 'fileId',
           label: 'Bank Statement / Passbook Document',
           type: 'file',
-          grid: { xs: 12 }
+          grid: { xs: 12 },
         },
       ]
     }

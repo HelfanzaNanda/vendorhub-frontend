@@ -112,5 +112,8 @@ export function useCrudTable<T = any>(endpoint: string, filters?: CrudFilters) {
     isUpdating: updateMutation.isPending,
     isDeleting: deleteMutation.isPending,
     isSaving: saveMutation.isPending,
+
+    // Manual fetch for details
+    getDetail: service.getById,
   }
 }

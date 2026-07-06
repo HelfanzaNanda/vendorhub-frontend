@@ -8,10 +8,13 @@ import React, { Suspense } from 'react'
 import PageHeader from '@/components/shared/PageHeader'
 import VendorProfile from '@/modules/vendors/components/VendorProfile'
 import { localVendorSchema } from '@/modules/vendors/schemas/local'
+import { useAuthStore } from '@/features/auth/store'
 
 function UpdateVendorPageContent() {
   const searchParams = useSearchParams()
-  const activeTab = searchParams.get('tab') || 'terms_conditions'
+  const user = useAuthStore((state) => state.user)
+  const isPreReg = user?.type === 'EXTERNAL' && user?.vendor?.vendorStatus?.code === 'PRE_REGISTRATION'
+  const activeTab = isPreReg ? 'terms_conditions' : (searchParams.get('tab') || 'terms_conditions')
   
   return (
     <Box className="flex flex-col gap-6 p-4 h-full">

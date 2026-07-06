@@ -2,7 +2,7 @@ export interface VendorInfo {
   id: number
   vendorCode: string | null
   companyName: string | null
-  vendorStatus: string | null
+  vendorStatus: { code: string; name?: string; [key: string]: any } | null
 }
 
 export interface User {

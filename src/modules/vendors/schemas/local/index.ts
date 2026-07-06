@@ -120,8 +120,8 @@ export const localVendorSchema: VendorProfileSchema = {
           columns: [
             { id: 'accountName', header: 'Account Name', accessorKey: 'accountName' },
             { id: 'accountNumber', header: 'Account Number', accessorKey: 'accountNumber' },
-            { id: 'currencyId', header: 'Currency', accessorKey: 'currencyId' },
-            { id: 'bankBranchId', header: 'Bank Branch', accessorKey: 'bankBranchId' },
+            { id: 'currencyId', header: 'Currency', accessorKey: 'currency.name' },
+            { id: 'bankBranchId', header: 'Bank Branch', accessorKey: 'bankBranch.name' },
           ],
         },
       ],
@@ -143,7 +143,7 @@ export const localVendorSchema: VendorProfileSchema = {
           columns: [
             { id: 'companyName', header: 'Company Name', accessorKey: 'companyName' },
             { id: 'npwp', header: 'NPWP', accessorKey: 'npwp' },
-            { id: 'affiliateTypeId', header: 'Affiliate Type', accessorKey: 'affiliateTypeId' },
+            { id: 'affiliateTypeId', header: 'Affiliate Type', accessorKey: 'affiliateType.name' },
             { id: 'businessField', header: 'Business Field', accessorKey: 'businessField' },
           ],
         },
@@ -193,8 +193,8 @@ export const localVendorSchema: VendorProfileSchema = {
           modalFormSchema: financialModalSchema,
           columns: [
             { id: 'year', header: 'Year', accessorKey: 'year' },
-            { id: 'reportType', header: 'Report Type', accessorKey: 'reportType' },
-            { id: 'auditStatus', header: 'Audit Status', accessorKey: 'auditStatus' },
+            { id: 'reportType', header: 'Report Type', accessorKey: 'financialReportType.name' },
+            { id: 'auditStatus', header: 'Audit Status', accessorKey: 'auditStatus.name' },
             { id: 'totalAssets', header: 'Total Assets', accessorKey: 'totalAssets', cell: 'currency' },
             { id: 'totalRevenue', header: 'Total Revenue', accessorKey: 'totalRevenue', cell: 'currency' },
           ],

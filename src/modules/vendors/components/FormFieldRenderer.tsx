@@ -261,6 +261,47 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
               </FormControl>
             )
 
+          case 'checkbox-group': {
+            const currentValues = Array.isArray(value) ? value : []
+            
+            return (
+              <FormControl error={!!error} component="fieldset" fullWidth>
+                <Typography variant="body2" fontWeight="medium" mb={1}>
+                  {field.required ? `${field.label} *` : field.label}
+                </Typography>
+                {isLoadingLookups ? (
+                  <CircularProgress size={24} className="mt-2" />
+                ) : (
+                  <Box className="flex flex-row flex-wrap gap-x-6 gap-y-2 border rounded-md p-3 border-gray-200 dark:border-gray-700">
+                    {options.map((opt) => (
+                      <FormControlLabel
+                        key={String(opt.value)}
+                        control={
+                          <Checkbox
+                            checked={currentValues.includes(opt.value)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                onChange([...currentValues, opt.value])
+                              } else {
+                                onChange(currentValues.filter((v: any) => v !== opt.value))
+                              }
+                            }}
+                            disabled={Boolean(field.disabled || (field.dependsOn && !dependencyValue))}
+                            color="primary"
+                          />
+                        }
+                        label={opt.label || String(opt.value)}
+                      />
+                    ))}
+                  </Box>
+                )}
+                {(error || field.helperText) && (
+                  <FormHelperText>{(error?.message as string) || field.helperText}</FormHelperText>
+                )}
+              </FormControl>
+            )
+          }
+
           case 'currency':
             return (
               <TextField

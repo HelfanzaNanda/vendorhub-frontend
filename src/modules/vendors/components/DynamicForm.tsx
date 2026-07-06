@@ -33,7 +33,7 @@ export default function DynamicForm({
   onCancel,
   tabEndpoint,
 }: DynamicFormProps) {
-  const { formDrafts, saveDraft, setVendorId } = useVendorStore()
+  const { formDrafts, saveDraft } = useVendorStore()
   
   // Call useCrudTable if tabEndpoint is specified for saving the form tab
   const { saveMutation } = useCrudTable(tabEndpoint || '')
@@ -79,6 +79,7 @@ return {
               fieldSchema = z.union([z.number(), z.string()])
               break
             case 'multi-select':
+            case 'checkbox-group':
             case 'field-array':
               fieldSchema = z.array(z.any())
               break
@@ -94,7 +95,7 @@ return {
             const requiredMsg = `${field.label} is required`
             if (field.type === 'text' || field.type === 'textarea' || field.type === 'email' || field.type === 'phone' || field.type === 'currency' || field.type === 'percentage') {
               fieldSchema = z.string().min(1, requiredMsg)
-            } else if (field.type === 'multi-select' || field.type === 'field-array') {
+            } else if (field.type === 'multi-select' || field.type === 'checkbox-group' || field.type === 'field-array') {
               fieldSchema = z.array(z.any()).min(1, requiredMsg)
             } else {
               fieldSchema = fieldSchema.nullable().refine((val) => val !== null && val !== undefined && val !== '', requiredMsg)
@@ -124,7 +125,7 @@ return {
       section.fields.forEach((field) => {
         if (field.defaultValue !== undefined) {
           defaults[field.name] = field.defaultValue
-        } else if (field.type === 'field-array') {
+        } else if (field.type === 'field-array' || field.type === 'multi-select' || field.type === 'checkbox-group') {
           defaults[field.name] = []
         } else if (field.type === 'number') {
           defaults[field.name] = null
@@ -162,6 +163,23 @@ return {
   const { handleSubmit, watch, formState: { isSubmitting } } = methods
   const formValues = watch()
 
+  const extractFileIds = (data: any) => {
+    if (!data || typeof data !== 'object') return data;
+    
+    const result = { ...data };
+    processedSchema.sections.forEach(section => {
+      section.fields.forEach(field => {
+        if (field.type === 'file' && result[field.name]) {
+          const val = result[field.name];
+          if (typeof val === 'object' && 'id' in val) {
+            result[field.name] = val.id;
+          }
+        }
+      });
+    });
+    return result;
+  }
+
   const stripFileObjects = (data: any): any => {
     if (!data) return data
     if (Array.isArray(data)) return data.map(stripFileObjects)
@@ -182,24 +200,34 @@ return {
   }
 
   const handleFormSubmit = async (rawData: any) => {
-    const data = stripFileObjects(rawData)
+    let data = stripFileObjects(rawData)
+    data = extractFileIds(data)
+
+    // Process schema-specific payload rules
+    processedSchema.sections.forEach((section) => {
+      section.fields.forEach((field) => {
+        // 1. Remove fields marked with excludeFromPayload
+        if (field.excludeFromPayload && data.hasOwnProperty(field.name)) {
+          delete data[field.name]
+        }
+        
+        // 2. Format fields marked with submitAsObject
+        if (field.submitAsObject && data[field.name] !== undefined && data[field.name] !== null) {
+          if (typeof data[field.name] !== 'object' || Array.isArray(data[field.name])) {
+            data[field.name] = { id: data[field.name] }
+          }
+        }
+      })
+    })
 
     if (onSubmit) {
       onSubmit(data)
-      
-return
+      return
     }
 
     if (tabEndpoint) {
       saveDraft(schema.id, data)
-      saveMutation.mutate(data, {
-        onSuccess: (res: any) => {
-          // Simulate generating a Vendor ID on first create of company info
-          if (schema.id === 'vendor_company') {
-            setVendorId(res?.data?.vendorId || 'VND-' + Math.floor(100000 + Math.random() * 900000))
-          }
-        },
-      })
+      saveMutation.mutate(data)
     }
   }
 

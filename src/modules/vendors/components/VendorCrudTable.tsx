@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 
 import type { SortingState, RowSelectionState } from '@tanstack/react-table'
 import { Box, Card, CardContent, Typography, Button, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
+import { toast } from 'sonner'
 
 import type { DatatableConfig } from '../schemas/types'
 import { useCrudTable } from '../hooks/useCrudTable'
@@ -33,6 +34,7 @@ export default function VendorCrudTable({ config }: VendorCrudTableProps) {
   const [itemToDelete, setItemToDelete] = useState<any | null>(null)
   const [bulkDeleteRows, setBulkDeleteRows] = useState<any[] | null>(null)
   const [isBulkDeleting, setIsBulkDeleting] = useState(false)
+  const [isDetailLoading, setIsDetailLoading] = useState(false)
 
   // Memoize filters sent to API
   const filters = useMemo(() => {
@@ -66,7 +68,26 @@ export default function VendorCrudTable({ config }: VendorCrudTableProps) {
     isCreating,
     isUpdating,
     isDeleting,
+    getDetail,
   } = useCrudTable<any>(config.apiEndpoint, filters)
+
+  const handleOpenModal = async (row: any, mode: 'view' | 'edit') => {
+    try {
+      setIsDetailLoading(true)
+      const res = await getDetail(row.id)
+      if (res.data) {
+        setSelectedItem({ ...res.data, source: row.source }) // Preserve 'source' property required by CRUD mutations
+        setModalMode(mode)
+        setModalOpen(true)
+      } else {
+        toast.error('Failed to load details')
+      }
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || 'Failed to load details')
+    } finally {
+      setIsDetailLoading(false)
+    }
+  }
 
   // Build columns definition dynamically
   const columns = useMemo(() => {
@@ -104,8 +125,8 @@ export default function VendorCrudTable({ config }: VendorCrudTableProps) {
         header: ({ column }: any) => (
           <DataTableColumnHeader column={column} title={col.header} />
         ),
-        cell: ({ row }: any) => {
-          const val = row.original[col.accessorKey]
+        cell: ({ row, getValue }: any) => {
+          const val = getValue()
 
           if (val === undefined || val === null) return '-'
           
@@ -136,16 +157,8 @@ export default function VendorCrudTable({ config }: VendorCrudTableProps) {
       header: () => <div className="text-right pr-2">Actions</div>,
       cell: ({ row }: any) => (
         <DataTableActions
-          onView={() => {
-            setSelectedItem(row.original)
-            setModalMode('view')
-            setModalOpen(true)
-          }}
-          onEdit={() => {
-            setSelectedItem(row.original)
-            setModalMode('edit')
-            setModalOpen(true)
-          }}
+          onView={() => handleOpenModal(row.original, 'view')}
+          onEdit={() => handleOpenModal(row.original, 'edit')}
           onDelete={config.canDelete ? () => {
             setItemToDelete(row.original)
             setDeleteConfirmOpen(true)
@@ -256,7 +269,7 @@ export default function VendorCrudTable({ config }: VendorCrudTableProps) {
           <DataTable
             data={rows}
             columns={columns}
-            loading={isLoading || isFetching}
+            loading={isLoading || isFetching || isDetailLoading}
             error={isError ? 'Failed to load records. Please try again.' : undefined}
             page={page}
             pageSize={pageSize}
@@ -304,7 +317,11 @@ export default function VendorCrudTable({ config }: VendorCrudTableProps) {
               mode={modalMode === 'view' ? 'view' : modalMode === 'create' ? 'create' : 'update'}
               defaultValues={
                 selectedItem
-                  ? { ...selectedItem }
+                  ? { 
+                      ...selectedItem,
+                      bankId: selectedItem.bankBranch?.bankId || selectedItem.bankBranch?.bank?.id || selectedItem.bankId,
+                      countryId: selectedItem.bankBranch?.bank?.countryId || selectedItem.countryId,
+                    }
                   : config.apiEndpoint.startsWith('/vendor-personnel-temp')
                     ? { personnelTypeCode: config.id }
                     : undefined
