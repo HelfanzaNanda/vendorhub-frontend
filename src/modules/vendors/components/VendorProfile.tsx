@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { useRouter, useSearchParams } from 'next/navigation'
 
-import { Box, Card, Tabs, Tab, Button } from '@mui/material'
+import { Box, Card, Tabs, Tab, Button, Alert } from '@mui/material'
 
 import DynamicForm from './DynamicForm'
 import DataTableSection from './DataTableSection'
@@ -93,7 +93,7 @@ export default function VendorProfile({ schemaConfig }: VendorProfileProps) {
 
   // Terms and conditions gate
   const { data: termsData, isLoading: isTermsLoading } = useVendorTerms()
-  const hasAcceptedTerms = !!termsData
+  const hasAcceptedTerms = !!termsData?.submission
 
   useEffect(() => {
     if (!isTermsLoading && !hasAcceptedTerms && schemaConfig.tabs.find(t => t.id === 'terms_conditions')) {
@@ -119,6 +119,11 @@ export default function VendorProfile({ schemaConfig }: VendorProfileProps) {
 
   return (
     <Box className="flex flex-col w-full h-full">
+      {!hasAcceptedTerms && (
+        <Alert severity="warning" className="mb-4">
+          Please complete and submit the Terms &amp; Conditions before filling out the remaining vendor information.
+        </Alert>
+      )}
       <Card className="mb-6">
         <Tabs
           value={activeTabId}

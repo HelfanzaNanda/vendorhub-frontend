@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { 
   Box, 
   Card, 
@@ -25,14 +25,18 @@ import jsPDF from 'jspdf'
 
 import FormSection from './FormSection'
 import { termsSchema } from '../schemas/local/terms.schema'
-import { useVendorTerms, useMasterTerms, useSubmitTerms } from '../hooks/useTerms'
+import { useMasterTerms, useSubmitTerms, useVendorTerms } from '../hooks/useTerms'
 import { useAuthStore } from '@/features/auth/store'
 import FormFieldRenderer from './FormFieldRenderer'
 
 export default function VendorTermsTab() {
   const { data: masterTerms, isLoading: isMasterLoading } = useMasterTerms()
+  const { data: vendorTermsData, isLoading: isVendorTermsLoading } = useVendorTerms()
   const submitMutation = useSubmitTerms()
   const user = useAuthStore(state => state.user)
+
+  const submission = vendorTermsData?.submission
+  const isReadOnly = !!submission
 
   // Chapter reviews state: chapterId -> { status: 'APPROVED' | 'REJECTED', reason?: string }
   const [reviews, setReviews] = useState<Record<string, { status: 'APPROVED' | 'REJECTED', reason?: string }>>({})
@@ -59,7 +63,7 @@ export default function VendorTermsTab() {
   const methods = useForm({
     resolver: zodResolver(combinedZodSchema),
     defaultValues: {
-      vendorName: user?.name || '',
+      vendorName: user?.vendor?.companyName || user?.firstname || '',
       authorizedSignatory: '',
       position: '',
       supportingDocumentId: null,
@@ -69,12 +73,30 @@ export default function VendorTermsTab() {
 
   const formValues = methods.watch()
 
+  useEffect(() => {
+    if (submission) {
+      setHasRead(true)
+      if (submission.chapterReviews) {
+        setReviews(submission.chapterReviews as any)
+      }
+      methods.reset({
+        vendorName: submission.vendorName || '',
+        authorizedSignatory: submission.authorizedSignatory || '',
+        position: submission.position || '',
+        supportingDocumentId: submission.supportingDocument || null,
+        signedDocumentId: submission.signedDocument || null
+      })
+    }
+  }, [submission, methods])
+
   const handleApprove = (chapterId: string) => {
+    if (isReadOnly) return
     setReviews(prev => ({ ...prev, [chapterId]: { status: 'APPROVED' } }))
   }
 
-  const handleReject = (chapterId: string) => {
-    setReviews(prev => ({ ...prev, [chapterId]: { status: 'REJECTED', reason: '' } }))
+  const handleReject = (chapterId: string, reason: string) => {
+    if (isReadOnly) return
+    setReviews(prev => ({ ...prev, [chapterId]: { status: 'REJECTED', reason } }))
   }
 
   const handleRejectReasonChange = (chapterId: string, reason: string) => {
@@ -105,14 +127,20 @@ export default function VendorTermsTab() {
   }
 
   const onSubmit = (data: any) => {
+    if (isReadOnly) return
+    
+    // Clean up document objects to only send IDs if needed, but existing backend handles it or we send just id
     const payload = {
       ...data,
+      supportingDocumentId: data.supportingDocumentId ? { id: data.supportingDocumentId.id } : null,
+      signedDocumentId: data.signedDocumentId ? { id: data.signedDocumentId.id } : null,
+      termsConditionId: masterTerms?.id ? { id: masterTerms.id } : undefined,
       chapterReviews: reviews
     }
     submitMutation.mutate(payload)
   }
 
-  if (isMasterLoading) return <Typography>Loading terms...</Typography>
+  if (isMasterLoading || isVendorTermsLoading) return <Typography>Loading terms...</Typography>
   if (!masterTerms) return <Typography>No terms available.</Typography>
 
   const reviewChapters = masterTerms.items.filter(c => c.approvalMode === 'REVIEW')
@@ -134,7 +162,7 @@ export default function VendorTermsTab() {
     required: true
   }
 
-  const isSaveEnabled = methods.formState.isValid && allReviewsCompleted && hasRead && pdfGenerated
+  const isSaveEnabled = methods.formState.isValid && allReviewsCompleted && hasRead && (pdfGenerated || isReadOnly)
 
   return (
     <FormProvider {...methods}>
@@ -142,13 +170,29 @@ export default function VendorTermsTab() {
         <Typography variant="h5" fontWeight="bold">Terms & Conditions</Typography>
         
         <Alert severity="info">
-          Please review the Terms & Conditions below, provide signatory details, and approve all required chapters. You must generate a PDF, sign it, and upload the signed copy to proceed.
+          <Typography variant="body1" fontWeight="bold" gutterBottom>
+            Before you can proceed with the vendor registration, please complete the following steps:
+          </Typography>
+          <ol className="list-decimal pl-5 space-y-1 mt-2">
+            <li>Fill in all required information.</li>
+            <li>Check <strong>&quot;I have read and understood all Terms &amp; Conditions.&quot;</strong></li>
+            <li>Download the Terms &amp; Conditions document.</li>
+            <li>Sign the downloaded document.</li>
+            <li>Upload the signed document.</li>
+            <li>Click <strong>Submit Terms &amp; Conditions</strong>.</li>
+          </ol>
         </Alert>
         
         {/* Signatory Details Form */}
         <Card className="rounded-xl shadow-sm border border-gray-100">
           <CardContent className="p-6 sm:p-8">
-            <FormSection section={termsSchema.sections[0]} formValues={formValues} />
+            <FormSection 
+              section={{
+                ...termsSchema.sections[0],
+                fields: termsSchema.sections[0].fields.map(f => ({ ...f, disabled: isReadOnly || f.disabled }))
+              }} 
+              formValues={formValues} 
+            />
           </CardContent>
         </Card>
 
@@ -245,7 +289,7 @@ export default function VendorTermsTab() {
                     className="text-sm text-gray-700 leading-relaxed [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-2 [&_li]:pl-1 [&_p]:mb-4 last:[&_p]:mb-0" 
                   />
                   
-                  {chapter.approvalMode === 'REVIEW' && (
+                  {chapter.approvalMode === 'REVIEW' && !isReadOnly && (
                     <Box className="p-6 bg-gray-50 rounded-xl border border-gray-200 mt-2">
                       <Typography variant="subtitle2" className="mb-4 font-semibold text-gray-900">
                         Approval Action Required
@@ -261,7 +305,7 @@ export default function VendorTermsTab() {
                         <Button 
                           variant={review?.status === 'REJECTED' ? 'contained' : 'outlined'} 
                           color="error"
-                          onClick={() => handleReject(chapter.id.toString())}
+                          onClick={() => handleReject(chapter.id.toString(), '')}
                         >
                           Reject
                         </Button>
@@ -282,6 +326,31 @@ export default function VendorTermsTab() {
                       )}
                     </Box>
                   )}
+                  {chapter.approvalMode === 'REVIEW' && isReadOnly && review && (
+                    <Box className="p-6 bg-gray-50 rounded-xl border border-gray-200 mt-2">
+                      <Typography variant="subtitle2" className="mb-4 font-semibold text-gray-900">
+                        Submitted Review
+                      </Typography>
+                      <Box className="flex flex-col gap-2">
+                        <Box className="flex items-center gap-2">
+                          <Typography variant="body2" fontWeight="medium">Status:</Typography>
+                          <Chip 
+                            label={review.status === 'APPROVED' ? 'Approved' : 'Rejected'} 
+                            color={review.status === 'APPROVED' ? 'success' : 'error'}
+                            size="small"
+                          />
+                        </Box>
+                        {review.status === 'REJECTED' && review.reason && (
+                          <Box className="mt-2">
+                            <Typography variant="body2" fontWeight="medium">Reason for rejection:</Typography>
+                            <Typography variant="body2" color="text.secondary" className="mt-1 p-3 bg-white rounded border border-gray-100">
+                              {review.reason}
+                            </Typography>
+                          </Box>
+                        )}
+                      </Box>
+                    </Box>
+                  )}
                 </AccordionDetails>
               </Accordion>
             )
@@ -296,42 +365,47 @@ export default function VendorTermsTab() {
                 <Checkbox 
                   checked={hasRead} 
                   onChange={(e) => setHasRead(e.target.checked)} 
+                  disabled={!allReviewsCompleted || isReadOnly}
                   color="primary"
                 />
               }
               label="I have read and understood all Terms & Conditions."
             />
 
-            <Box>
-              <Button 
-                variant="outlined" 
-                onClick={generatePDF}
-                disabled={!allReviewsCompleted || !hasRead}
-                startIcon={<i className="ri-file-download-line" />}
-              >
-                Generate / Download Terms
-              </Button>
-              {pdfGenerated && <Typography variant="caption" color="success.main" className="ml-3">PDF Generated ✓</Typography>}
-            </Box>
+            {!isReadOnly && (
+              <Box>
+                <Button 
+                  variant="outlined" 
+                  onClick={generatePDF}
+                  disabled={!allReviewsCompleted || !hasRead}
+                  startIcon={<i className="ri-file-download-line" />}
+                >
+                  Generate / Download Terms
+                </Button>
+                {pdfGenerated && <Typography variant="caption" color="success.main" className="ml-3">PDF Generated ✓</Typography>}
+              </Box>
+            )}
 
             <Box className="max-w-md">
-              <FormFieldRenderer field={signedDocFieldSchema} />
+              <FormFieldRenderer field={{...signedDocFieldSchema, disabled: isReadOnly}} />
             </Box>
 
             <Divider />
 
-            <Box className="flex justify-end">
-              <Button 
-                type="submit" 
-                variant="contained" 
-                color="primary" 
-                size="large"
-                disabled={!isSaveEnabled || submitMutation.isPending}
-                startIcon={submitMutation.isPending ? <i className="ri-loader-4-line animate-spin" /> : <i className="ri-save-line" />}
-              >
-                {submitMutation.isPending ? 'Saving...' : 'Submit Terms & Conditions'}
-              </Button>
-            </Box>
+            {!isReadOnly && (
+              <Box className="flex justify-end">
+                <Button 
+                  type="submit" 
+                  variant="contained" 
+                  color="primary" 
+                  size="large"
+                  disabled={!isSaveEnabled || submitMutation.isPending}
+                  startIcon={submitMutation.isPending ? <i className="ri-loader-4-line animate-spin" /> : <i className="ri-save-line" />}
+                >
+                  {submitMutation.isPending ? 'Saving...' : 'Submit Terms & Conditions'}
+                </Button>
+              </Box>
+            )}
           </CardContent>
         </Card>
       </form>

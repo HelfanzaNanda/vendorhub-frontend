@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { termsService } from '../services/terms.service'
+import { termsService, SubmitVendorTermsPayload } from '../services/terms.service'
 import { toast } from 'sonner'
 
 export function useVendorTerms() {
@@ -22,7 +22,7 @@ export function useSubmitTerms() {
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: (data: any) => termsService.submitVendorTerms(data),
+    mutationFn: (data: SubmitVendorTermsPayload) => termsService.submitVendorTerms(data),
     onSuccess: () => {
       toast.success('Terms & Conditions accepted successfully')
       queryClient.invalidateQueries({ queryKey: ['vendor-terms'] })

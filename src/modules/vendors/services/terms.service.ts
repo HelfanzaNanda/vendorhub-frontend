@@ -16,21 +16,38 @@ export interface MasterTerms {
 }
 
 export interface VendorTermsCondition {
-  id: string | number
+  id?: string | number
   vendorId?: string | number
+  termsConditionId?: string | number
   vendorName?: string
   authorizedSignatory?: string
   position?: string
-  supportingDocumentId?: string | number
-  signedDocumentId?: string | number
+  supportingDocument?: { id: number; filename: string } | null
+  signedDocument?: { id: number; filename: string } | null
+  chapterReviews?: Record<string, { status: string; reason?: string }>
   status?: string
 }
 
+export interface VendorTermsResponse {
+  termsCondition: any // We use the master terms from /terms-conditions/latest instead
+  submission: VendorTermsCondition | null
+}
+
+export interface SubmitVendorTermsPayload {
+  termsConditionId: { id: string | number }
+  vendorName?: string
+  authorizedSignatory: string
+  position: string
+  supportingDocumentId: any
+  signedDocumentId: any
+  chapterReviews: Record<string, any>
+}
+
 export const termsService = {
-  getVendorTerms: async (): Promise<VendorTermsCondition | null> => {
+  getVendorTerms: async (): Promise<VendorTermsResponse | null> => {
     try {
-      const response = await api.get<any>('/vendor/terms-condition')
-      return response.data?.data || null
+      const response = await api.get<any>('/vendor/terms-conditions')
+      return response.data?.data || response.data || null
     } catch (error: any) {
       if (error.response?.status === 404) {
         return null
@@ -39,9 +56,8 @@ export const termsService = {
     }
   },
 
-  submitVendorTerms: async (data: any): Promise<VendorTermsCondition> => {
-    // API placeholder until backend is ready
-    const response = await api.post<any>('/vendor/terms-condition', data)
+  submitVendorTerms: async (data: SubmitVendorTermsPayload): Promise<VendorTermsCondition> => {
+    const response = await api.post<any>('/vendor/terms-conditions', data)
     return response.data?.data || response.data
   },
 

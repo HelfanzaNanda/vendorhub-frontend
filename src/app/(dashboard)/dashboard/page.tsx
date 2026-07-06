@@ -35,7 +35,7 @@ export default function DashboardPage() {
       {/* Welcome Header */}
       <Box className="flex flex-col gap-1">
         <Typography variant="h4" color="text.primary" fontWeight="bold">
-          Welcome back, {user?.name || 'User'}! 👋🏻
+          Welcome back, {user ? (user.vendor?.companyName || user.firstname) : 'User'}! 👋🏻
         </Typography>
         <Typography variant="body1" color="text.secondary">
           Here is a summary of your VendorHub inventory status.

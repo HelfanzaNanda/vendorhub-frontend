@@ -16,7 +16,6 @@ export const useLogin = () => {
     onSuccess: (response: any) => {
       // Defensively parse wrapped or raw token payload structures
       const data = response?.data || response
-      const user = data?.user || null
       const accessToken = data?.accessToken || data?.token || null
       const refreshToken = data?.refreshToken || null
 
@@ -26,7 +25,7 @@ export const useLogin = () => {
         return
       }
 
-      setAuth(user, accessToken, refreshToken)
+      setAuth(accessToken, refreshToken)
       toast.success(response?.message || 'Logged in successfully!')
       router.push('/dashboard')
     },

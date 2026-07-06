@@ -1,7 +1,7 @@
 import { api } from '@/services/api'
 import type { ApiResponse } from '@/services/api'
 import type { LoginInput, RegisterInput } from './schema'
-import type { AuthResponseData, User } from './types'
+import type { AuthResponseData, AuthProfileResponse, User } from './types'
 
 export const authApi = {
   login: async (input: LoginInput): Promise<ApiResponse<AuthResponseData>> => {
@@ -12,7 +12,7 @@ export const authApi = {
     return api.post<User>('/auth/signup', input)
   },
 
-  getCurrentProfile: async (): Promise<ApiResponse<User>> => {
-    return api.get<User>('/auth/me')
+  getCurrentProfile: async (): Promise<ApiResponse<AuthProfileResponse>> => {
+    return api.get<AuthProfileResponse>('/auth/me')
   },
 }

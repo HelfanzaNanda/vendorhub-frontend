@@ -79,7 +79,7 @@ const UserDropdown = () => {
       >
         <Avatar
           ref={anchorRef}
-          alt={user?.name || 'User'}
+          alt={user ? (user.vendor?.companyName || user.firstname) : 'User'}
           src='/images/avatars/1.png'
           onClick={handleDropdownOpen}
           className='cursor-pointer bs-[38px] is-[38px]'
@@ -107,10 +107,10 @@ const UserDropdown = () => {
               <ClickAwayListener onClickAway={e => handleDropdownClose(e as MouseEvent | TouchEvent)}>
                 <MenuList>
                   <div className='flex items-center plb-2 pli-4 gap-2' tabIndex={-1}>
-                    <Avatar alt={user?.name || 'User'} src='/images/avatars/1.png' />
+                    <Avatar alt={user ? (user.vendor?.companyName || user.firstname) : 'User'} src='/images/avatars/1.png' />
                     <div className='flex items-start flex-col'>
                       <Typography variant='body2' className='font-medium' color='text.primary'>
-                        {user?.name || 'User'}
+                        {user ? (user.vendor?.companyName || `${user.firstname} ${user.lastname}`) : 'User'}
                       </Typography>
                       <Typography variant='caption'>{user?.email || 'user@vendorhub.com'}</Typography>
                     </div>
