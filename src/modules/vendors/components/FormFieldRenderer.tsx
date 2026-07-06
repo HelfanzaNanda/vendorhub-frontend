@@ -67,7 +67,7 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
           label: field.required ? `${field.label} *` : field.label,
           placeholder: field.placeholder,
           error: !!error,
-          helperText: error?.message as string,
+          helperText: (error?.message as string) || field.helperText,
           disabled: field.disabled,
           InputProps: {
             readOnly: field.readonly,
@@ -306,7 +306,7 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
                   error={!!error}
                 />
                 
-                {error && <FormHelperText>{error.message as string}</FormHelperText>}
+                {(error || field.helperText) && <FormHelperText>{(error?.message as string) || field.helperText}</FormHelperText>}
               </FormControl>
             )
           }

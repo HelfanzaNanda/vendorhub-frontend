@@ -35,6 +35,7 @@ export interface FieldSchema {
   disabled?: boolean
   readonly?: boolean
   defaultValue?: any
+  helperText?: string
   validation?: ZodTypeAny
   grid?: {
     xs?: number

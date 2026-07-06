@@ -19,6 +19,7 @@ export const localCompanySchema: FormSchema = {
           placeholder: 'PT. Maju Mundur',
           required: true,
           grid: { xs: 12, md: 6 },
+          helperText: 'Do not include company prefixes or legal entity names such as PT, CV, Ltd., Inc., etc. Please select the appropriate Business Type instead.',
         },
         {
           id: 'siteId',
@@ -69,6 +70,8 @@ export const localCompanySchema: FormSchema = {
           required: true,
           grid: { xs: 12, md: 4 },
           lookupEndpoint: 'countries',
+          defaultValue: 27,
+          disabled: true,
         },
         {
           id: 'provinceId',

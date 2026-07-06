@@ -13,7 +13,7 @@ export interface LookupItem {
 export const lookupService = {
   getLookup: async (module: string, params?: Record<string, any>): Promise<FieldOption[]> => {
     try {
-      const response = await api.get<LookupItem[]>(`/lookups/${module}`, { params })
+      const response = await api.get<LookupItem[]>(`/lookups/${module}`, params)
 
       // Handle both { data: [...] } and bare array responses
       const items = Array.isArray(response.data)
