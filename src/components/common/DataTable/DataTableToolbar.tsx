@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 
 import type { Table } from '@tanstack/react-table'
 import { Search, RotateCw, SlidersHorizontal, Download, Eye, X, Loader2 } from 'lucide-react'
+import { AppReactDatepicker } from '@/components/common/AppReactDatepicker'
 
 import type { FilterDefinition } from './DataTable'
 
@@ -393,29 +394,55 @@ return `${selected.length} Selected`
                   )}
 
                   {filter.type === 'date' && (
-                    <input
-                      type="date"
-                      value={filterValues[filter.id] || ''}
-                      onChange={(e) => handleFilterValueChange(filter.id, e.target.value)}
+                    <AppReactDatepicker
+                      value={filterValues[filter.id] ? [new Date(filterValues[filter.id])] : []}
+                      onChange={(dates: Date[]) => {
+                        if (dates.length > 0) {
+                          // Format to YYYY-MM-DD for standard input values
+                          const d = dates[0]
+                          const formatted = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+                          handleFilterValueChange(filter.id, formatted)
+                        } else {
+                          handleFilterValueChange(filter.id, '')
+                        }
+                      }}
                       className="h-9 w-full rounded border border-[var(--border-color)] bg-backgroundPaper px-3 text-sm text-textPrimary focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer"
                     />
                   )}
 
                   {filter.type === 'date-range' && (
                     <div className="flex items-center gap-1.5">
-                      <input
-                        type="date"
-                        value={(filterValues[filter.id] as any)?.start || ''}
-                        onChange={(e) => handleDateRangeChange(filter.id, 'start', e.target.value)}
-                        className="h-9 w-full rounded border border-[var(--border-color)] bg-backgroundPaper px-2 text-xs text-textPrimary focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer"
-                      />
+                      <div className="w-full">
+                        <AppReactDatepicker
+                          value={(filterValues[filter.id] as any)?.start ? [new Date((filterValues[filter.id] as any).start)] : []}
+                          onChange={(dates: Date[]) => {
+                            if (dates.length > 0) {
+                              const d = dates[0]
+                              const formatted = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+                              handleDateRangeChange(filter.id, 'start', formatted)
+                            } else {
+                              handleDateRangeChange(filter.id, 'start', '')
+                            }
+                          }}
+                          className="h-9 w-full rounded border border-[var(--border-color)] bg-backgroundPaper px-2 text-xs text-textPrimary focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer"
+                        />
+                      </div>
                       <span className="text-textSecondary text-xs select-none">to</span>
-                      <input
-                        type="date"
-                        value={(filterValues[filter.id] as any)?.end || ''}
-                        onChange={(e) => handleDateRangeChange(filter.id, 'end', e.target.value)}
-                        className="h-9 w-full rounded border border-[var(--border-color)] bg-backgroundPaper px-2 text-xs text-textPrimary focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer"
-                      />
+                      <div className="w-full">
+                        <AppReactDatepicker
+                          value={(filterValues[filter.id] as any)?.end ? [new Date((filterValues[filter.id] as any).end)] : []}
+                          onChange={(dates: Date[]) => {
+                            if (dates.length > 0) {
+                              const d = dates[0]
+                              const formatted = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+                              handleDateRangeChange(filter.id, 'end', formatted)
+                            } else {
+                              handleDateRangeChange(filter.id, 'end', '')
+                            }
+                          }}
+                          className="h-9 w-full rounded border border-[var(--border-color)] bg-backgroundPaper px-2 text-xs text-textPrimary focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer"
+                        />
+                      </div>
                     </div>
                   )}
                 </div>

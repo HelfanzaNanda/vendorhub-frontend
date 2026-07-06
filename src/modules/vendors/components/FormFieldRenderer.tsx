@@ -21,6 +21,9 @@ import {
 import type { FieldSchema } from '../schemas/types'
 import { useLookup } from '../hooks/useLookup'
 import FileUpload from './FileUpload'
+import { AppReactDatepicker } from '@/components/common/AppReactDatepicker'
+import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect'
+import 'flatpickr/dist/plugins/monthSelect/style.css'
 
 export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
   const { control, setValue, watch, formState: { errors } } = useFormContext()
@@ -201,15 +204,61 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
 
           case 'date':
             return (
-              <TextField
-                {...baseProps}
-                type="date"
-                InputLabelProps={{ shrink: true }}
+              <AppReactDatepicker
+                label={field.required ? `${field.label} *` : field.label}
+                placeholder={field.placeholder || 'Select Date'}
+                error={!!error}
+                helperText={(error?.message as string) || field.helperText}
+                fullWidth
+                disabled={field.disabled}
                 value={value || ''}
-                onChange={onChange}
-                onBlur={onBlur}
+                onChange={(dates: Date[]) => {
+                  onChange(dates.length > 0 ? dates[0] : null)
+                }}
               />
             )
+
+          case 'date-range': {
+            const currentYear = new Date().getFullYear()
+            const minDate = new Date(currentYear - 4, 0, 1)
+
+            return (
+              <AppReactDatepicker
+                label={field.required ? `${field.label} *` : field.label}
+                placeholder={field.placeholder || 'Select Period Range'}
+                error={!!error}
+                helperText={(error?.message as string) || field.helperText}
+                fullWidth
+                disabled={field.disabled}
+                value={value || []}
+                options={{
+                  mode: 'range',
+                  minDate,
+                  plugins: [
+                    monthSelectPlugin({
+                      shorthand: true, // Display short month names
+                      dateFormat: 'M Y', // Display format
+                      altFormat: 'M Y',
+                    })
+                  ]
+                }}
+                onChange={(dates: Date[]) => {
+                  onChange(dates)
+                  
+                  // Auto-map to periodFrom and periodTo if it's the period field
+                  if (field.name === 'period') {
+                    if (dates.length === 2) {
+                      setValue('periodFrom', dates[0], { shouldValidate: true })
+                      setValue('periodTo', dates[1], { shouldValidate: true })
+                    } else if (dates.length === 0) {
+                      setValue('periodFrom', null)
+                      setValue('periodTo', null)
+                    }
+                  }
+                }}
+              />
+            )
+          }
 
           case 'switch':
             return (
@@ -311,7 +360,6 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
                 onChange={(e) => onChange(e.target.value === '' ? '' : Number(e.target.value))}
                 onBlur={onBlur}
                 InputProps={{
-                  startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
                   readOnly: field.readonly,
                 }}
               />

@@ -68,6 +68,8 @@ return {
           
           switch (field.type) {
             case 'number':
+            case 'currency':
+            case 'percentage':
               fieldSchema = z.number()
               break
             case 'checkbox':
@@ -93,7 +95,7 @@ return {
 
           if (field.required && !field.disabled) {
             const requiredMsg = `${field.label} is required`
-            if (field.type === 'text' || field.type === 'textarea' || field.type === 'email' || field.type === 'phone' || field.type === 'currency' || field.type === 'percentage') {
+            if (field.type === 'text' || field.type === 'textarea' || field.type === 'email' || field.type === 'phone') {
               fieldSchema = z.string().min(1, requiredMsg)
             } else if (field.type === 'multi-select' || field.type === 'checkbox-group' || field.type === 'field-array') {
               fieldSchema = z.array(z.any()).min(1, requiredMsg)
@@ -101,7 +103,7 @@ return {
               fieldSchema = fieldSchema.nullable().refine((val) => val !== null && val !== undefined && val !== '', requiredMsg)
             }
           } else {
-            if (field.type === 'autocomplete' || field.type === 'select' || field.type === 'date' || field.type === 'file' || field.type === 'number') {
+            if (field.type === 'autocomplete' || field.type === 'select' || field.type === 'date' || field.type === 'file' || field.type === 'number' || field.type === 'currency' || field.type === 'percentage') {
               fieldSchema = fieldSchema.nullable().optional()
             } else {
               fieldSchema = fieldSchema.optional()
@@ -127,7 +129,7 @@ return {
           defaults[field.name] = field.defaultValue
         } else if (field.type === 'field-array' || field.type === 'multi-select' || field.type === 'checkbox-group') {
           defaults[field.name] = []
-        } else if (field.type === 'number') {
+        } else if (field.type === 'number' || field.type === 'currency' || field.type === 'percentage') {
           defaults[field.name] = null
         } else if (field.type === 'checkbox' || field.type === 'switch') {
           defaults[field.name] = false

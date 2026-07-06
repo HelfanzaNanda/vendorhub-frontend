@@ -8,7 +8,6 @@ export type FieldType =
   | 'phone'
   | 'select'
   | 'multi-select'
-  | 'date'
   | 'checkbox'
   | 'checkbox-group'
   | 'radio'
@@ -19,6 +18,8 @@ export type FieldType =
   | 'field-array'
   | 'autocomplete'
   | 'display'
+  | 'date'
+  | 'date-range'
 
 export interface FieldOption {
   label: string

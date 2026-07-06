@@ -17,30 +17,29 @@ export const financialModalSchema: FormSchema = {
           type: 'select',
           required: true,
           grid: { xs: 12, md: 6 },
-          lookupEndpoint: 'report-types',
+          options: [
+            { value: 'INTERIM', label: 'INTERIM' },
+            { value: 'ANNUAL', label: 'ANNUAL' }
+          ]
         },
         {
           id: 'year',
           name: 'year',
           label: 'Year',
-          type: 'number',
+          type: 'select',
           required: true,
-          validation: z.number().min(1900, 'Invalid year'),
-          grid: { xs: 12, md: 6 }
+          grid: { xs: 12, md: 6 },
+          lookupEndpoint: 'years',
+          visibility: (values) => values?.reportType === 'ANNUAL'
         },
         {
-          id: 'periodFrom',
-          name: 'periodFrom',
-          label: 'Period From',
-          type: 'date',
-          grid: { xs: 12, md: 6 }
-        },
-        {
-          id: 'periodTo',
-          name: 'periodTo',
-          label: 'Period To',
-          type: 'date',
-          grid: { xs: 12, md: 6 }
+          id: 'period',
+          name: 'period',
+          label: 'Period (Max 4 Years Backward)',
+          type: 'date-range',
+          required: true,
+          grid: { xs: 12, md: 6 },
+          visibility: (values) => values?.reportType === 'INTERIM'
         },
         {
           id: 'auditStatus',
@@ -48,7 +47,10 @@ export const financialModalSchema: FormSchema = {
           label: 'Audit Status',
           type: 'select',
           grid: { xs: 12, md: 6 },
-          lookupEndpoint: 'audit-statuses',
+          options: [
+            { value: 'UNAUDITED', label: 'UNAUDITED' },
+            { value: 'AUDITED', label: 'AUDITED' }
+          ]
         },
         {
           id: 'currencyId',
