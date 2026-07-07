@@ -44,6 +44,7 @@ export default function VendorCrudTable({ config }: VendorCrudTableProps) {
       search,
       sortBy: sorting[0]?.id || undefined,
       sortDir: sorting[0]?.id ? (sorting[0].desc ? 'desc' : 'asc') : undefined,
+      ...config.baseFilters,
     }
     
     // Auto-filter by personnel type if using personnel endpoint
@@ -52,7 +53,8 @@ export default function VendorCrudTable({ config }: VendorCrudTableProps) {
     }
     
     return base
-  }, [page, pageSize, search, sorting, config.apiEndpoint, config.id])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, pageSize, search, sorting, config.apiEndpoint, config.id, config.baseFilters])
 
   // CRUD Hook using the datatable specific apiEndpoint
   const {
@@ -75,6 +77,7 @@ export default function VendorCrudTable({ config }: VendorCrudTableProps) {
     try {
       setIsDetailLoading(true)
       const res = await getDetail(row.id)
+
       if (res.data) {
         setSelectedItem({ ...res.data, source: row.source }) // Preserve 'source' property required by CRUD mutations
         setModalMode(mode)
@@ -125,7 +128,7 @@ export default function VendorCrudTable({ config }: VendorCrudTableProps) {
         header: ({ column }: any) => (
           <DataTableColumnHeader column={column} title={col.header} />
         ),
-        cell: ({ row, getValue }: any) => {
+        cell: ({ getValue }: any) => {
           const val = getValue()
 
           if (val === undefined || val === null) return '-'
@@ -170,11 +173,12 @@ export default function VendorCrudTable({ config }: VendorCrudTableProps) {
     })
 
     return list
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config])
 
   // Mutation Handlers
   const handleFormSubmit = (data: any) => {
-    const payload = { ...data }
+    const payload = { ...config.baseFilters, ...data }
     
     // Automatically attach personnelTypeCode if this is personnel table
     if (config.apiEndpoint.startsWith('/vendor-personnel-temp')) {

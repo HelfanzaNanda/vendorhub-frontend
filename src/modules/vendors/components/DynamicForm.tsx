@@ -78,11 +78,13 @@ return {
               break
             case 'autocomplete':
             case 'select':
+            case 'tree-select':
               fieldSchema = z.union([z.number(), z.string()])
               break
             case 'multi-select':
             case 'checkbox-group':
             case 'field-array':
+            case 'custom-customer-references':
               fieldSchema = z.array(z.any())
               break
             case 'date':
@@ -103,7 +105,7 @@ return {
               fieldSchema = fieldSchema.nullable().refine((val) => val !== null && val !== undefined && val !== '', requiredMsg)
             }
           } else {
-            if (field.type === 'autocomplete' || field.type === 'select' || field.type === 'date' || field.type === 'file' || field.type === 'number' || field.type === 'currency' || field.type === 'percentage') {
+            if (field.type === 'autocomplete' || field.type === 'select' || field.type === 'tree-select' || field.type === 'date' || field.type === 'file' || field.type === 'number' || field.type === 'currency' || field.type === 'percentage') {
               fieldSchema = fieldSchema.nullable().optional()
             } else {
               fieldSchema = fieldSchema.optional()
@@ -127,13 +129,13 @@ return {
       section.fields.forEach((field) => {
         if (field.defaultValue !== undefined) {
           defaults[field.name] = field.defaultValue
-        } else if (field.type === 'field-array' || field.type === 'multi-select' || field.type === 'checkbox-group') {
+        } else if (field.type === 'field-array' || field.type === 'multi-select' || field.type === 'checkbox-group' || field.type === 'custom-customer-references') {
           defaults[field.name] = []
         } else if (field.type === 'number' || field.type === 'currency' || field.type === 'percentage') {
           defaults[field.name] = null
         } else if (field.type === 'checkbox' || field.type === 'switch') {
           defaults[field.name] = false
-        } else if (field.type === 'date' || field.type === 'file' || field.type === 'select' || field.type === 'autocomplete') {
+        } else if (field.type === 'date' || field.type === 'file' || field.type === 'select' || field.type === 'autocomplete' || field.type === 'tree-select') {
           defaults[field.name] = null
         } else {
           defaults[field.name] = ''

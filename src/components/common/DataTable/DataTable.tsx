@@ -67,6 +67,9 @@ interface DataTableProps<T> {
   onExportCSV?: (allRecords: boolean) => void
   onExportExcel?: (allRecords: boolean) => void
   exportLoading?: boolean
+
+  getRowId?: (row: T) => string
+  enableRowSelection?: boolean
 }
 
 export function DataTable<T>({
@@ -96,6 +99,8 @@ export function DataTable<T>({
   onExportCSV,
   onExportExcel,
   exportLoading = false,
+  getRowId,
+  enableRowSelection,
 }: DataTableProps<T>) {
   const [, startTransition] = useTransition()
 
@@ -147,10 +152,17 @@ export function DataTable<T>({
     data,
     columns,
     state: {
-      sorting,
-      rowSelection,
+      ...(sorting !== undefined && { sorting }),
+      ...(rowSelection !== undefined && { rowSelection }),
     },
-    getRowId: (row: any) => String(row.id || row.uuid || row._id || Math.random()),
+    enableRowSelection: enableRowSelection ?? !!onRowSelectionChange,
+    getRowId: getRowId || ((row: any) => {
+      const id = row.id || row.uuid || row._id
+      if (!id) {
+        console.warn('DataTable: Row is missing a unique id. Please provide a stable unique id for each row or use the getRowId prop.')
+      }
+      return String(id)
+    }),
     onSortingChange: (updater) => {
       startTransition(() => {
         onSortingChange?.(updater)

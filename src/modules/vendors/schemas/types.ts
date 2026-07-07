@@ -20,6 +20,8 @@ export type FieldType =
   | 'display'
   | 'date'
   | 'date-range'
+  | 'custom-customer-references'
+  | 'tree-select'
 
 export interface FieldOption {
   label: string
@@ -113,6 +115,9 @@ export interface DatatableConfig {
 
   /** Whether this table supports Delete action */
   canDelete?: boolean
+
+  /** Optional base filters to pass to the GET endpoint (e.g., competencyId: 5) and POST payload */
+  baseFilters?: Record<string, any>
 }
 
 export interface VendorTabSchema {
@@ -129,6 +134,9 @@ export interface VendorTabSchema {
 
   /** Only required if type === 'datatable' */
   datatableConfigs?: DatatableConfig[]
+
+  /** Optional base filters */
+  baseFilters?: Record<string, any>
 }
 
 export interface VendorProfileSchema {

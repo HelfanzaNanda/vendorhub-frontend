@@ -1,10 +1,10 @@
 'use client'
 
 import { useEffect, useRef, useMemo } from 'react'
+
 import { Controller, useFormContext, useFieldArray } from 'react-hook-form'
 import { 
   TextField, 
-  MenuItem, 
   FormControlLabel, 
   Switch, 
   Checkbox,
@@ -18,11 +18,14 @@ import {
   CircularProgress
 } from '@mui/material'
 
+import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect'
+
 import type { FieldSchema } from '../schemas/types'
 import { useLookup } from '../hooks/useLookup'
 import FileUpload from './FileUpload'
+import CustomerReferenceField from './fields/CustomerReferenceField'
+import TreeSelectField from './fields/TreeSelectField'
 import { AppReactDatepicker } from '@/components/common/AppReactDatepicker'
-import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect'
 import 'flatpickr/dist/plugins/monthSelect/style.css'
 
 export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
@@ -38,6 +41,7 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
       // Clear the value when dependency changes
       setValue(field.name, null, { shouldValidate: true })
     }
+
     previousDependencyValue.current = dependencyValue
   }, [dependencyValue, field.name, field.dependsOn, setValue])
 
@@ -45,7 +49,9 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
     if (field.dependsOn && field.dependencyParam && dependencyValue !== undefined && dependencyValue !== null && dependencyValue !== '') {
       return { [field.dependencyParam]: dependencyValue }
     }
-    return undefined
+
+    
+return undefined
   }, [field.dependsOn, field.dependencyParam, dependencyValue])
 
   // Fetch dynamic lookup options
@@ -56,6 +62,14 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
 
   if (field.type === 'field-array') {
     return <FieldArrayRenderer field={field} />
+  }
+
+  if (field.type === 'custom-customer-references') {
+    return <CustomerReferenceField field={field} />
+  }
+
+  if (field.type === 'tree-select') {
+    return <TreeSelectField field={field} />
   }
 
   return (
@@ -115,30 +129,38 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
             )
 
           case 'select':
+
           case 'autocomplete': {
             const selectedOption = options.find(opt => String(opt.value) === String(value)) || null
-            return (
+
+            
+return (
               <Autocomplete
                 id={field.id}
                 options={options}
                 getOptionLabel={(option) => option.label || String(option.value)}
                 isOptionEqualToValue={(option, val) => String(option.value) === String(val.value)}
                 value={selectedOption}
-                onChange={(_, newValue) => {
+                onChange={(event, newValue) => {
                   onChange(newValue ? newValue.value : null)
+
                   if (field.populateFields && newValue?.data) {
                     Object.entries(field.populateFields).forEach(([sourceKey, targetRelativePath]) => {
                       const lastDot = field.name.lastIndexOf('.')
                       const basePath = lastDot !== -1 ? field.name.substring(0, lastDot) : ''
                       const targetPath = basePath ? `${basePath}.${targetRelativePath}` : targetRelativePath
+
                       setValue(targetPath, newValue.data[sourceKey], { shouldValidate: true })
                     })
                   }
                 }}
                 disabled={Boolean(field.disabled || isLoadingLookups || (field.dependsOn && !dependencyValue))}
                 renderInput={(params) => {
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   const { inputRef: _, ...restBaseProps } = baseProps
-                  return (
+
+                  
+return (
                     <TextField
                       {...params}
                       {...restBaseProps}
@@ -173,13 +195,16 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
                 getOptionLabel={(option) => option.label || String(option.value)}
                 isOptionEqualToValue={(option, val) => String(option.value) === String(val.value)}
                 value={selectedOptions}
-                onChange={(_, newValue) => {
+                onChange={(event, newValue) => {
                   onChange(newValue.map(v => v.value))
                 }}
                 disabled={Boolean(field.disabled || isLoadingLookups || (field.dependsOn && !dependencyValue))}
                 renderInput={(params) => {
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   const { inputRef: _, ...restBaseProps } = baseProps
-                  return (
+
+                  
+return (
                     <TextField
                       {...params}
                       {...restBaseProps}
@@ -418,6 +443,7 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
 
 function FieldArrayRenderer({ field }: { field: FieldSchema }) {
   const { control, formState: { errors } } = useFormContext()
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: field.name,
@@ -440,8 +466,10 @@ function FieldArrayRenderer({ field }: { field: FieldSchema }) {
             onClick={() => {
               // Append an empty object with keys based on arrayFields
               const emptyItem: Record<string, any> = {}
+
               field.arrayFields?.forEach((f) => {
                 emptyItem[f.name] = f.defaultValue !== undefined ? f.defaultValue : ''
+
                 if (f.type === 'checkbox' || f.type === 'switch' || f.type === 'radio') {
                   emptyItem[f.name] = f.defaultValue !== undefined ? f.defaultValue : false
                 }

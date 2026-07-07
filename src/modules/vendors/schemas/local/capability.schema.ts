@@ -2,6 +2,25 @@ import { z } from 'zod'
 
 import type { FormSchema } from '../types'
 
+export const customerReferenceModalSchema: FormSchema = {
+  id: 'customer_reference_modal',
+  title: 'Customer Reference',
+  sections: [
+    {
+      id: 'details',
+      title: 'Details',
+      fields: [
+        { id: 'name', name: 'name', label: 'Customer Name', type: 'text', required: true, grid: { xs: 12, md: 6 } },
+        { id: 'year', name: 'year', label: 'Year', type: 'select', lookupEndpoint: 'years', required: true, grid: { xs: 12, md: 6 } },
+        { id: 'projectValue', name: 'projectValue', label: 'Project Value', type: 'currency', required: true, grid: { xs: 12, md: 6 } },
+        { id: 'fileId', name: 'fileId', label: 'Document', type: 'file', required: true, submitAsObject: true, grid: { xs: 12, md: 6 } },
+        { id: 'description', name: 'description', label: 'Description', type: 'textarea', grid: { xs: 12 } },
+        { id: 'areaIds', name: 'areaIds', label: 'Areas', type: 'checkbox-group', lookupEndpoint: 'areas', required: true, grid: { xs: 12 } },
+      ]
+    }
+  ]
+}
+
 export const competencyModalSchema: FormSchema = {
   id: 'competency_modal',
   title: 'Company Competency',
@@ -11,34 +30,21 @@ export const competencyModalSchema: FormSchema = {
       title: 'Competency Details',
       fields: [
         {
-          id: 'competencyName',
-          name: 'competencyName',
-          label: 'Competency Area',
-          type: 'text',
+          id: 'subCategoryItemId',
+          name: 'subCategoryItemId',
+          label: 'Sub Category Item',
+          type: 'tree-select',
+          lookupEndpoint: 'competency-tree',
           required: true,
-          grid: { xs: 12, md: 6 }
-        },
-        {
-          id: 'certificateId',
-          name: 'certificateId',
-          label: 'Certificate Number',
-          type: 'text',
-          grid: { xs: 12, md: 6 }
-        },
-        {
-          id: 'description',
-          name: 'description',
-          label: 'Description',
-          type: 'textarea',
           grid: { xs: 12 }
         },
         {
-          id: 'fileId',
-          name: 'fileId',
-          label: 'Competency Document',
-          type: 'file',
+          id: 'customerReferences',
+          name: 'customerReferences',
+          label: 'Customer References',
+          type: 'custom-customer-references',
           grid: { xs: 12 }
-        },
+        }
       ]
     }
   ]
@@ -83,7 +89,9 @@ export const capabilityFormSchema: FormSchema = {
           .min(1, 'At least one Industry Classification is required')
           .refine((items) => {
             const ids = items.map(item => item.industryClassificationId).filter(Boolean);
-            return new Set(ids).size === ids.length;
+
+            
+return new Set(ids).size === ids.length;
           }, { message: 'Duplicate Industry Classifications are not allowed' }),
           arrayFields: [
             {
