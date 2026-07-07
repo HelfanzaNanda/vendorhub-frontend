@@ -18,6 +18,7 @@ import {
   useUpdateVendorBusinessLicense
 } from '../hooks/useSingletonResource'
 import type { VendorProfileSchema, VendorTabSchema } from '../schemas/types'
+import { useVendorStore } from '../store/vendorStore'
 
 // Wrapper for Vendor Company (Singleton)
 function VendorCompanyWrapper({ activeTab }: { activeTab: VendorTabSchema }) {
@@ -31,7 +32,7 @@ function VendorCompanyWrapper({ activeTab }: { activeTab: VendorTabSchema }) {
       key={`${activeTab.id}-form`}
       schema={activeTab.schema!}
       mode="update"
-      defaultValues={data || {}}
+      defaultValues={data}
       onSubmit={(data) => updateMutation.mutate(data)}
       isLoading={updateMutation.isPending}
       showDraftButtons={false}
@@ -44,26 +45,81 @@ function VendorCapabilityWrapper({ activeTab }: { activeTab: VendorTabSchema }) 
   const { data, isLoading } = useVendorBusinessLicense()
   const updateMutation = useUpdateVendorBusinessLicense()
 
+  const capabilityDraft = useVendorStore(state => state.formDrafts['vendor_capability_form'])
+
   if (isLoading) return null
 
+  const currentFormValues = capabilityDraft || data || {}
+  const industryClassifications = currentFormValues.industryClassifications || []
+  const hasIndustryClassification = industryClassifications.length > 0
+
   return (
-    <>
-      <DynamicForm 
-        key={`${activeTab.id}-form`}
-        schema={activeTab.schema!}
-        mode="update"
-        defaultValues={data || {}}
-        onSubmit={(data) => updateMutation.mutate(data)}
-        isLoading={updateMutation.isPending}
-        showDraftButtons={false}
-      />
-      {activeTab.datatableConfigs && (
-        <DataTableSection
-          key={`${activeTab.id}-datatable`}
-          configs={activeTab.datatableConfigs}
+    <Box className="flex flex-col gap-6 w-full">
+      <Card className="flex flex-col">
+        <DynamicForm 
+          key={`${activeTab.id}-form`}
+          schema={activeTab.schema!}
+          mode="update"
+          defaultValues={data}
+          onSubmit={(formData) => {
+            const payload = { ...formData }
+
+            if (payload.nibFileId !== undefined) {
+              payload.fileId = payload.nibFileId
+              delete payload.nibFileId
+            }
+
+            if (payload.industryClassifications) {
+              payload.industryClassificationIds = payload.industryClassifications
+                .map((ic: any) => Number(ic.industryClassificationId))
+                .filter((id: number) => !isNaN(id))
+              delete payload.industryClassifications
+            }
+
+            updateMutation.mutate(payload)
+          }}
+          isLoading={updateMutation.isPending}
+          showDraftButtons={false}
         />
+      </Card>
+      {activeTab.datatableConfigs && (
+        <Card className="flex flex-col">
+          <DataTableSection
+            key={`${activeTab.id}-datatable`}
+            configs={activeTab.datatableConfigs.map(config => {
+              if (config.id === 'COMPETENCY') {
+                const updatedConfig = { ...config, disableAdd: !hasIndustryClassification }
+                
+                // Inject into the field schema directly to avoid polluting payload
+                if (updatedConfig.modalFormSchema) {
+                  updatedConfig.modalFormSchema = {
+                    ...updatedConfig.modalFormSchema,
+                    sections: updatedConfig.modalFormSchema.sections.map(section => ({
+                      ...section,
+                      fields: section.fields.map(field => {
+                        if (field.id === 'subCategoryItemId') {
+                          return { 
+                            ...field, 
+                            _industryClassificationIds: industryClassifications
+                              .map((ic: any) => ic.industryClassificationId)
+                              .filter(Boolean)
+                              .join(',') 
+                          }
+                        }
+                        return field
+                      })
+                    }))
+                  }
+                }
+
+                return updatedConfig
+              }
+              return config
+            })}
+          />
+        </Card>
       )}
-    </>
+    </Box>
   )
 }
 
@@ -147,13 +203,13 @@ export default function VendorProfile({ schemaConfig }: VendorProfileProps) {
         </Tabs>
       </Card>
 
-      <Card className="min-h-[500px] flex flex-col">
+      <Box className="min-h-[500px] flex flex-col gap-6">
         {activeTab.type === 'terms_conditions' && (
-          <VendorTermsTab />
+          <Card className="flex flex-col"><VendorTermsTab /></Card>
         )}
 
         {activeTab.id === 'vendor_company' && (
-          <VendorCompanyWrapper activeTab={activeTab} />
+          <Card className="flex flex-col"><VendorCompanyWrapper activeTab={activeTab} /></Card>
         )}
 
         {activeTab.id === 'vendor_capability' && (
@@ -163,27 +219,31 @@ export default function VendorProfile({ schemaConfig }: VendorProfileProps) {
         {activeTab.id !== 'vendor_company' && activeTab.id !== 'vendor_capability' && activeTab.type !== 'documents' && activeTab.type !== 'terms_conditions' && (
           <>
             {(activeTab.type === 'form' || activeTab.type === 'mixed') && activeTab.schema && (
-              <DynamicForm 
-                key={`${activeTab.id}-form`}
-                schema={activeTab.schema}
-                mode="update"
-                tabEndpoint={activeTab.tabEndpoint}
-              />
+              <Card className="flex flex-col">
+                <DynamicForm 
+                  key={`${activeTab.id}-form`}
+                  schema={activeTab.schema}
+                  mode="update"
+                  tabEndpoint={activeTab.tabEndpoint}
+                />
+              </Card>
             )}
 
             {(activeTab.type === 'datatable' || activeTab.type === 'mixed') && activeTab.datatableConfigs && (
-              <DataTableSection
-                key={`${activeTab.id}-datatable`}
-                configs={activeTab.datatableConfigs}
-              />
+              <Card className="flex flex-col">
+                <DataTableSection
+                  key={`${activeTab.id}-datatable`}
+                  configs={activeTab.datatableConfigs}
+                />
+              </Card>
             )}
           </>
         )}
 
         {activeTab.type === 'documents' && (
-          <VendorDocumentsTab key={activeTab.id} />
+          <Card className="flex flex-col"><VendorDocumentsTab key={activeTab.id} /></Card>
         )}
-      </Card>
+      </Box>
     </Box>
   )
 }

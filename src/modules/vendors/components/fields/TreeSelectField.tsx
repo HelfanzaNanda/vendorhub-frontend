@@ -20,7 +20,6 @@ import {
 
 import type { FieldSchema } from '../../schemas/types'
 import { api } from '@/services/api'
-import { useVendorStore } from '../../store/vendorStore'
 
 interface TreeNode {
   id: number
@@ -32,17 +31,8 @@ interface TreeNode {
 
 export default function TreeSelectField({ field }: { field: FieldSchema }) {
   const { control, formState: { errors } } = useFormContext()
-  const { formDrafts } = useVendorStore()
   const error = errors[field.name]
-
-  const industryClassificationIds = useMemo(() => {
-    const industryClassifications = formDrafts['vendor_capability_form']?.industryClassifications || []
-
-    
-return industryClassifications
-      .map((item: any) => item.industryClassificationId)
-      .filter(Boolean)
-  }, [formDrafts])
+  const industryClassificationIdsStr = (field as any)._industryClassificationIds || ''
 
   const [treeData, setTreeData] = useState<TreeNode[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -51,22 +41,46 @@ return industryClassifications
     let isMounted = true
 
     const fetchTree = async () => {
+      if (!industryClassificationIdsStr) {
+        setTreeData([])
+        return
+      }
+
       setIsLoading(true)
 
       try {
-        let url = `/lookups/${field.lookupEndpoint}`
-
-        if (industryClassificationIds.length > 0) {
-          url += `?industryClassificationIds=${industryClassificationIds.join(',')}`
-        }
+        const url = `/lookups/${field.lookupEndpoint}?industryClassificationIds=${industryClassificationIdsStr}`
 
         const response = await api.get<any>(url)
 
         if (isMounted) {
           // Handle both { data: [...] } and bare array responses
-          const items = Array.isArray(response.data)
+          let items = Array.isArray(response.data)
             ? response.data
             : response?.data?.data || []
+            
+          const existingIds = (field as any)._existingSubCategoryItemIds as number[] | undefined
+
+          if (existingIds && existingIds.length > 0) {
+            items = items.map((category: any) => {
+              if (!category.children) return category
+              
+              const filteredSubCategories = category.children.map((subCategory: any) => {
+                if (!subCategory.children) return subCategory
+                
+                const filteredItems = subCategory.children.filter((item: any) => {
+                  if (item.selectable && existingIds.includes(item.id)) {
+                    return false
+                  }
+                  return true
+                })
+                
+                return { ...subCategory, children: filteredItems }
+              }).filter((subCategory: any) => subCategory.children && subCategory.children.length > 0)
+              
+              return { ...category, children: filteredSubCategories }
+            }).filter((category: any) => category.children && category.children.length > 0)
+          }
 
           setTreeData(items)
         }
@@ -84,7 +98,7 @@ return industryClassifications
     }
 
     return () => { isMounted = false }
-  }, [field.lookupEndpoint, industryClassificationIds])
+  }, [field.lookupEndpoint, industryClassificationIdsStr])
 
   // Helper to find node by id
   const findNode = (nodes: TreeNode[], id: number): TreeNode | null => {

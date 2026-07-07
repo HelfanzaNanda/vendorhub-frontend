@@ -92,6 +92,42 @@ export default function VendorCrudTable({ config }: VendorCrudTableProps) {
     }
   }
 
+  // Dynamically inject existing selected items into the schema to prevent duplicates
+  const dynamicSchema = useMemo(() => {
+    if (!config.modalFormSchema) return undefined
+    
+    // Check if this is the competency modal by looking for subCategoryItemId field
+    const isCompetencyModal = config.modalFormSchema.sections.some(s => 
+      s.fields.some(f => f.id === 'subCategoryItemId')
+    )
+
+    if (isCompetencyModal && rows && rows.length > 0) {
+      // Collect all selected subCategoryItemIds, ignoring the currently edited item
+      const selectedSubCategoryItemIds = rows
+        .filter((r: any) => selectedItem ? r.id !== selectedItem.id : true)
+        .map((r: any) => r.subCategoryItemId)
+        .filter(Boolean)
+      
+      return {
+        ...config.modalFormSchema,
+        sections: config.modalFormSchema.sections.map(section => ({
+          ...section,
+          fields: section.fields.map(field => {
+            if (field.id === 'subCategoryItemId') {
+              return { 
+                ...field, 
+                _existingSubCategoryItemIds: selectedSubCategoryItemIds 
+              }
+            }
+            return field
+          })
+        }))
+      }
+    }
+
+    return config.modalFormSchema
+  }, [config.modalFormSchema, rows, selectedItem])
+
   // Build columns definition dynamically
   const columns = useMemo(() => {
     const list: any[] = []
@@ -265,6 +301,7 @@ export default function VendorCrudTable({ config }: VendorCrudTableProps) {
                 setModalMode('create')
                 setModalOpen(true)
               }}
+              disabled={config.disableAdd}
             >
               Add New
             </Button>
@@ -299,7 +336,7 @@ export default function VendorCrudTable({ config }: VendorCrudTableProps) {
       </Card>
 
       {/* Modal Dialog for Create/Edit/View */}
-      {config.modalFormSchema && (
+      {dynamicSchema && (
         <Dialog
           open={modalOpen}
           onClose={() => !isCreating && !isUpdating && setModalOpen(false)}
@@ -317,18 +354,21 @@ export default function VendorCrudTable({ config }: VendorCrudTableProps) {
           </DialogTitle>
           <DialogContent className="p-0">
             <DynamicForm
-              schema={config.modalFormSchema}
+              key={modalOpen ? `form-open-${selectedItem?.id || 'new'}` : 'form-closed'}
+              schema={dynamicSchema}
               mode={modalMode === 'view' ? 'view' : modalMode === 'create' ? 'create' : 'update'}
               defaultValues={
                 selectedItem
                   ? { 
+                      ...config.baseFilters,
                       ...selectedItem,
                       bankId: selectedItem.bankBranch?.bankId || selectedItem.bankBranch?.bank?.id || selectedItem.bankId,
                       countryId: selectedItem.bankBranch?.bank?.countryId || selectedItem.countryId,
                     }
-                  : config.apiEndpoint.startsWith('/vendor-personnel-temp')
-                    ? { personnelTypeCode: config.id }
-                    : undefined
+                  : {
+                      ...config.baseFilters,
+                      ...(config.apiEndpoint.startsWith('/vendor-personnel-temp') ? { personnelTypeCode: config.id } : {})
+                    }
               }
               onSubmit={handleFormSubmit}
               onCancel={() => setModalOpen(false)}

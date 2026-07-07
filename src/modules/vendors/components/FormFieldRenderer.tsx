@@ -25,6 +25,7 @@ import { useLookup } from '../hooks/useLookup'
 import FileUpload from './FileUpload'
 import CustomerReferenceField from './fields/CustomerReferenceField'
 import TreeSelectField from './fields/TreeSelectField'
+import IndustryClassificationField from './fields/IndustryClassificationField'
 import { AppReactDatepicker } from '@/components/common/AppReactDatepicker'
 import 'flatpickr/dist/plugins/monthSelect/style.css'
 
@@ -70,6 +71,10 @@ return undefined
 
   if (field.type === 'tree-select') {
     return <TreeSelectField field={field} />
+  }
+
+  if (field.type === 'custom-industry-classifications') {
+    return <IndustryClassificationField field={field} />
   }
 
   return (

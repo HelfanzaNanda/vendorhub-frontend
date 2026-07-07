@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import React, { useMemo, useEffect } from 'react'
 
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -33,7 +33,7 @@ export default function DynamicForm({
   onCancel,
   tabEndpoint,
 }: DynamicFormProps) {
-  const { formDrafts, saveDraft } = useVendorStore()
+  const saveDraft = useVendorStore(state => state.saveDraft)
   
   // Call useCrudTable if tabEndpoint is specified for saving the form tab
   const { saveMutation } = useCrudTable(tabEndpoint || '')
@@ -85,6 +85,7 @@ return {
             case 'checkbox-group':
             case 'field-array':
             case 'custom-customer-references':
+            case 'custom-industry-classifications':
               fieldSchema = z.array(z.any())
               break
             case 'date':
@@ -129,7 +130,7 @@ return {
       section.fields.forEach((field) => {
         if (field.defaultValue !== undefined) {
           defaults[field.name] = field.defaultValue
-        } else if (field.type === 'field-array' || field.type === 'multi-select' || field.type === 'checkbox-group' || field.type === 'custom-customer-references') {
+        } else if (field.type === 'field-array' || field.type === 'multi-select' || field.type === 'checkbox-group' || field.type === 'custom-customer-references' || field.type === 'custom-industry-classifications') {
           defaults[field.name] = []
         } else if (field.type === 'number' || field.type === 'currency' || field.type === 'percentage') {
           defaults[field.name] = null
@@ -148,24 +149,46 @@ return {
       Object.assign(defaults, propDefaultValues)
     }
 
-    // Finally override with drafts
-    const savedDraft = formDrafts[processedSchema.id]
+    // Finally override with drafts (only if drafts are enabled for this form)
+    if (showDraftButtons !== false) {
+      const savedDraft = useVendorStore.getState().formDrafts[processedSchema.id]
 
-    if (savedDraft) {
-      Object.assign(defaults, savedDraft)
+      if (savedDraft) {
+        Object.assign(defaults, savedDraft)
+      }
     }
 
     return defaults
-  }, [processedSchema, formDrafts, propDefaultValues])
+  }, [processedSchema, propDefaultValues, showDraftButtons])
 
   const methods = useForm({
     resolver: zodResolver(zodSchema),
-    values: defaultValues, // Use values instead of defaultValues to respond to changes in active item
+    defaultValues,
     mode: 'onBlur',
   })
 
-  const { handleSubmit, watch, formState: { isSubmitting } } = methods
+  const { handleSubmit, watch, reset, formState: { isSubmitting } } = methods
   const formValues = watch()
+
+  // Reset form when the target entity changes (e.g. switching between Edit items),
+  // but NOT on every render — only when the item's identity actually changes.
+  const itemKey = propDefaultValues?.id ?? '__new__'
+  const prevItemKeyRef = React.useRef(itemKey)
+  useEffect(() => {
+    if (prevItemKeyRef.current !== itemKey) {
+      prevItemKeyRef.current = itemKey
+      reset(defaultValues)
+    }
+  }, [itemKey, defaultValues, reset])
+
+  useEffect(() => {
+    if (showDraftButtons === false) return
+
+    const subscription = watch((value) => {
+      saveDraft(schema.id, value)
+    })
+    return () => subscription.unsubscribe()
+  }, [watch, schema.id, saveDraft, showDraftButtons])
 
   const extractFileIds = (data: any) => {
     if (!data || typeof data !== 'object') return data;
@@ -204,7 +227,11 @@ return {
   }
 
   const handleFormSubmit = async (rawData: any) => {
-    let data = stripFileObjects(rawData)
+    // Merge formValues with rawData to ensure custom fields (like customerReferences) 
+    // that may not be strictly registered as inputs are still included in the payload.
+    const completeData = { ...formValues, ...rawData }
+    
+    let data = stripFileObjects(completeData)
     data = extractFileIds(data)
 
     // Process schema-specific payload rules
@@ -239,7 +266,7 @@ return {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col h-full">
+      <form onSubmit={(e) => { e.stopPropagation(); handleSubmit(handleFormSubmit)(e) }} className="flex flex-col h-full">
         <Box className="p-6 pb-2">
           <Typography variant="h5" fontWeight="bold" gutterBottom>
             {schema.title}
@@ -253,7 +280,7 @@ return {
         
         <Divider />
 
-        <CardContent className="flex-grow flex flex-col gap-8 overflow-y-auto max-h-[60vh]">
+        <CardContent className="flex-grow flex flex-col gap-8 overflow-visible">
           {processedSchema.sections.map((section) => (
             <FormSection 
               key={section.id} 

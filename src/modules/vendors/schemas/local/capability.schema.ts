@@ -77,9 +77,8 @@ export const capabilityFormSchema: FormSchema = {
           id: 'industryClassifications',
           name: 'industryClassifications',
           label: 'Industry Classifications',
-          type: 'field-array',
+          type: 'custom-industry-classifications',
           required: true,
-          arrayItemLabel: 'Industry Classification',
           validation: z.array(z.object({
             industryClassificationId: z.union([z.number(), z.string()]).nullable().refine((val) => val !== null && val !== undefined && val !== '', 'Industry Classification is required'),
             number: z.string().optional(),
@@ -89,47 +88,8 @@ export const capabilityFormSchema: FormSchema = {
           .min(1, 'At least one Industry Classification is required')
           .refine((items) => {
             const ids = items.map(item => item.industryClassificationId).filter(Boolean);
-
-            
-return new Set(ids).size === ids.length;
-          }, { message: 'Duplicate Industry Classifications are not allowed' }),
-          arrayFields: [
-            {
-              id: 'industryClassificationId',
-              name: 'industryClassificationId',
-              label: 'Industry Classification Lookup',
-              type: 'autocomplete',
-              lookupEndpoint: 'industry-classifications',
-              populateFields: {
-                label: 'number',
-                name: 'title',
-                description: 'description'
-              },
-              required: true,
-              grid: { xs: 12 }
-            },
-            {
-              id: 'number',
-              name: 'number',
-              label: 'Number',
-              type: 'display',
-              grid: { xs: 12, md: 4 }
-            },
-            {
-              id: 'title',
-              name: 'title',
-              label: 'Title',
-              type: 'display',
-              grid: { xs: 12, md: 8 }
-            },
-            {
-              id: 'description',
-              name: 'description',
-              label: 'Description',
-              type: 'display',
-              grid: { xs: 12 }
-            }
-          ]
+            return new Set(ids).size === ids.length;
+          }, { message: 'Duplicate Industry Classifications are not allowed' })
         }
       ]
     }

@@ -22,6 +22,7 @@ export type FieldType =
   | 'date-range'
   | 'custom-customer-references'
   | 'tree-select'
+  | 'custom-industry-classifications'
 
 export interface FieldOption {
   label: string
@@ -118,6 +119,9 @@ export interface DatatableConfig {
 
   /** Optional base filters to pass to the GET endpoint (e.g., competencyId: 5) and POST payload */
   baseFilters?: Record<string, any>
+
+  /** Whether the Add New button should be disabled */
+  disableAdd?: boolean
 }
 
 export interface VendorTabSchema {

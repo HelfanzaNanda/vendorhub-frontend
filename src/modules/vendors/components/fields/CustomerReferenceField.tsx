@@ -5,54 +5,24 @@ import React, { useState, useMemo } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { Box, Button, Typography, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
 
-import type { FieldSchema, DatatableConfig } from '../../schemas/types'
+import type { FieldSchema } from '../../schemas/types'
 import { customerReferenceModalSchema } from '../../schemas/local/capability.schema'
-import VendorCrudTable from '../VendorCrudTable'
 import { DataTable, DataTableColumnHeader, DataTableActions } from '@/components/common/DataTable'
 import DynamicForm from '../DynamicForm'
 
 export default function CustomerReferenceField({ field }: { field: FieldSchema }) {
-  const { watch } = useFormContext()
-  const formValues = watch()
-  
-  // Competency ID exists only in Edit Mode
-  const competencyId = formValues.id
-
-  if (competencyId) {
-    // -----------------------------------------------------
-    // EDIT MODE: Use VendorCrudTable for backend CRUD
-    // -----------------------------------------------------
-    const crudConfig: DatatableConfig = {
-      id: 'CUSTOMER_REFERENCE',
-      title: 'Customer References',
-      description: 'Manage customer references for this competency.',
-      apiEndpoint: '/vendor-customer-reference-temps',
-      canDelete: true,
-      modalFormSchema: customerReferenceModalSchema,
-      baseFilters: { competencyId },
-      columns: [
-        { id: 'name', header: 'Name', accessorKey: 'name' },
-        { id: 'year', header: 'Year', accessorKey: 'year' },
-        { id: 'projectValue', header: 'Project Value', accessorKey: 'projectValue', cell: 'currency' },
-      ],
-    }
-
-    return (
-      <Box className="w-full mt-4">
-        <VendorCrudTable config={crudConfig} />
-      </Box>
-    )
-  }
-
-  // -----------------------------------------------------
-  // CREATE MODE: Use local state and array field
-  // -----------------------------------------------------
   return <LocalCustomerReferenceTable field={field} />
 }
 
 function LocalCustomerReferenceTable({ field }: { field: FieldSchema }) {
-  const { watch, setValue, formState: { errors } } = useFormContext()
-  const items: any[] = watch(field.name) || []
+  const { watch, setValue, register, formState: { errors } } = useFormContext()
+  
+  // Explicitly register the field so react-hook-form knows it exists
+  React.useEffect(() => {
+    register(field.name)
+  }, [register, field.name])
+  
+  const items = watch(field.name) || []
   
   const [modalOpen, setModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create')
@@ -72,24 +42,23 @@ function LocalCustomerReferenceTable({ field }: { field: FieldSchema }) {
 
   const handleDelete = (index: number) => {
     const newItems = [...items]
-
     newItems.splice(index, 1)
-    setValue(field.name, newItems, { shouldValidate: true })
+    setValue(field.name, newItems, { shouldDirty: true, shouldValidate: true })
   }
 
   const handleFormSubmit = (data: any) => {
     const newItems = [...items]
-
+    
     if (modalMode === 'edit' && editIndex !== null) {
-      newItems[editIndex] = { ...newItems[editIndex], ...data }
+      newItems[editIndex] = { ...items[editIndex], ...data }
     } else {
       newItems.push({
         ...data,
         id: data.id || crypto.randomUUID()
       })
     }
-
-    setValue(field.name, newItems, { shouldValidate: true })
+    
+    setValue(field.name, newItems, { shouldDirty: true, shouldValidate: true })
     setModalOpen(false)
   }
 
