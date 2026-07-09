@@ -16,6 +16,7 @@ export const fileService = {
     onUploadProgress?: (progressEvent: any) => void
   ): Promise<ApiResponse<FileData>> => {
     const formData = new FormData()
+
     formData.append('file', file)
 
     return api.post<FileData>('/files', formData, {

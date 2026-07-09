@@ -168,6 +168,7 @@ export const localVendorSchema: VendorProfileSchema = {
             { id: 'subCategory', header: 'Sub Category', accessorKey: 'subCategoryItem.subCategory.name' },
             { id: 'subCategoryItem', header: 'Sub Category Item', accessorKey: 'subCategoryItem.name' },
             { id: 'customerReferencesCount', header: 'Total Customer References', accessorKey: 'customerReferencesCount' },
+
             // { id: 'createdAt', header: 'Created At', accessorKey: 'createdAt', cell: 'date' },
             // { id: 'updatedAt', header: 'Updated At', accessorKey: 'updatedAt', cell: 'date' },
           ],
@@ -196,10 +197,10 @@ export const localVendorSchema: VendorProfileSchema = {
           modalFormSchema: financialModalSchema,
           columns: [
             { id: 'year', header: 'Year', accessorKey: 'year' },
-            { id: 'reportType', header: 'Report Type', accessorKey: 'financialReportType.name' },
-            { id: 'auditStatus', header: 'Audit Status', accessorKey: 'auditStatus.name' },
-            { id: 'totalAssets', header: 'Total Assets', accessorKey: 'totalAssets', cell: 'currency' },
-            { id: 'totalRevenue', header: 'Total Revenue', accessorKey: 'totalRevenue', cell: 'currency' },
+            { id: 'reportType', header: 'Report Type', accessorKey: 'reportType' },
+            { id: 'auditStatus', header: 'Audit Status', accessorKey: 'auditStatus' },
+            { id: 'totalAssets', header: 'Total Assets', accessorKey: 'totalAssets' },
+            { id: 'totalRevenue', header: 'Total Revenue', accessorKey: 'totalRevenue' },
           ],
         },
       ],

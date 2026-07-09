@@ -25,13 +25,13 @@ function LocalCustomerReferenceTable({ field }: { field: FieldSchema }) {
   const items = watch(field.name) || []
   
   const [modalOpen, setModalOpen] = useState(false)
-  const [modalMode, setModalMode] = useState<'create' | 'edit'>('create')
+  const [modalMode, setModalMode] = useState<'create' | 'update'>('create')
   const [editIndex, setEditIndex] = useState<number | null>(null)
   
   const handleOpenModal = (index: number | null) => {
     if (index !== null) {
       setEditIndex(index)
-      setModalMode('edit')
+      setModalMode('update')
     } else {
       setEditIndex(null)
       setModalMode('create')
@@ -42,6 +42,7 @@ function LocalCustomerReferenceTable({ field }: { field: FieldSchema }) {
 
   const handleDelete = (index: number) => {
     const newItems = [...items]
+
     newItems.splice(index, 1)
     setValue(field.name, newItems, { shouldDirty: true, shouldValidate: true })
   }
@@ -49,7 +50,7 @@ function LocalCustomerReferenceTable({ field }: { field: FieldSchema }) {
   const handleFormSubmit = (data: any) => {
     const newItems = [...items]
     
-    if (modalMode === 'edit' && editIndex !== null) {
+    if (modalMode === 'update' && editIndex !== null) {
       newItems[editIndex] = { ...items[editIndex], ...data }
     } else {
       newItems.push({
@@ -81,10 +82,9 @@ function LocalCustomerReferenceTable({ field }: { field: FieldSchema }) {
 
         if (!val) return '-'
         
-return new Intl.NumberFormat('id-ID', {
-          style: 'currency',
-          currency: 'IDR',
-          minimumFractionDigits: 0,
+        return new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
         }).format(Number(val))
       },
     },
@@ -162,7 +162,7 @@ return new Intl.NumberFormat('id-ID', {
           <DynamicForm
             schema={customerReferenceModalSchema}
             mode={modalMode}
-            defaultValues={modalMode === 'edit' && editIndex !== null ? items[editIndex] : undefined}
+            defaultValues={modalMode === 'update' && editIndex !== null ? items[editIndex] : undefined}
             onSubmit={handleFormSubmit}
             onCancel={() => setModalOpen(false)}
             showDraftButtons={false}

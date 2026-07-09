@@ -13,6 +13,7 @@ export function createSingletonService<T = any>(baseEndpoint: string) {
         if (error?.response?.status === 404) {
           return { success: true, data: null } as ApiResponse<T | null>
         }
+
         throw error
       }
     },

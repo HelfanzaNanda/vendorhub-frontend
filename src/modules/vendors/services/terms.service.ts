@@ -47,28 +47,36 @@ export const termsService = {
   getVendorTerms: async (): Promise<VendorTermsResponse | null> => {
     try {
       const response = await api.get<any>('/vendor/terms-conditions')
-      return response.data?.data || response.data || null
+
+      
+return response.data?.data || response.data || null
     } catch (error: any) {
       if (error.response?.status === 404) {
         return null
       }
+
       throw error
     }
   },
 
   submitVendorTerms: async (data: SubmitVendorTermsPayload): Promise<VendorTermsCondition> => {
     const response = await api.post<any>('/vendor/terms-conditions', data)
-    return response.data?.data || response.data
+
+    
+return response.data?.data || response.data
   },
 
   getLatestMasterTerms: async (): Promise<MasterTerms | null> => {
     try {
       const response = await api.get<any>('/terms-conditions/latest')
-      return response.data || null
+
+      
+return response.data || null
     } catch (error: any) {
       if (error.response?.status === 404) {
         return null
       }
+
       throw error
     }
   }

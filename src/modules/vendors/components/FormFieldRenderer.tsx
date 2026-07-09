@@ -27,6 +27,7 @@ import CustomerReferenceField from './fields/CustomerReferenceField'
 import TreeSelectField from './fields/TreeSelectField'
 import IndustryClassificationField from './fields/IndustryClassificationField'
 import { AppReactDatepicker } from '@/components/common/AppReactDatepicker'
+import { AppNumericInput } from '@/components/common/AppNumericInput'
 import 'flatpickr/dist/plugins/monthSelect/style.css'
 
 export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
@@ -251,42 +252,85 @@ return (
           case 'date-range': {
             const currentYear = new Date().getFullYear()
             const minDate = new Date(currentYear - 4, 0, 1)
+            
+            const dates = Array.isArray(value) ? value : []
+            const fromDate = dates[0] || null
+            const toDate = dates[1] || null
 
             return (
-              <AppReactDatepicker
-                label={field.required ? `${field.label} *` : field.label}
-                placeholder={field.placeholder || 'Select Period Range'}
-                error={!!error}
-                helperText={(error?.message as string) || field.helperText}
-                fullWidth
-                disabled={field.disabled}
-                value={value || []}
-                options={{
-                  mode: 'range',
-                  minDate,
-                  plugins: [
-                    monthSelectPlugin({
-                      shorthand: true, // Display short month names
-                      dateFormat: 'M Y', // Display format
-                      altFormat: 'M Y',
-                    })
-                  ]
-                }}
-                onChange={(dates: Date[]) => {
-                  onChange(dates)
-                  
-                  // Auto-map to periodFrom and periodTo if it's the period field
-                  if (field.name === 'period') {
-                    if (dates.length === 2) {
-                      setValue('periodFrom', dates[0], { shouldValidate: true })
-                      setValue('periodTo', dates[1], { shouldValidate: true })
-                    } else if (dates.length === 0) {
-                      setValue('periodFrom', null)
-                      setValue('periodTo', null)
-                    }
-                  }
-                }}
-              />
+              <Box className="w-full">
+                <Typography variant="body2" fontWeight="medium" mb={1} color={error ? 'error' : 'text.primary'}>
+                  {field.required ? `${field.label} *` : field.label}
+                </Typography>
+                <Box className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                  <Box className="flex-1 w-full">
+                    <AppReactDatepicker
+                      placeholder="Start Period (Month Year)"
+                      fullWidth
+                      disabled={field.disabled}
+                      value={fromDate || ''}
+                      error={!!error}
+                      options={{
+                        minDate,
+                        plugins: [
+                          monthSelectPlugin({
+                            shorthand: true,
+                            dateFormat: 'M Y',
+                            altFormat: 'M Y',
+                          })
+                        ]
+                      }}
+                      onChange={(newDates: Date[]) => {
+                        const newFrom = newDates.length > 0 ? newDates[0] : undefined
+                        const newArray = newFrom || toDate ? [newFrom, toDate] : []
+                        onChange(newArray)
+                        
+                        if (field.name === 'period') {
+                          setValue('periodFrom', newFrom || null, { shouldValidate: true })
+                          setValue('periodTo', toDate || null, { shouldValidate: true })
+                        }
+                      }}
+                    />
+                  </Box>
+                  <Typography variant="body2" color="text.secondary" className="hidden sm:block">
+                    to
+                  </Typography>
+                  <Box className="flex-1 w-full">
+                    <AppReactDatepicker
+                      placeholder="End Period (Month Year)"
+                      fullWidth
+                      disabled={field.disabled}
+                      value={toDate || ''}
+                      error={!!error}
+                      options={{
+                        minDate: fromDate || minDate,
+                        plugins: [
+                          monthSelectPlugin({
+                            shorthand: true,
+                            dateFormat: 'M Y',
+                            altFormat: 'M Y',
+                          })
+                        ]
+                      }}
+                      onChange={(newDates: Date[]) => {
+                        const newTo = newDates.length > 0 ? newDates[0] : undefined
+                        const newArray = fromDate || newTo ? [fromDate, newTo] : []
+                        onChange(newArray)
+                        
+                        if (field.name === 'period') {
+                          setValue('periodFrom', fromDate || null, { shouldValidate: true })
+                          setValue('periodTo', newTo || null, { shouldValidate: true })
+                        }
+                      }}
+                    />
+                  </Box>
+                </Box>
+                {(error || field.helperText) && (
+                  <FormHelperText error={!!error}>
+                    {(error?.message as string) || field.helperText}
+                  </FormHelperText>
+                )}
+              </Box>
             )
           }
 
@@ -383,11 +427,11 @@ return (
 
           case 'currency':
             return (
-              <TextField
+              <AppNumericInput
                 {...baseProps}
-                type="number"
-                value={value ?? ''}
-                onChange={(e) => onChange(e.target.value === '' ? '' : Number(e.target.value))}
+                name={field.name}
+                value={value}
+                onChange={onChange}
                 onBlur={onBlur}
                 InputProps={{
                   readOnly: field.readonly,

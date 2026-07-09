@@ -43,7 +43,8 @@ export default function TreeSelectField({ field }: { field: FieldSchema }) {
     const fetchTree = async () => {
       if (!industryClassificationIdsStr) {
         setTreeData([])
-        return
+        
+return
       }
 
       setIsLoading(true)
@@ -72,7 +73,9 @@ export default function TreeSelectField({ field }: { field: FieldSchema }) {
                   if (item.selectable && existingIds.includes(item.id)) {
                     return false
                   }
-                  return true
+
+                  
+return true
                 })
                 
                 return { ...subCategory, children: filteredItems }

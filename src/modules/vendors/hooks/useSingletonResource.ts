@@ -19,7 +19,9 @@ export function createSingletonHooks<T = any>(endpoint: string) {
 
   const useUpdate = () => {
     const queryClient = useQueryClient()
-    return useMutation({
+
+    
+return useMutation({
       mutationFn: (data: Partial<T>) => service.update(data),
       onSuccess: (res: any) => {
         queryClient.invalidateQueries({ queryKey: [endpoint] })
@@ -27,6 +29,7 @@ export function createSingletonHooks<T = any>(endpoint: string) {
       },
       onError: (error: any) => {
         const message = error?.response?.data?.message || error?.message || 'Failed to save'
+
         toast.error(message)
       },
     })
@@ -37,15 +40,18 @@ export function createSingletonHooks<T = any>(endpoint: string) {
 
 // Vendor Company Singleton Hooks
 const vendorCompanyHooks = createSingletonHooks('/vendor-company-temps')
+
 export const useVendorCompany = vendorCompanyHooks.useGet
 export const useUpdateVendorCompany = vendorCompanyHooks.useUpdate
 
 // Vendor Business License Singleton Hooks
 const vendorBusinessLicenseHooks = createSingletonHooks('/vendor-business-license-temps')
+
 export const useVendorBusinessLicense = vendorBusinessLicenseHooks.useGet
 export const useUpdateVendorBusinessLicense = vendorBusinessLicenseHooks.useUpdate
 
 // Vendor Document Singleton Hooks
 const vendorDocumentHooks = createSingletonHooks('/vendor-document-temps')
+
 export const useVendorDocument = vendorDocumentHooks.useGet
 export const useUpdateVendorDocument = vendorDocumentHooks.useUpdate

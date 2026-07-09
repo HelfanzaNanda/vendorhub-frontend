@@ -1,4 +1,5 @@
 import { z } from 'zod'
+
 import type { FormSchema } from '../types'
 
 export const termsSchema: FormSchema = {

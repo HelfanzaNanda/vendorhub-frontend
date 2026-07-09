@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useMemo, useEffect } from 'react'
+import dayjs from 'dayjs'
 
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -96,11 +97,14 @@ return {
               fieldSchema = z.string()
           }
 
-          if (field.required && !field.disabled) {
+          const isConditionallyVisible = !!field.visibility
+
+          if (field.required && !field.disabled && !isConditionallyVisible) {
             const requiredMsg = `${field.label} is required`
+
             if (field.type === 'text' || field.type === 'textarea' || field.type === 'email' || field.type === 'phone') {
               fieldSchema = z.string().min(1, requiredMsg)
-            } else if (field.type === 'multi-select' || field.type === 'checkbox-group' || field.type === 'field-array') {
+            } else if (field.type === 'multi-select' || field.type === 'checkbox-group' || field.type === 'field-array' || field.type === 'date-range') {
               fieldSchema = z.array(z.any()).min(1, requiredMsg)
             } else {
               fieldSchema = fieldSchema.nullable().refine((val) => val !== null && val !== undefined && val !== '', requiredMsg)
@@ -108,6 +112,8 @@ return {
           } else {
             if (field.type === 'autocomplete' || field.type === 'select' || field.type === 'tree-select' || field.type === 'date' || field.type === 'file' || field.type === 'number' || field.type === 'currency' || field.type === 'percentage') {
               fieldSchema = fieldSchema.nullable().optional()
+            } else if (field.type === 'multi-select' || field.type === 'checkbox-group' || field.type === 'field-array' || field.type === 'date-range') {
+              fieldSchema = z.array(z.any()).optional()
             } else {
               fieldSchema = fieldSchema.optional()
             }
@@ -118,7 +124,28 @@ return {
       })
     })
     
-    return z.object(shape)
+    return z.object(shape).superRefine((data, ctx) => {
+      processedSchema.sections.forEach((section) => {
+        section.fields.forEach((field) => {
+          if (field.visibility && field.required && !field.disabled) {
+            // It's a conditionally required field
+            const isVisible = field.visibility(data)
+            if (isVisible) {
+              const val = data[field.name]
+              const isEmpty = val === null || val === undefined || val === '' || (Array.isArray(val) && val.length === 0)
+              
+              if (isEmpty) {
+                ctx.addIssue({
+                  code: z.ZodIssueCode.custom,
+                  path: [field.name],
+                  message: `${field.label} is required`
+                })
+              }
+            }
+          }
+        })
+      })
+    })
   }, [processedSchema])
 
   // Get default values
@@ -130,7 +157,7 @@ return {
       section.fields.forEach((field) => {
         if (field.defaultValue !== undefined) {
           defaults[field.name] = field.defaultValue
-        } else if (field.type === 'field-array' || field.type === 'multi-select' || field.type === 'checkbox-group' || field.type === 'custom-customer-references' || field.type === 'custom-industry-classifications') {
+        } else if (field.type === 'field-array' || field.type === 'multi-select' || field.type === 'checkbox-group' || field.type === 'custom-customer-references' || field.type === 'custom-industry-classifications' || field.type === 'date-range') {
           defaults[field.name] = []
         } else if (field.type === 'number' || field.type === 'currency' || field.type === 'percentage') {
           defaults[field.name] = null
@@ -174,6 +201,7 @@ return {
   // but NOT on every render — only when the item's identity actually changes.
   const itemKey = propDefaultValues?.id ?? '__new__'
   const prevItemKeyRef = React.useRef(itemKey)
+
   useEffect(() => {
     if (prevItemKeyRef.current !== itemKey) {
       prevItemKeyRef.current = itemKey
@@ -187,33 +215,43 @@ return {
     const subscription = watch((value) => {
       saveDraft(schema.id, value)
     })
-    return () => subscription.unsubscribe()
+
+    
+return () => subscription.unsubscribe()
   }, [watch, schema.id, saveDraft, showDraftButtons])
 
   const extractFileIds = (data: any) => {
     if (!data || typeof data !== 'object') return data;
     
     const result = { ...data };
+
     processedSchema.sections.forEach(section => {
       section.fields.forEach(field => {
         if (field.type === 'file' && result[field.name]) {
           const val = result[field.name];
+
           if (typeof val === 'object' && 'id' in val) {
             result[field.name] = val.id;
           }
         }
       });
     });
-    return result;
+    
+return result;
   }
 
   const stripFileObjects = (data: any): any => {
     if (!data) return data
+    if (data instanceof Date) return dayjs(data).format('YYYY-MM-DD')
     if (Array.isArray(data)) return data.map(stripFileObjects)
+
     if (typeof data === 'object') {
       const result: any = {}
+
       for (const key in data) {
         const val = data[key]
+
+
         // Identify FileData objects from fileService
         if (val && typeof val === 'object' && 'id' in val && 'filename' in val && 'size' in val) {
           result[key] = val.id
@@ -221,9 +259,13 @@ return {
           result[key] = stripFileObjects(val)
         }
       }
-      return result
+
+      
+return result
     }
-    return data
+
+    
+return data
   }
 
   const handleFormSubmit = async (rawData: any) => {
@@ -232,6 +274,7 @@ return {
     const completeData = { ...formValues, ...rawData }
     
     let data = stripFileObjects(completeData)
+
     data = extractFileIds(data)
 
     // Process schema-specific payload rules
@@ -253,7 +296,8 @@ return {
 
     if (onSubmit) {
       onSubmit(data)
-      return
+      
+return
     }
 
     if (tabEndpoint) {

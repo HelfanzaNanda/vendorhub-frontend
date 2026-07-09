@@ -31,7 +31,8 @@ export default function IndustryClassificationField({ field }: { field: FieldSch
   const handleSelect = (event: any, newValue: any) => {
     if (!newValue) {
       setSearchValue(null)
-      return
+      
+return
     }
 
     // Check for duplicates
@@ -58,6 +59,7 @@ export default function IndustryClassificationField({ field }: { field: FieldSch
 
   const handleRemove = (index: number) => {
     const newItems = [...items]
+
     newItems.splice(index, 1)
     setValue(field.name, newItems, { shouldValidate: true })
   }

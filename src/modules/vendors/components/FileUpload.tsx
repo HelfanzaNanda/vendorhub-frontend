@@ -33,6 +33,7 @@ export default function FileUpload({
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
+
     if (!file) return
 
     setIsUploading(true)
@@ -41,6 +42,7 @@ export default function FileUpload({
     try {
       const response = await fileService.upload(file, (progressEvent) => {
         const percentCompleted = Math.round((progressEvent.loaded * 100) / (progressEvent.total || file.size))
+
         setProgress(percentCompleted)
       })
 
@@ -50,6 +52,7 @@ export default function FileUpload({
       }
     } catch (err: any) {
       toast.error(err?.response?.data?.message || 'Failed to upload file')
+
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
       }
@@ -61,6 +64,7 @@ export default function FileUpload({
 
   const handleRemove = () => {
     onChange(null)
+
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
@@ -71,7 +75,9 @@ export default function FileUpload({
     const k = 1024
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+
+    
+return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
   }
 
   return (

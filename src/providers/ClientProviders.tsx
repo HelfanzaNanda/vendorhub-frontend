@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect } from 'react'
+import React, { useEffect , Suspense } from 'react'
+
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { Backdrop, CircularProgress } from '@mui/material'
 import { Toaster } from 'sonner'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import React, { Suspense } from 'react'
 
 import { useLoadingStore } from '@/store/loadingStore'
 import { useAuthStore } from '@/features/auth/store'

@@ -119,7 +119,9 @@ export default function VendorCrudTable({ config }: VendorCrudTableProps) {
                 _existingSubCategoryItemIds: selectedSubCategoryItemIds 
               }
             }
-            return field
+
+            
+return field
           })
         }))
       }

@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
+
 import { 
   Box, 
   Card, 
@@ -76,9 +77,11 @@ export default function VendorTermsTab() {
   useEffect(() => {
     if (submission) {
       setHasRead(true)
+
       if (submission.chapterReviews) {
         setReviews(submission.chapterReviews as any)
       }
+
       methods.reset({
         vendorName: submission.vendorName || '',
         authorizedSignatory: submission.authorizedSignatory || '',
@@ -137,6 +140,7 @@ export default function VendorTermsTab() {
       termsConditionId: masterTerms?.id ? { id: masterTerms.id } : undefined,
       chapterReviews: reviews
     }
+
     submitMutation.mutate(payload)
   }
 
@@ -144,11 +148,14 @@ export default function VendorTermsTab() {
   if (!masterTerms) return <Typography>No terms available.</Typography>
 
   const reviewChapters = masterTerms.items.filter(c => c.approvalMode === 'REVIEW')
+
   const completedReviews = reviewChapters.filter(c => {
     const rev = reviews[c.id.toString()]
+
     if (!rev) return false
     if (rev.status === 'REJECTED' && !rev.reason) return false
-    return true
+    
+return true
   }).length
 
   const allReviewsCompleted = completedReviews === reviewChapters.length

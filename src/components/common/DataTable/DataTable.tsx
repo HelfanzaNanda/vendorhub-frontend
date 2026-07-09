@@ -158,10 +158,13 @@ export function DataTable<T>({
     enableRowSelection: enableRowSelection ?? !!onRowSelectionChange,
     getRowId: getRowId || ((row: any) => {
       const id = row.id || row.uuid || row._id
+
       if (!id) {
         console.warn('DataTable: Row is missing a unique id. Please provide a stable unique id for each row or use the getRowId prop.')
       }
-      return String(id)
+
+      
+return String(id)
     }),
     onSortingChange: (updater) => {
       startTransition(() => {

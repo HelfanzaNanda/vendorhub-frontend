@@ -88,7 +88,9 @@ export const capabilityFormSchema: FormSchema = {
           .min(1, 'At least one Industry Classification is required')
           .refine((items) => {
             const ids = items.map(item => item.industryClassificationId).filter(Boolean);
-            return new Set(ids).size === ids.length;
+
+            
+return new Set(ids).size === ids.length;
           }, { message: 'Duplicate Industry Classifications are not allowed' })
         }
       ]

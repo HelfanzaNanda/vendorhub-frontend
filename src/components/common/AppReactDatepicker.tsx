@@ -1,8 +1,11 @@
 'use client'
 
 import React, { forwardRef } from 'react'
-import Flatpickr, { DateTimePickerProps } from 'react-flatpickr'
-import { TextField, TextFieldProps } from '@mui/material'
+
+import type { DateTimePickerProps } from 'react-flatpickr';
+import Flatpickr from 'react-flatpickr'
+import type { TextFieldProps } from '@mui/material';
+import { TextField } from '@mui/material'
 import 'flatpickr/dist/flatpickr.css'
 
 export interface AppReactDatepickerProps extends Omit<DateTimePickerProps, 'render'> {
@@ -18,8 +21,11 @@ export interface AppReactDatepickerProps extends Omit<DateTimePickerProps, 'rend
 
 const CustomInput = forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => {
   const { inputRef, ...rest } = props
-  return <TextField {...rest} inputRef={ref || inputRef} />
+
+  
+return <TextField {...rest} inputRef={ref || inputRef} />
 })
+
 CustomInput.displayName = 'CustomInput'
 
 export const AppReactDatepicker = forwardRef<any, AppReactDatepickerProps>((props, ref) => {

@@ -16,6 +16,7 @@ interface PageHeaderProps {
   actionHref?: string
   onActionClick?: () => void
   actionIcon?: React.ReactNode
+  actionDisabled?: boolean
 }
 
 export default function PageHeader({
@@ -25,6 +26,7 @@ export default function PageHeader({
   actionHref,
   onActionClick,
   actionIcon,
+  actionDisabled,
 }: PageHeaderProps) {
   return (
     <Box className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
@@ -77,6 +79,7 @@ export default function PageHeader({
               variant="contained"
               color="primary"
               startIcon={actionIcon}
+              disabled={actionDisabled}
             >
               {actionLabel}
             </Button>

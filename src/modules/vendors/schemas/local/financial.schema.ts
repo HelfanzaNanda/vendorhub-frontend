@@ -39,7 +39,14 @@ export const financialModalSchema: FormSchema = {
           type: 'date-range',
           required: true,
           grid: { xs: 12, md: 6 },
-          visibility: (values) => values?.reportType === 'INTERIM'
+          visibility: (values) => values?.reportType === 'INTERIM',
+          excludeFromPayload: true,
+          validation: z.array(z.date()).optional().nullable().refine((dates) => {
+            if (!dates || dates.length !== 2) return true; // Let required check handle empty cases
+            const diffTime = Math.abs(dates[1].getTime() - dates[0].getTime())
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+            return diffDays <= 366 // Allow up to 366 days for leap year
+          }, { message: 'Total period duration cannot exceed 1 year' })
         },
         {
           id: 'auditStatus',

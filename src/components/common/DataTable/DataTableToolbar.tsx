@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 
 import type { Table } from '@tanstack/react-table'
 import { Search, RotateCw, SlidersHorizontal, Download, Eye, X, Loader2 } from 'lucide-react'
+
 import { AppReactDatepicker } from '@/components/common/AppReactDatepicker'
 
 import type { FilterDefinition } from './DataTable'
@@ -401,6 +402,7 @@ return `${selected.length} Selected`
                           // Format to YYYY-MM-DD for standard input values
                           const d = dates[0]
                           const formatted = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+
                           handleFilterValueChange(filter.id, formatted)
                         } else {
                           handleFilterValueChange(filter.id, '')
@@ -419,6 +421,7 @@ return `${selected.length} Selected`
                             if (dates.length > 0) {
                               const d = dates[0]
                               const formatted = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+
                               handleDateRangeChange(filter.id, 'start', formatted)
                             } else {
                               handleDateRangeChange(filter.id, 'start', '')
@@ -435,6 +438,7 @@ return `${selected.length} Selected`
                             if (dates.length > 0) {
                               const d = dates[0]
                               const formatted = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+
                               handleDateRangeChange(filter.id, 'end', formatted)
                             } else {
                               handleDateRangeChange(filter.id, 'end', '')

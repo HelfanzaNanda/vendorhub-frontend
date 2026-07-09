@@ -1,6 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { termsService, SubmitVendorTermsPayload } from '../services/terms.service'
+
 import { toast } from 'sonner'
+
+import type { SubmitVendorTermsPayload } from '../services/terms.service';
+import { termsService } from '../services/terms.service'
+
 
 export function useVendorTerms() {
   return useQuery({

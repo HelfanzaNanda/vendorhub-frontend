@@ -106,7 +106,9 @@ function VendorCapabilityWrapper({ activeTab }: { activeTab: VendorTabSchema }) 
                               .join(',') 
                           }
                         }
-                        return field
+
+                        
+return field
                       })
                     }))
                   }
@@ -114,7 +116,9 @@ function VendorCapabilityWrapper({ activeTab }: { activeTab: VendorTabSchema }) 
 
                 return updatedConfig
               }
-              return config
+
+              
+return config
             })}
           />
         </Card>
@@ -162,6 +166,7 @@ export default function VendorProfile({ schemaConfig }: VendorProfileProps) {
     if (!hasAcceptedTerms && newValue !== 'terms_conditions') {
       return // Prevent navigating away from terms if not accepted
     }
+
     setActiveTabId(newValue)
     router.push(`?tab=${newValue}`, { scroll: false })
   }
