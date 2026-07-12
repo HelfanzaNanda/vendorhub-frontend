@@ -35,6 +35,16 @@ const verticalMenuData = (): VerticalMenuDataType[] => [
     label: 'About',
     href: '/about',
     icon: 'ri-information-line'
+  },
+  {
+    label: 'Worklist',
+    icon: 'ri-task-line',
+    children: [
+      {
+        label: 'Vendor Registration',
+        href: '/worklist/vendor-registration'
+      }
+    ]
   }
 ]
 

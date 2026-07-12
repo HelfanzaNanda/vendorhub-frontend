@@ -94,6 +94,11 @@ const HorizontalMenu = () => {
             Products
           </MenuItem>
         </SubMenu>
+        <SubMenu label='Worklist' icon={<i className='ri-task-line' />}>
+          <MenuItem href='/worklist/vendor-registration' icon={<i className='ri-file-edit-line' />}>
+            Vendor Registration
+          </MenuItem>
+        </SubMenu>
       </Menu>
       {/* <Menu
         rootStyles={menuRootStyles(theme)}
