@@ -13,45 +13,46 @@ export function WorklistSummaryTab() {
 
   return (
     <Box className="flex flex-col gap-6 w-full">
-      <Card className="p-6">
-        <Typography variant="h6" className="mb-4">Workflow Information</Typography>
+      <Card sx={{ p: 3, mb: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2 }}>Workflow Information</Typography>
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
-            <Box className="flex flex-col gap-3">
-              <Box className="flex justify-between border-b pb-2">
-                <Typography color="textSecondary">Request No</Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid', borderColor: 'divider', pb: 1 }}>
+                <Typography color="text.secondary">Request No</Typography>
                 <Typography fontWeight="medium">{workflowInfo?.requestNo || '-'}</Typography>
+
               </Box>
-              <Box className="flex justify-between border-b pb-2">
-                <Typography color="textSecondary">Workflow</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid', borderColor: 'divider', pb: 1 }}>
+                <Typography color="text.secondary">Workflow</Typography>
                 <Typography fontWeight="medium">{workflowInfo?.workflow || '-'}</Typography>
               </Box>
-              <Box className="flex justify-between border-b pb-2">
-                <Typography color="textSecondary">Status</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid', borderColor: 'divider', pb: 1 }}>
+                <Typography color="text.secondary">Status</Typography>
                 <Typography fontWeight="medium" color="primary">{workflowInfo?.status || '-'}</Typography>
               </Box>
-              <Box className="flex justify-between border-b pb-2">
-                <Typography color="textSecondary">Submitted By</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid', borderColor: 'divider', pb: 1 }}>
+                <Typography color="text.secondary">Submitted By</Typography>
                 <Typography fontWeight="medium">{workflowInfo?.submittedBy || '-'}</Typography>
               </Box>
             </Box>
           </Grid>
           <Grid item xs={12} md={6}>
-            <Box className="flex flex-col gap-3">
-              <Box className="flex justify-between border-b pb-2">
-                <Typography color="textSecondary">Submitted Date</Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid', borderColor: 'divider', pb: 1 }}>
+                <Typography color="text.secondary">Submitted Date</Typography>
                 <Typography fontWeight="medium">{workflowInfo?.submittedDate || '-'}</Typography>
               </Box>
-              <Box className="flex justify-between border-b pb-2">
-                <Typography color="textSecondary">Current Step</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid', borderColor: 'divider', pb: 1 }}>
+                <Typography color="text.secondary">Current Step</Typography>
                 <Typography fontWeight="medium">{workflowInfo?.currentStep || '-'}</Typography>
               </Box>
-              <Box className="flex justify-between border-b pb-2">
-                <Typography color="textSecondary">SLA PIC</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid', borderColor: 'divider', pb: 1 }}>
+                <Typography color="text.secondary">SLA PIC</Typography>
                 <Typography fontWeight="medium">{workflowInfo?.slaPic || '-'}</Typography>
               </Box>
-              <Box className="flex justify-between border-b pb-2">
-                <Typography color="textSecondary">Due Date</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid', borderColor: 'divider', pb: 1 }}>
+                <Typography color="text.secondary">Due Date</Typography>
                 <Typography fontWeight="medium">{workflowInfo?.dueDate || '-'}</Typography>
               </Box>
             </Box>
@@ -60,19 +61,19 @@ export function WorklistSummaryTab() {
       </Card>
 
       {summary && summary.length > 0 && (
-        <Card className="p-6">
-          <Typography variant="h6" className="mb-4">Summary of Changes</Typography>
+        <Card sx={{ p: 3 }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>Summary of Changes</Typography>
           <Grid container spacing={2}>
             {summary.map((item: any, idx: number) => (
               <Grid item xs={12} sm={6} md={4} key={idx}>
                 <Box 
-                  className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors" 
+                  className="cursor-pointer transition-colors" 
                   onClick={() => {
                     const params = new URLSearchParams(window.location.search)
                     
                     let tabId = ''
                     if (item.section === 'Company') tabId = 'vendor_company'
-                    else if (item.section === 'Person Responsible') tabId = 'vendor_personnel'
+                    else if (item.section === 'Personnel') tabId = 'vendor_personnel'
                     else if (item.section === 'User Access') tabId = 'vendor_user_access'
                     else if (item.section === 'Bank') tabId = 'vendor_bank'
                     else if (item.section === 'Affiliations') tabId = 'vendor_affiliate'
@@ -86,16 +87,22 @@ export function WorklistSummaryTab() {
                       window.dispatchEvent(new Event('popstate'))
                     }
                   }}
+                  sx={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 1.5,
+                    border: '1px solid', borderColor: 'divider', borderRadius: 2,
+                    '&:hover': { bgcolor: 'action.hover' }
+                  }}
                 >
                   <Typography fontWeight="medium">{item.section}</Typography>
-                  <Typography className={`text-xs px-2 py-1 rounded font-semibold ${
-                    item.action === 'UPDATE' ? 'bg-blue-100 text-blue-700' :
-                    item.action === 'CREATE' ? 'bg-green-100 text-green-700' :
-                    item.action === 'DELETE' ? 'bg-red-100 text-red-700' :
-                    'bg-gray-100 text-gray-700'
-                  }`}>
+                  <Box sx={{
+                    px: 1, py: 0.5, borderRadius: 1, fontSize: '0.75rem', fontWeight: 600,
+                    ...(item.action === 'UPDATE' ? { bgcolor: 'info.main', color: 'info.contrastText' } :
+                        item.action === 'CREATE' ? { bgcolor: 'success.main', color: 'success.contrastText' } :
+                        item.action === 'DELETE' ? { bgcolor: 'error.main', color: 'error.contrastText' } :
+                        { bgcolor: 'action.selected', color: 'text.primary' })
+                  }}>
                     {item.action}
-                  </Typography>
+                  </Box>
                 </Box>
               </Grid>
             ))}

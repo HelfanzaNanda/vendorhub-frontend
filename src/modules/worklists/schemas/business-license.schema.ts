@@ -5,7 +5,7 @@ export const worklistBusinessLicenseGroup: WorklistDataGroupSchema = {
   title: 'Business License',
   endpoint: '/worklists/:workflowTransactionId?tab=business-licenses',
   isMultiple: true,
-  reviewSectionId: 'business-license',
+  reviewSectionId: 'VENDOR_BUSINESS_LICENSE',
   sections: [
     {
       id: 'license-info',

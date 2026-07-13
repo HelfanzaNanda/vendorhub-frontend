@@ -5,7 +5,7 @@ export const worklistBankGroup: WorklistDataGroupSchema = {
   title: 'Bank Information',
   endpoint: '/worklists/:workflowTransactionId?tab=banks',
   isMultiple: true,
-  reviewSectionId: 'bank',
+  reviewSectionId: 'VENDOR_BANK',
   card: {
     titleField: 'accountName',
     subtitleField: 'accountNumber',

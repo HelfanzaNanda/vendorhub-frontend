@@ -5,7 +5,7 @@ export const worklistCompetencyGroup: WorklistDataGroupSchema = {
   title: 'Competency',
   endpoint: '/worklists/:workflowTransactionId?tab=competencies',
   isMultiple: true,
-  reviewSectionId: 'competency',
+  reviewSectionId: 'VENDOR_COMPETENCY',
   sections: [
     {
       id: 'competency-info',

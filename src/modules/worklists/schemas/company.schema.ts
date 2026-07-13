@@ -5,7 +5,7 @@ export const worklistCompanyGroup: WorklistDataGroupSchema = {
   title: 'Company Information',
   endpoint: '/worklists/:workflowTransactionId?tab=company',
   isMultiple: false,
-  reviewSectionId: 'company',
+  reviewSectionId: 'VENDOR_COMPANY',
   sections: [
     {
       id: 'company-info',

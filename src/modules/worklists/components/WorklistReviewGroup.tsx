@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { api } from '@/services/api'
 import { WorklistDataGroupSchema } from '../schemas/types'
 import WorklistReviewCard from './WorklistReviewCard'
+import WorklistMultipleReviewGroup from './WorklistMultipleReviewGroup'
 
 interface WorklistReviewGroupProps {
   group: WorklistDataGroupSchema
@@ -47,6 +48,12 @@ export default function WorklistReviewGroup({ group, workflowTransactionId }: Wo
         <Box className="p-6 bg-gray-50 border border-dashed border-gray-300 rounded text-center text-gray-500">
           No data available.
         </Box>
+      ) : group.isMultiple ? (
+        <WorklistMultipleReviewGroup 
+          records={records}
+          group={group}
+          workflowTransactionId={workflowTransactionId}
+        />
       ) : (
         <Box className="flex flex-col gap-6">
           {records.map((record, index) => (

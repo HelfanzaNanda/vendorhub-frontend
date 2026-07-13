@@ -4,7 +4,7 @@ import { worklistPersonnelGroups } from './personnel.schema'
 import { worklistBankGroup } from './bank.schema'
 import { worklistBusinessLicenseGroup } from './business-license.schema'
 import { worklistCompetencyGroup } from './competency.schema'
-import { worklistDocumentGroup } from './document.schema'
+import { worklistDocumentGroups } from './document.schema'
 import { worklistFinancialReportGroup } from './financial-report.schema'
 import { worklistUserAccessGroup } from './user-access.schema'
 import { worklistAffiliationGroup } from './affiliation.schema'
@@ -25,7 +25,7 @@ export const worklistProfileSchema: WorklistProfileSchema = {
     },
     {
       id: 'personnel',
-      label: 'Person Responsible',
+      label: 'Personnel',
       icon: 'ri-user-line',
       groups: worklistPersonnelGroups
     },
@@ -57,7 +57,7 @@ export const worklistProfileSchema: WorklistProfileSchema = {
       id: 'document',
       label: 'Document',
       icon: 'ri-file-text-line',
-      groups: [worklistDocumentGroup]
+      groups: worklistDocumentGroups
     },
     {
       id: 'financial',

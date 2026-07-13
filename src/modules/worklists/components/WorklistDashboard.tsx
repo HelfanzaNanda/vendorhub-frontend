@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import type { ColumnDef, SortingState } from '@tanstack/react-table'
-import { Box, Grid } from '@mui/material'
+import { Box, Chip, Grid } from '@mui/material'
 import { ClipboardList, RefreshCw, CheckCircle, XCircle, Clock } from 'lucide-react'
 
 import PageHeader from '@/components/shared/PageHeader'
@@ -178,12 +178,15 @@ export function WorklistDashboard({ workflowCode, title }: WorklistDashboardProp
       ),
     }
 
-    const status = {
-      id: 'status',
-      header: ({ column }: any) => <DataTableColumnHeader column={column} title="Status" />,
-      accessorFn: (row: any) => row.status,
+    const currentStep = {
+      id: 'currentStep',
+      header: ({ column }: any) => <DataTableColumnHeader column={column} title="Current Stetep" />,
+      accessorFn: (row: any) => row.currentStep,
       cell: ({ row }: any) => (
-        <span className="text-sm font-medium text-textPrimary">{row.original.status || '-'}</span>
+        <div className='flex flex-col'>
+          <span className="font-medium text-textPrimary">{row.original.currentStep.name}</span>
+          <span className="text-xs text-secondary mt-0.5">{row.original.assigneeUser?.name || ''}</span>
+        </div>
       )
     }
 
@@ -229,7 +232,7 @@ export function WorklistDashboard({ workflowCode, title }: WorklistDashboardProp
       cell: ({ row }: any) => (
         <div className="flex justify-end pr-2">
           <DataTableActions
-            onView={() => router.push(`/worklist/${workflowCode.toLowerCase()}/${(row.original as any).workflowTransactionId || row.original.requestNo}`)}
+            onView={() => router.push(`/worklist/${workflowCode.toLowerCase()}/${row.original.id}`)}
           />
         </div>
       ),
@@ -241,7 +244,7 @@ export function WorklistDashboard({ workflowCode, title }: WorklistDashboardProp
       case WorklistCard.NEED_MY_REVIEW:
         return [baseRequest, baseVendor, site, timelineAssignedDue, slaPic, actionCol]
       case WorklistCard.IN_PROGRESS:
-        return [baseRequest, baseVendor, status, timelineAssignedDue, slaPic, actionCol]
+        return [baseRequest, baseVendor, site, currentStep, timelineAssignedDue, slaPic, actionCol]
       case WorklistCard.COMPLETED:
         return [
           baseRequest, 
@@ -288,7 +291,7 @@ export function WorklistDashboard({ workflowCode, title }: WorklistDashboardProp
         return [
           baseRequest, 
           baseVendor, 
-          status,
+          currentStep,
           {
             id: 'dueDate',
             header: ({ column }: any) => <DataTableColumnHeader column={column} title="Due Date" />,

@@ -5,20 +5,26 @@ export const worklistFinancialReportGroup: WorklistDataGroupSchema = {
   title: 'Financial Report',
   endpoint: '/worklists/:workflowTransactionId?tab=financial-reports',
   isMultiple: true,
-  reviewSectionId: 'financial-report',
+  reviewSectionId: 'VENDOR_FINANCIAL_REPORT',
+  card: {
+    titleField: 'year',
+    subtitleField: 'reportType',
+  },
   sections: [
     {
       id: 'financial-info',
       fields: [
         { id: 'year', label: 'Year' },
         { id: 'reportType', label: 'Report Type' },
-        { id: 'currency', label: 'Currency' },
-        { id: 'asset', label: 'Total Asset', type: 'currency' },
-        { id: 'liability', label: 'Total Liability', type: 'currency' },
-        { id: 'equity', label: 'Total Equity', type: 'currency' },
-        { id: 'revenue', label: 'Total Revenue', type: 'currency' },
-        { id: 'netProfit', label: 'Net Profit', type: 'currency' },
-        { id: 'file', label: 'Report Document', type: 'file' },
+        { id: 'currencyName', label: 'Currency' },
+        { id: 'currentAssets', label: 'Cirremt Asset', formatter: 'currency' },
+        { id: 'currentLiabilities', label: 'Cirremt Liabilities', formatter: 'currency' },
+        { id: 'totalAssets', label: 'Total Asset', formatter: 'currency' },
+        { id: 'totalLiabilities', label: 'Total Liability', formatter: 'currency' },
+        { id: 'netProfitLossAfterTax', label: 'Net Profix Loss After tax', formatter: 'currency' },
+        { id: 'totalRevenue', label: 'Total Revenue', formatter: 'currency' },
+        { id: 'netProfit', label: 'Net Profit', formatter: 'currency' },
+        { id: 'file.filename', label: 'Report Document', component: 'file' },
       ]
     }
   ]

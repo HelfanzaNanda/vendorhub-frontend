@@ -3,12 +3,12 @@ import { WorklistDataGroupSchema } from './types'
 export const worklistAffiliationGroup: WorklistDataGroupSchema = {
   id: 'affiliation',
   title: 'Affiliation',
-  endpoint: '/worklists/:workflowTransactionId?tab=affiliation',
+  endpoint: '/worklists/:workflowTransactionId?tab=affiliations',
   isMultiple: true,
-  reviewSectionId: 'affiliation',
+  reviewSectionId: 'VENDOR_AFFILIATION',
   card: {
-    titleField: 'name',
-    subtitleField: 'address',
+    titleField: 'companyName',
+    subtitleField: 'npwp',
   },
   sections: [
     {
@@ -16,11 +16,10 @@ export const worklistAffiliationGroup: WorklistDataGroupSchema = {
       layout: 'grid',
       columns: 2,
       fields: [
-        { id: 'vendorType.name', label: 'Vendor Type' },
-        { id: 'affiliationType', label: 'Affiliation Type' },
-        { id: 'name', label: 'Name' },
-        { id: 'address', label: 'Address' },
-        { id: 'file.fileName', label: 'File', component: 'file', width: 12 },
+        { id: 'companyName', label: 'Company Name' },
+        { id: 'affiliateType.name', label: 'Affiliation Type' },
+        { id: 'npwp', label: 'NPWP' },
+        { id: 'businessField', label: 'businessField' },
       ]
     }
   ]

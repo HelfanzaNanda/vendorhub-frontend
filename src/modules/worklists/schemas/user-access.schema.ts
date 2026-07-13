@@ -5,7 +5,7 @@ export const worklistUserAccessGroup: WorklistDataGroupSchema = {
   title: 'User Access',
   endpoint: '/worklists/:workflowTransactionId?tab=user-access',
   isMultiple: true,
-  reviewSectionId: 'bank',
+  reviewSectionId: 'VENDOR_USER_ACCESS',
   card: {
     titleField: 'email',
     subtitleField: 'fullName',
