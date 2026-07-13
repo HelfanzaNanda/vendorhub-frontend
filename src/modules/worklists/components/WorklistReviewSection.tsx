@@ -18,11 +18,12 @@ export function WorklistReviewSection({ sectionId, transactionId }: Props) {
 
   if (isLoading || !data) return null
 
-  const { permission, sections } = data
+  const { permissions, sections } = data
+  
   const section = sections?.find((s: any) => s.id === sectionId)
 
   // If this section has no review data and is not in review mode
-  if (!section || !isReviewMode) return null
+  if (!section || !isReviewMode || !section.showReviewSection) return null
 
   const review = section.review || { status: '', remark: '' }
 
@@ -49,7 +50,7 @@ export function WorklistReviewSection({ sectionId, transactionId }: Props) {
           row 
           value={review.status || ''} 
           onChange={(e) => {
-            if (!permission?.canReview) return;
+            if (!permissions?.canReview) return;
             handleReviewChange(e.target.value, review.remark || '')
           }}
         >
@@ -57,13 +58,13 @@ export function WorklistReviewSection({ sectionId, transactionId }: Props) {
             value="OK" 
             control={<Radio color="success" />} 
             label="OK" 
-            disabled={!permission?.canReview || submitReview.isPending} 
+            disabled={!permissions?.canReview || submitReview.isPending} 
           />
           <FormControlLabel 
             value="NOT_OK" 
             control={<Radio color="error" />} 
             label="Not OK" 
-            disabled={!permission?.canReview || submitReview.isPending} 
+            disabled={!permissions?.canReview || submitReview.isPending} 
           />
         </RadioGroup>
 
@@ -75,12 +76,12 @@ export function WorklistReviewSection({ sectionId, transactionId }: Props) {
           placeholder="Add remark..."
           defaultValue={review.remark || ''}
           onBlur={(e) => {
-            if (!permission?.canReview) return;
+            if (!permissions?.canReview) return;
             if (e.target.value !== review.remark) {
               handleReviewChange(review.status || '', e.target.value)
             }
           }}
-          disabled={!permission?.canReview || review.status === 'OK'}
+          disabled={!permissions?.canReview || review.status === 'OK'}
         />
 
         {submitReview.isPending && (

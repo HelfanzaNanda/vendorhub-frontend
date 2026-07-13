@@ -10,6 +10,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import CancelIcon from '@mui/icons-material/Cancel'
 import GenericFieldRenderer from './GenericFieldRenderer'
+import { WorklistReviewContext } from '../context'
 
 interface WorklistMultipleReviewGroupProps {
   records: any[]
@@ -19,14 +20,19 @@ interface WorklistMultipleReviewGroupProps {
 
 export default function WorklistMultipleReviewGroup({ records, group, workflowTransactionId }: WorklistMultipleReviewGroupProps) {
   const theme = useTheme()
-  const firstRecord = records[0] || {}
+  const firstRecord = records.find(r => r.permissions?.showReviewSection) || records[0] || {}
   
   const [reviewStatus, setReviewStatus] = useState<'OK' | 'NOT_OK' | ''>(firstRecord.reviewStatus || '')
   const [reviewRemark, setReviewRemark] = useState(firstRecord.reviewRemark || '')
+
+  const { worklistData } = React.useContext(WorklistReviewContext)
+  const canReview = worklistData?.permissions?.canReview ?? false
+  const showReviewSection = records.some(r => r.permissions?.showReviewSection)
   
   const saveReviewMutation = useMutation({
     mutationFn: async (payload: { status: string; remark: string }) => {
-      const promises = records.map(record => 
+      const recordsToReview = records.filter(record => record.permissions?.showReviewSection)
+      const promises = recordsToReview.map(record => 
         api.post(`/worklists/${workflowTransactionId}/reviews`, {
           sectionId: group.reviewSectionId,
           recordId: record.id,
@@ -45,6 +51,7 @@ export default function WorklistMultipleReviewGroup({ records, group, workflowTr
   })
 
   useEffect(() => {
+    if (!showReviewSection || !canReview) return
     if (reviewStatus === '') return
 
     if (reviewStatus === firstRecord.reviewStatus && reviewRemark === (firstRecord.reviewRemark || '')) {
@@ -59,9 +66,10 @@ export default function WorklistMultipleReviewGroup({ records, group, workflowTr
     }, 500)
 
     return () => clearTimeout(timeout)
-  }, [reviewStatus, reviewRemark, firstRecord.reviewStatus, firstRecord.reviewRemark])
+  }, [reviewStatus, reviewRemark, firstRecord.reviewStatus, firstRecord.reviewRemark, showReviewSection, canReview])
 
   const handleStatusChange = (status: 'OK' | 'NOT_OK') => {
+    if (!canReview) return
     setReviewStatus(status)
     if (status === 'OK') {
       setReviewRemark('')
@@ -228,63 +236,65 @@ export default function WorklistMultipleReviewGroup({ records, group, workflowTr
         })}
       </Box>
 
-      <Box className="p-6 md:p-8" sx={{ bgcolor: alpha(theme.palette.action.hover, 0.3), borderTop: '1px solid', borderColor: 'divider' }}>
-        <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 2, color: 'text.primary', textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.75rem' }}>
-          Review Result
-        </Typography>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={5}>
-            <Box className="flex gap-4">
-              <Box
-                onClick={() => handleStatusChange('OK')}
-                sx={{
-                  cursor: 'pointer', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, px: 3, py: 1.5, borderRadius: 3, border: '2px solid', transition: 'all 0.2s', fontWeight: 600,
-                  ...(reviewStatus === 'OK' 
-                    ? { borderColor: 'success.main', bgcolor: alpha(theme.palette.success.main, 0.1), color: 'success.main', boxShadow: theme.shadows[2], transform: 'scale(1.02)' } 
-                    : { borderColor: 'divider', bgcolor: 'background.paper', color: 'text.secondary', '&:hover': { borderColor: alpha(theme.palette.success.main, 0.5), bgcolor: alpha(theme.palette.success.main, 0.05) } })
-                }}
-              >
-                <CheckCircleIcon /> OK
+      {showReviewSection && (
+        <Box className="p-6 md:p-8" sx={{ bgcolor: alpha(theme.palette.action.hover, 0.3), borderTop: '1px solid', borderColor: 'divider' }}>
+          <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 2, color: 'text.primary', textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.75rem' }}>
+            Review Result
+          </Typography>
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={5}>
+              <Box className="flex gap-4">
+                <Box
+                  onClick={() => handleStatusChange('OK')}
+                  sx={{
+                    cursor: canReview ? 'pointer' : 'default', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, px: 3, py: 1.5, borderRadius: 3, border: '2px solid', transition: 'all 0.2s', fontWeight: 600,
+                    ...(reviewStatus === 'OK' 
+                      ? { borderColor: 'success.main', bgcolor: alpha(theme.palette.success.main, 0.1), color: 'success.main', boxShadow: theme.shadows[2], transform: canReview ? 'scale(1.02)' : 'none' } 
+                      : { borderColor: 'divider', bgcolor: 'background.paper', color: 'text.secondary', opacity: canReview ? 1 : 0.6, '&:hover': canReview ? { borderColor: alpha(theme.palette.success.main, 0.5), bgcolor: alpha(theme.palette.success.main, 0.05) } : {} })
+                  }}
+                >
+                  <CheckCircleIcon /> OK
+                </Box>
+                <Box
+                  onClick={() => handleStatusChange('NOT_OK')}
+                  sx={{
+                    cursor: canReview ? 'pointer' : 'default', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, px: 3, py: 1.5, borderRadius: 3, border: '2px solid', transition: 'all 0.2s', fontWeight: 600,
+                    ...(reviewStatus === 'NOT_OK' 
+                      ? { borderColor: 'error.main', bgcolor: alpha(theme.palette.error.main, 0.1), color: 'error.main', boxShadow: theme.shadows[2], transform: canReview ? 'scale(1.02)' : 'none' } 
+                      : { borderColor: 'divider', bgcolor: 'background.paper', color: 'text.secondary', opacity: canReview ? 1 : 0.6, '&:hover': canReview ? { borderColor: alpha(theme.palette.error.main, 0.5), bgcolor: alpha(theme.palette.error.main, 0.05) } : {} })
+                  }}
+                >
+                  <CancelIcon /> NOT OK
+                </Box>
               </Box>
-              <Box
-                onClick={() => handleStatusChange('NOT_OK')}
+            </Grid>
+  
+            <Grid item xs={12} md={7}>
+              <TextField
+                fullWidth
+                multiline
+                rows={3}
+                variant="outlined"
+                label="Remark"
+                value={reviewRemark}
+                onChange={(e) => setReviewRemark(e.target.value)}
+                placeholder={canReview ? "Enter remark here..." : ""}
+                required={reviewStatus === 'NOT_OK'}
+                disabled={!canReview || reviewStatus !== 'NOT_OK'}
+                error={reviewStatus === 'NOT_OK' && !reviewRemark}
+                helperText={reviewStatus === 'NOT_OK' && !reviewRemark ? 'Remark is required if Not OK' : ''}
                 sx={{
-                  cursor: 'pointer', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, px: 3, py: 1.5, borderRadius: 3, border: '2px solid', transition: 'all 0.2s', fontWeight: 600,
-                  ...(reviewStatus === 'NOT_OK' 
-                    ? { borderColor: 'error.main', bgcolor: alpha(theme.palette.error.main, 0.1), color: 'error.main', boxShadow: theme.shadows[2], transform: 'scale(1.02)' } 
-                    : { borderColor: 'divider', bgcolor: 'background.paper', color: 'text.secondary', '&:hover': { borderColor: alpha(theme.palette.error.main, 0.5), bgcolor: alpha(theme.palette.error.main, 0.05) } })
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '12px',
+                    bgcolor: reviewStatus === 'NOT_OK' ? alpha(theme.palette.error.main, 0.05) : alpha(theme.palette.action.disabledBackground, 0.5),
+                    transition: 'all 0.2s',
+                  }
                 }}
-              >
-                <CancelIcon /> NOT OK
-              </Box>
-            </Box>
+              />
+            </Grid>
           </Grid>
-
-          <Grid item xs={12} md={7}>
-            <TextField
-              fullWidth
-              multiline
-              rows={3}
-              variant="outlined"
-              label="Remark"
-              value={reviewRemark}
-              onChange={(e) => setReviewRemark(e.target.value)}
-              placeholder="Enter remark here..."
-              required={reviewStatus === 'NOT_OK'}
-              disabled={reviewStatus !== 'NOT_OK'}
-              error={reviewStatus === 'NOT_OK' && !reviewRemark}
-              helperText={reviewStatus === 'NOT_OK' && !reviewRemark ? 'Remark is required if Not OK' : ''}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '12px',
-                  bgcolor: reviewStatus === 'NOT_OK' ? alpha(theme.palette.error.main, 0.05) : alpha(theme.palette.action.disabledBackground, 0.5),
-                  transition: 'all 0.2s',
-                }
-              }}
-            />
-          </Grid>
-        </Grid>
-      </Box>
+        </Box>
+      )}
     </Card>
   )
 }
