@@ -35,7 +35,7 @@ export const worklistPersonnelGroups: WorklistDataGroupSchema[] = [
           { id: 'name', label: 'Name' },
           { id: 'position', label: 'Position' },
           { id: 'identityType.name', label: 'Identity Type' },
-          { id: 'idNumber', label: 'Identity Number' },
+          { id: 'identityNumber', label: 'Identity Number' },
           { id: 'ownershipPercentage', label: 'Ownership Percentage' },
         ]
       }

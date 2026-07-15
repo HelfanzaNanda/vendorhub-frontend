@@ -7,6 +7,7 @@ export const worklistDocumentGroups: WorklistDataGroupSchema[] = [
   endpoint: '/worklists/:workflowTransactionId?tab=documents&documentType=NPWP',
   isMultiple: false,
   reviewSectionId: 'VENDOR_DOCUMENT',
+  
   sections: [
     {
       id: 'document-npwp',

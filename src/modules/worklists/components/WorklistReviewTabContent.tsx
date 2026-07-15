@@ -32,13 +32,39 @@ export default function WorklistReviewTabContent({ tab, workflowTransactionId }:
         <WorklistApprovalHistory workflowTransactionId={workflowTransactionId} />
       ) : (
         <Box className="flex flex-col gap-8">
-          {tab.groups?.map((group) => (
-            <WorklistReviewGroup 
-              key={group.id} 
-              group={group} 
-              workflowTransactionId={workflowTransactionId} 
-            />
-          ))}
+          {tab.groups?.map((group) => {
+            let groupPendingReviews = 0;
+            const validation = worklistData?.reviewValidation?.[tab.id];
+            
+            if (validation?.groups) {
+              // Try direct mapping
+              const camelCaseId = group.id.toLowerCase().replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+              if (validation.groups[camelCaseId] !== undefined) {
+                groupPendingReviews = validation.groups[camelCaseId];
+              } else {
+                // Try to find a matching key based on title or ID
+                const normalizedGroupId = group.id.toLowerCase().replace(/[^a-z0-9]/g, '');
+                const normalizedTitle = group.title.toLowerCase().replace(/[^a-z0-9]/g, '');
+                
+                for (const key in validation.groups) {
+                  const normalizedKey = key.toLowerCase().replace(/[^a-z0-9]/g, '');
+                  if (normalizedKey === normalizedGroupId || normalizedKey === normalizedTitle || normalizedKey.includes(normalizedGroupId) || normalizedGroupId.includes(normalizedKey)) {
+                    groupPendingReviews = validation.groups[key];
+                    break;
+                  }
+                }
+              }
+            }
+
+            return (
+              <WorklistReviewGroup 
+                key={group.id} 
+                group={group} 
+                workflowTransactionId={workflowTransactionId} 
+                pendingReviews={groupPendingReviews}
+              />
+            )
+          })}
         </Box>
       )}
     </Box>

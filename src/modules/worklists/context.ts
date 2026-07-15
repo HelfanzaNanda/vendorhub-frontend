@@ -18,6 +18,7 @@ export interface WorklistWorkflowInfo {
 }
 
 export interface WorklistApprover {
+    workflowTransactionStepId : number;
     user: {
         name: string;
         email: string;
@@ -35,6 +36,11 @@ export interface WorklistApprover {
 export interface WorklistReviewContextState {
   isReviewMode: boolean;
   worklistData?: {
+    permissions?:{
+      canSubmit?: boolean;
+      canDelegate?: boolean;
+      canReview?: boolean;
+    };
     workflowInfo: WorklistWorkflowInfo;
     approvers: WorklistApprover[];
     reviewStatistics?: {
@@ -49,10 +55,28 @@ export interface WorklistReviewContextState {
   };
   sectionChanges?: Record<string, { current: any; new: any }>;
   listChanges?: Record<string, { action: string; current: any; new: any }>;
+  reviewValidation?: any;
+  setReviewValidation?: (val: any) => void;
+  activeTab?: number;
+  setActiveTab?: (val: number) => void;
 }
+
+
+export interface DelegationUser {
+    id: number
+    firstname: string
+    lastname: string
+    email: string
+    username: string
+    site : {
+        name : string
+    }
+}
+
 
 export const WorklistReviewContext = createContext<WorklistReviewContextState>({
   isReviewMode: false,
+  worklistData: undefined,
 })
 
 export const useWorklistReview = () => useContext(WorklistReviewContext)

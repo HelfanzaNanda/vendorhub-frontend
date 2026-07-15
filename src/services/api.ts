@@ -1,13 +1,13 @@
 import { apiClient } from './axios'
 
 export interface ApiResponse<T = any> {
-  success: boolean
+  status: boolean
   data: T
   message?: string
 }
 
 export interface ApiError {
-  success: boolean
+  status: boolean
   message: string
   errors?: Record<string, string[]>
 }

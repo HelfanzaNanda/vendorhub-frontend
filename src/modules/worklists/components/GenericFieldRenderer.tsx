@@ -2,6 +2,9 @@ import React from 'react'
 import { Box, Chip, Link, Typography } from '@mui/material'
 import { FieldComponentType, FormatterType, WorklistFieldSchema } from '../schemas/types'
 import dayjs from 'dayjs'
+import WorklistCustomerReferenceTable from './WorklistCustomerReferenceTable'
+import PremiumDownloadCard from '@/components/common/File/PremiumDownloadCard'
+import DownloadFile from '@/components/common/File/DownloadFile'
 
 interface GenericFieldRendererProps {
   value: any
@@ -16,7 +19,7 @@ export default function GenericFieldRenderer({ value, originalValue, field }: Ge
   }
 
   // Handle empty or null values
-  if (value === undefined || value === null || value === '') {
+  if ((value === undefined || value === null || value === '') && field.component !== 'customer-reference-table') {
     return <Typography variant="body2" className="text-gray-400 italic">-</Typography>
   }
 
@@ -57,15 +60,16 @@ export default function GenericFieldRenderer({ value, originalValue, field }: Ge
       return <Link href={String(value)} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline font-medium">{formattedValue}</Link>
     case 'file':
       return (
-        <Box className="flex items-center gap-2 text-blue-600">
-          <i className="ri-file-text-line"></i>
-          <span className="font-medium">{formattedValue}</span>
+        <Box className="flex items-center gap-2">
+          <PremiumDownloadCard url={String(value)} fileName={String(value).split('/').pop() || String(value)} />
         </Box>
       )
     case 'image':
       return <img src={String(value)} alt={field.label} className="max-h-32 object-contain rounded border border-gray-200" />
     case 'textarea':
       return <Typography variant="body2" className="whitespace-pre-wrap">{formattedValue}</Typography>
+    case 'customer-reference-table':
+      return <WorklistCustomerReferenceTable value={value} field={field} originalValue={originalValue} />
     default:
       return <Typography variant="body2" className="text-gray-900 break-words font-medium">{formattedValue}</Typography>
   }

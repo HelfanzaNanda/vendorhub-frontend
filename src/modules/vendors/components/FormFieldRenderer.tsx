@@ -208,26 +208,24 @@ return (
                 renderInput={(params) => {
                   // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   const { inputRef: _, ...restBaseProps } = baseProps
-
-                  
-return (
-                    <TextField
-                      {...params}
-                      {...restBaseProps}
-                      InputProps={{
-                        ...params.InputProps,
-                        ...restBaseProps.InputProps,
-                        endAdornment: (
-                          <>
-                            {isLoadingLookups ? <CircularProgress color="inherit" size={20} /> : null}
-                            {params.InputProps.endAdornment}
-                          </>
-                        ),
-                      }}
-                      label={field.required ? `${field.label} *` : field.label}
-                      placeholder={field.placeholder || 'Select multiple...'}
-                    />
-                  )
+                    return (
+                        <TextField
+                            {...params}
+                            {...restBaseProps}
+                            InputProps={{
+                                ...params.InputProps,
+                                ...restBaseProps.InputProps,
+                                endAdornment: (
+                                <>
+                                {isLoadingLookups ? <CircularProgress color="inherit" size={20} /> : null}
+                                {params.InputProps.endAdornment}
+                            </>
+                            ),
+                        }}
+                        label={field.required ? `${field.label} *` : field.label}
+                        placeholder={field.placeholder || 'Select multiple...'}
+                        />
+                    )
                 }}
               />
             )

@@ -15,9 +15,10 @@ interface WorklistReviewCardProps {
   record: any
   group: WorklistDataGroupSchema
   workflowTransactionId: string
+  pendingReviews?: number
 }
 
-export default function WorklistReviewCard({ record, group, workflowTransactionId }: WorklistReviewCardProps) {
+export default function WorklistReviewCard({ record, group, workflowTransactionId, pendingReviews = 0 }: WorklistReviewCardProps) {
   const theme = useTheme()
   const [reviewStatus, setReviewStatus] = useState<'OK' | 'NOT_OK' | ''>(record.reviewStatus || '')
   const [reviewRemark, setReviewRemark] = useState(record.reviewRemark || '')
@@ -45,6 +46,10 @@ export default function WorklistReviewCard({ record, group, workflowTransactionI
 
     if (reviewStatus === record.reviewStatus && reviewRemark === (record.reviewRemark || '')) {
       return
+    }
+
+    if (reviewStatus === 'NOT_OK' && !reviewRemark.trim()) {
+      return // Don't send request if NOT OK and remark is empty
     }
 
     const timeout = setTimeout(() => {
@@ -193,13 +198,18 @@ export default function WorklistReviewCard({ record, group, workflowTransactionI
   const cardBadge = group.card?.badgeField ? _get(record.data, group.card.badgeField) : null;
 
   return (
-    <Card sx={{ mb: 4, borderRadius: 3, overflow: 'hidden', bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', boxShadow: theme.shadows[2] }}>
+    <Card sx={{ mb: 4, borderRadius: 3, overflow: 'hidden', bgcolor: 'background.paper', border: showReviewSection && !reviewStatus ? '2px solid' : '1px solid', borderColor: showReviewSection && !reviewStatus ? 'error.main' : 'divider', boxShadow: theme.shadows[2] }}>
       {/* Header */}
       <Box className="p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4" sx={{ borderBottom: '1px solid', borderColor: 'divider', bgcolor: alpha(theme.palette.action.hover, 0.5) }}>
         <Box>
           <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'text.primary', display: 'flex', alignItems: 'center', gap: 1.5 }}>
             <i className={`${getIconForTitle(group.title)}`} style={{ fontSize: '1.25rem', color: theme.palette.primary.main }} />
             {cardTitle}
+            {pendingReviews > 0 && (
+              <Box sx={{ bgcolor: 'error.main', color: 'white', borderRadius: '50%', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold' }}>
+                {pendingReviews}
+              </Box>
+            )}
           </Typography>
           {cardSubtitle && (
             <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5, ml: 4 }}>
@@ -218,6 +228,11 @@ export default function WorklistReviewCard({ record, group, workflowTransactionI
             <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', px: 1.5, py: 0.5, borderRadius: 1, boxShadow: 1 }}>
               {changedCount} Changed Fields
             </Typography>
+          )}
+          {showReviewSection && !reviewStatus && (
+            <Box sx={{ px: 1.5, py: 0.5, bgcolor: alpha(theme.palette.error.main, 0.1), color: 'error.main', borderRadius: 1, fontWeight: 'bold', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              ⚠ Review belum dipilih.
+            </Box>
           )}
         </Box>
       </Box>
@@ -266,28 +281,28 @@ export default function WorklistReviewCard({ record, group, workflowTransactionI
           </Typography>
           <Grid container spacing={4}>
             <Grid item xs={12} md={5}>
-              <Box className="flex gap-4">
+              <Box className="flex gap-2">
                 <Box
                   onClick={() => handleStatusChange('OK')}
                   sx={{
-                    cursor: canReview ? 'pointer' : 'default', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, px: 3, py: 1.5, borderRadius: 3, border: '2px solid', transition: 'all 0.2s', fontWeight: 600,
+                    cursor: canReview ? 'pointer' : 'default', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, px: 2, py: 1, borderRadius: 2, border: '1px solid', transition: 'all 0.2s', fontWeight: 600, fontSize: '0.875rem',
                     ...(reviewStatus === 'OK' 
-                      ? { borderColor: 'success.main', bgcolor: alpha(theme.palette.success.main, 0.1), color: 'success.main', boxShadow: theme.shadows[2], transform: canReview ? 'scale(1.02)' : 'none' } 
-                      : { borderColor: 'divider', bgcolor: 'background.paper', color: 'text.secondary', opacity: canReview ? 1 : 0.6, '&:hover': canReview ? { borderColor: alpha(theme.palette.success.main, 0.5), bgcolor: alpha(theme.palette.success.main, 0.05) } : {} })
+                      ? { borderColor: 'success.main', bgcolor: alpha(theme.palette.success.main, 0.1), color: 'success.main', boxShadow: 'none' } 
+                      : { borderColor: 'divider', bgcolor: 'transparent', color: 'text.secondary', opacity: canReview ? 1 : 0.6, '&:hover': canReview ? { borderColor: 'success.main', bgcolor: alpha(theme.palette.success.main, 0.05) } : {} })
                   }}
                 >
-                  <CheckCircleIcon /> OK
+                  <CheckCircleIcon fontSize="small" /> OK
                 </Box>
                 <Box
                   onClick={() => handleStatusChange('NOT_OK')}
                   sx={{
-                    cursor: canReview ? 'pointer' : 'default', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, px: 3, py: 1.5, borderRadius: 3, border: '2px solid', transition: 'all 0.2s', fontWeight: 600,
+                    cursor: canReview ? 'pointer' : 'default', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, px: 2, py: 1, borderRadius: 2, border: '1px solid', transition: 'all 0.2s', fontWeight: 600, fontSize: '0.875rem',
                     ...(reviewStatus === 'NOT_OK' 
-                      ? { borderColor: 'error.main', bgcolor: alpha(theme.palette.error.main, 0.1), color: 'error.main', boxShadow: theme.shadows[2], transform: canReview ? 'scale(1.02)' : 'none' } 
-                      : { borderColor: 'divider', bgcolor: 'background.paper', color: 'text.secondary', opacity: canReview ? 1 : 0.6, '&:hover': canReview ? { borderColor: alpha(theme.palette.error.main, 0.5), bgcolor: alpha(theme.palette.error.main, 0.05) } : {} })
+                      ? { borderColor: 'error.main', bgcolor: alpha(theme.palette.error.main, 0.1), color: 'error.main', boxShadow: 'none' } 
+                      : { borderColor: 'divider', bgcolor: 'transparent', color: 'text.secondary', opacity: canReview ? 1 : 0.6, '&:hover': canReview ? { borderColor: 'error.main', bgcolor: alpha(theme.palette.error.main, 0.05) } : {} })
                   }}
                 >
-                  <CancelIcon /> NOT OK
+                  <CancelIcon fontSize="small" /> NOT OK
                 </Box>
               </Box>
             </Grid>
@@ -295,21 +310,22 @@ export default function WorklistReviewCard({ record, group, workflowTransactionI
             <Grid item xs={12} md={7}>
               <TextField
                 fullWidth
+                size="small"
                 multiline
-                rows={3}
+                rows={2}
                 variant="outlined"
-                label="Remark"
+                label="Remarks"
                 value={reviewRemark}
                 onChange={(e) => setReviewRemark(e.target.value)}
-                placeholder={canReview ? "Enter remark here..." : ""}
+                placeholder={canReview ? "Enter remarks here..." : ""}
                 required={reviewStatus === 'NOT_OK'}
                 disabled={!canReview || reviewStatus !== 'NOT_OK'}
-                error={reviewStatus === 'NOT_OK' && !reviewRemark}
-                helperText={reviewStatus === 'NOT_OK' && !reviewRemark ? 'Remark is required if Not OK' : ''}
+                error={reviewStatus === 'NOT_OK' && !reviewRemark.trim()}
+                helperText={reviewStatus === 'NOT_OK' && !reviewRemark.trim() ? 'Remarks is required for NOT OK status.' : ''}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    borderRadius: '12px',
-                    bgcolor: reviewStatus === 'NOT_OK' ? alpha(theme.palette.error.main, 0.05) : alpha(theme.palette.action.disabledBackground, 0.5),
+                    borderRadius: 2,
+                    bgcolor: reviewStatus === 'NOT_OK' ? alpha(theme.palette.error.main, 0.02) : alpha(theme.palette.action.disabledBackground, 0.3),
                     transition: 'all 0.2s',
                   }
                 }}

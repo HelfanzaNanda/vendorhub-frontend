@@ -1,13 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { delegateWorklistApi } from '../api/delegate.api'
 import { WORKLIST_QUERY_KEYS } from '../constants'
+import { ApiResponse } from '@/services/api'
+import { DelegationUser } from '../context'
 
-export const useDelegateUsers = (workflowTransactionId: string, enabled: boolean) => {
+export const useDelegateUsers = (workflowTransactionStepId: number, enabled: boolean) => {
   return useQuery({
-    queryKey: ['delegate-users', workflowTransactionId],
+    queryKey: ['delegations', workflowTransactionStepId],
     queryFn: async () => {
-      const res = await delegateWorklistApi.getDelegateUsers(workflowTransactionId)
-      return res?.data || res
+      const res  = await delegateWorklistApi.getDelegateUsers(workflowTransactionStepId)
+      return res?.data ?? [];
     },
     enabled,
   })
@@ -16,10 +18,10 @@ export const useDelegateUsers = (workflowTransactionId: string, enabled: boolean
 export const useDelegateWorklist = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, payload }: { id: string; payload: any }) => 
-      delegateWorklistApi.delegate(id, payload),
-    onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: WORKLIST_QUERY_KEYS.detail(id) })
+    mutationFn: ({ workflowTransactionId, workflowTransactionStepId, payload }: { workflowTransactionId : number, workflowTransactionStepId: number; payload: any }) => 
+      delegateWorklistApi.delegate(workflowTransactionStepId, payload),
+    onSuccess: (_, { workflowTransactionId }) => {
+      queryClient.invalidateQueries({ queryKey: WORKLIST_QUERY_KEYS.detail(workflowTransactionId) })
       queryClient.invalidateQueries({ queryKey: WORKLIST_QUERY_KEYS.lists() })
     }
   })

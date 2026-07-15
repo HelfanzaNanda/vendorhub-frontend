@@ -14,13 +14,11 @@ export default function WorklistReviewFooter({ workflowTransactionId }: Worklist
   const { worklistData } = useContext(WorklistReviewContext)
 
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false)
-  const [isDelegateModalOpen, setIsDelegateModalOpen] = useState(false)
 
   const canSubmit = worklistData?.permissions?.canSubmit ?? false
-  const canDelegate = worklistData?.permissions?.canDelegate ?? false
 
   // Only show footer if at least one permission is true
-  if (!canSubmit && !canDelegate) {
+  if (!canSubmit) {
     return null
   }
 
@@ -30,11 +28,6 @@ export default function WorklistReviewFooter({ workflowTransactionId }: Worklist
         <Button variant="outlined" color="inherit" onClick={() => router.back()}>
           Cancel
         </Button>
-        {canDelegate && (
-          <Button variant="outlined" color="primary" onClick={() => setIsDelegateModalOpen(true)} className="px-6 font-bold">
-            Delegate
-          </Button>
-        )}
         {canSubmit && (
           <Button variant="contained" color="primary" onClick={() => setIsSubmitModalOpen(true)} className="px-8 font-bold">
             Submit
@@ -46,14 +39,6 @@ export default function WorklistReviewFooter({ workflowTransactionId }: Worklist
         <WorklistSubmitDialog 
           open={isSubmitModalOpen} 
           onClose={() => setIsSubmitModalOpen(false)} 
-          workflowTransactionId={workflowTransactionId} 
-        />
-      )}
-
-      {canDelegate && (
-        <WorklistDelegateDialog 
-          open={isDelegateModalOpen} 
-          onClose={() => setIsDelegateModalOpen(false)} 
           workflowTransactionId={workflowTransactionId} 
         />
       )}

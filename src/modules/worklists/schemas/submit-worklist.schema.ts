@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const submitWorklistSchema = z.object({
-  status: z.enum(['APPROVE', 'REJECT', 'REVISE'], {
+  status: z.enum(['APPROVED', 'REJECTED', 'REVISED'], {
     required_error: 'Status is required',
   }),
   vendorCategoryId: z.any().optional(),
@@ -9,7 +9,7 @@ export const submitWorklistSchema = z.object({
   priority: z.enum(['VIP', 'NON_VIP']).optional().default('NON_VIP'),
   remarks: z.string().optional(),
 }).superRefine((data, ctx) => {
-  if (data.status === 'APPROVE') {
+  if (data.status === 'APPROVED') {
     if (!data.vendorCategoryId) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -33,7 +33,7 @@ export const submitWorklistSchema = z.object({
     }
   }
 
-  if ((data.status === 'REJECT' || data.status === 'REVISE') && !data.remarks?.trim()) {
+  if ((data.status === 'REJECTED' || data.status === 'REVISED') && !data.remarks?.trim()) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: 'Remarks is required',

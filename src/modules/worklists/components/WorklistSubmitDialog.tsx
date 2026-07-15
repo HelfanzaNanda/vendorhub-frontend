@@ -10,6 +10,9 @@ import { submitWorklistSchema, SubmitWorklistFormData } from '../schemas/submit-
 import { useVendorCategories, useVendorCategoryItems, useSubmitWorklist } from '../hooks/useSubmitWorklist'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import { WorklistReviewContext } from '../context'
+import { worklistProfileSchema } from '../schemas'
+import { AxiosError } from 'axios'
 
 interface WorklistSubmitDialogProps {
   open: boolean
@@ -19,6 +22,7 @@ interface WorklistSubmitDialogProps {
 
 export default function WorklistSubmitDialog({ open, onClose, workflowTransactionId }: WorklistSubmitDialogProps) {
   const router = useRouter()
+  const { setReviewValidation, setActiveTab } = React.useContext(WorklistReviewContext)
   
   const { 
     control, handleSubmit, watch, setValue, reset, formState: { errors } 
@@ -40,9 +44,9 @@ export default function WorklistSubmitDialog({ open, onClose, workflowTransactio
   const { data: categoryItems = [], isLoading: loadingItems } = useVendorCategoryItems(vendorCategoryId || '')
   const submitMutation = useSubmitWorklist()
 
-  // Reset fields when status changes from APPROVE to something else
+  // Reset fields when status changes from APPROVED to something else
   useEffect(() => {
-    if (status !== 'APPROVE') {
+    if (status !== 'APPROVED') {
       setValue('vendorCategoryId', undefined)
       setValue('vendorCategoryItemId', undefined)
       setValue('priority', 'NON_VIP')
@@ -64,20 +68,47 @@ export default function WorklistSubmitDialog({ open, onClose, workflowTransactio
   const onSubmit = (data: SubmitWorklistFormData) => {
     const payload = {
       status: data.status,
-      vendorCategoryItemId: data.status === 'APPROVE' ? data.vendorCategoryItemId : undefined,
-      priority: data.status === 'APPROVE' ? data.priority : undefined,
+      vendorCategoryItemId: data.status === 'APPROVED' ? data.vendorCategoryItemId : undefined,
+      priority: data.status === 'APPROVED' ? data.priority : undefined,
       remarks: data.remarks
     }
 
     submitMutation.mutate({ id: workflowTransactionId, payload }, {
-      onSuccess: () => {
-        toast.success('Worklist submitted successfully')
-        onClose()
-        router.push('/worklist')
-      },
-      onError: (err: any) => {
-        toast.error(err?.response?.data?.message || 'Failed to submit worklist')
-      }
+        onSuccess: () => {
+            toast.success('Worklist submitted successfully')
+            if (setReviewValidation) setReviewValidation(null)
+            onClose()
+            router.push('/worklist/vendor-registration')
+        },
+        onError: (err : any) => {
+            const status = err?.response?.status
+            const data = err?.response?.data
+            
+            if (status === 422 && data?.reviewValidation) {
+                toast.error(data.message || 'Review belum selesai.')
+                
+                if (setReviewValidation) {
+                    setReviewValidation(data.reviewValidation)
+                }
+            
+                // Auto navigate to first tab with pending reviews
+                if (setActiveTab) {
+                    const tabs = worklistProfileSchema.tabs
+                    const firstPendingTabIndex = tabs.findIndex(tab => {
+                        const tabValidation = data.reviewValidation[tab.id]
+                        if (typeof tabValidation === 'number' && tabValidation > 0) return true
+                        if (tabValidation && typeof tabValidation === 'object' && tabValidation.pendingReviews > 0) return true
+                        return false
+                    })
+                    if (firstPendingTabIndex !== -1) {
+                        setActiveTab(firstPendingTabIndex)
+                    }
+                    onClose()
+                }
+            } else {
+                toast.error(data?.message || 'Failed to submit worklist')
+            }
+        }
     })
   }
 
@@ -97,16 +128,16 @@ export default function WorklistSubmitDialog({ open, onClose, workflowTransactio
               <FormControl error={!!errors.status}>
                 <FormLabel required>Status</FormLabel>
                 <RadioGroup row {...field} value={field.value || ''}>
-                  <FormControlLabel value="APPROVE" control={<Radio />} label="Approve" />
-                  <FormControlLabel value="REJECT" control={<Radio />} label="Reject" />
-                  <FormControlLabel value="REVISE" control={<Radio />} label="Revise (Return to Vendor)" />
+                  <FormControlLabel value="APPROVED" control={<Radio />} label="Approve" />
+                  <FormControlLabel value="REJECTED" control={<Radio />} label="Reject" />
+                  <FormControlLabel value="REVISED" control={<Radio />} label="Revise (Return to Vendor)" />
                 </RadioGroup>
                 {errors.status && <FormHelperText>{errors.status.message}</FormHelperText>}
               </FormControl>
             )}
           />
 
-          {status === 'APPROVE' && (
+          {status === 'APPROVED' && (
             <>
               <Controller
                 name="vendorCategoryId"
@@ -115,10 +146,9 @@ export default function WorklistSubmitDialog({ open, onClose, workflowTransactio
                   <Autocomplete
                     {...field}
                     options={categories}
-                    getOptionLabel={(option: any) => option.name ? `${option.code} - ${option.name}` : ''}
                     loading={loadingCategories}
-                    onChange={(_, newValue) => field.onChange(newValue?.id || '')}
-                    value={categories.find((c: any) => c.id === field.value) || null}
+                    onChange={(_, newValue) => field.onChange(newValue?.value || '')}
+                    value={categories.find((c: any) => c.value === field.value) || null}
                     renderInput={(params) => (
                       <TextField 
                         {...params} 
@@ -139,11 +169,10 @@ export default function WorklistSubmitDialog({ open, onClose, workflowTransactio
                   <Autocomplete
                     {...field}
                     options={categoryItems}
-                    getOptionLabel={(option: any) => option.name ? `${option.code} - ${option.name}` : ''}
                     loading={loadingItems}
                     disabled={!vendorCategoryId}
-                    onChange={(_, newValue) => field.onChange(newValue?.id || '')}
-                    value={categoryItems.find((c: any) => c.id === field.value) || null}
+                    onChange={(_, newValue) => field.onChange(newValue?.value || '')}
+                    value={categoryItems.find((c: any) => c.value === field.value) || null}
                     renderInput={(params) => (
                       <TextField 
                         {...params} 
@@ -185,7 +214,7 @@ export default function WorklistSubmitDialog({ open, onClose, workflowTransactio
                 minRows={3}
                 maxRows={6}
                 placeholder="Enter remarks..."
-                required={status === 'REJECT' || status === 'REVISE'}
+                required={status === 'REJECTED' || status === 'REVISED'}
                 error={!!errors.remarks}
                 helperText={errors.remarks?.message}
                 fullWidth

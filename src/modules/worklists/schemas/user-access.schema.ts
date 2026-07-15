@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { WorklistDataGroupSchema } from './types'
 
 export const worklistUserAccessGroup: WorklistDataGroupSchema = {
@@ -7,8 +8,8 @@ export const worklistUserAccessGroup: WorklistDataGroupSchema = {
   isMultiple: true,
   reviewSectionId: 'VENDOR_USER_ACCESS',
   card: {
-    titleField: 'email',
-    subtitleField: 'fullName',
+    titleField: 'firstname',
+    subtitleField: 'email',
   },
   sections: [
     {
@@ -16,13 +17,22 @@ export const worklistUserAccessGroup: WorklistDataGroupSchema = {
       layout: 'grid',
       columns: 2,
       fields: [
-        { id: 'fullName', label: 'Full Name' },
+        { id: 'firstname', label: 'First Name' },
+        { id: 'lastname', label: 'Last Name' },
+        // { id: 'username', label: 'username' },
         { id: 'email', label: 'Email' },
-        { id: 'roles', label: 'Roles', component: 'tags' },
-        { id: 'site.name', label: 'Site',  },
+        { id: 'phone', label: 'Phone' },
         { id: 'area.name', label: 'Area' },
-        { id: 'department', label: 'Department' },
-        { id: 'employeeId', label: 'Employee ID' },
+        { id: 'effectiveStartDate', label: 'Effective Start Date', render(value, originalValue) {
+          return dayjs(value).format('DD MMM YYYY')
+        }, },
+        { id: 'effectiveEndDate', label: 'Effective End Date', render(value, originalValue) {
+          return dayjs(value).format('DD MMM YYYY')
+        } },
+        { id: 'position.name', label: 'Position' },
+        { id: 'jobTitle', label: 'Job Title' },
+        { id : 'roles', label : 'Roles', component: 'tags' }
+
       ]
     }
   ]

@@ -11,11 +11,12 @@ interface WorklistProfileProps {
 }
 
 export default function WorklistProfile({ schemaConfig, worklistTransactionId }: WorklistProfileProps) {
-  const [activeTab, setActiveTab] = useState(0)
-  const { worklistData } = useContext(WorklistReviewContext)
+  const { worklistData, activeTab = 0, setActiveTab, reviewValidation } = useContext(WorklistReviewContext)
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setActiveTab(newValue)
+    if (setActiveTab) {
+      setActiveTab(newValue)
+    }
   }
 
   const currentTab = schemaConfig.tabs[activeTab]
@@ -64,20 +65,54 @@ export default function WorklistProfile({ schemaConfig, worklistTransactionId }:
           {schemaConfig.tabs.map((tab: WorklistTabSchema, index: number) => {
             const changesCount = worklistData?.tabChanges?.[tab.id] || 0
             
+            // Calculate pending reviews for this tab from reviewValidation
+            let pendingReviewsCount = 0
+            if (reviewValidation && reviewValidation[tab.id]) {
+              const tabValidation = reviewValidation[tab.id]
+              if (typeof tabValidation === 'number') {
+                pendingReviewsCount = tabValidation
+              } else if (tabValidation && typeof tabValidation === 'object' && tabValidation.pendingReviews !== undefined) {
+                pendingReviewsCount = tabValidation.pendingReviews
+              }
+            }
+            
             return (
             <Tab
               key={tab.id}
               label={
                 <Box className="flex items-center gap-3 w-full">
                   {tab.icon && <i className={`${tab.icon} text-lg`} />}
-                  <Typography variant="body2" className="flex-1 font-inherit text-left flex items-center justify-between">
+                  <Typography variant="body2" component={"div"} className="flex-1 font-inherit text-left flex items-center justify-between">
                     <span>{tab.label}</span>
-                    {changesCount > 0 && (
-                      <span className="bg-amber-100 text-amber-700 text-[10px] font-bold px-1.5 py-0.5 rounded ml-2">
-                        {changesCount}
-                      </span>
-                    )}
                   </Typography>
+
+                  <Box className="flex items-center gap-1">
+                    {changesCount > 0 && (
+                    <span className="bg-amber-100 text-amber-700 text-[10px] font-bold px-1.5 py-0.5 rounded">
+                        {changesCount}
+                    </span>
+                    )}
+                    {pendingReviewsCount > 0 && (
+                    <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                        {pendingReviewsCount}
+                    </span>
+                    )}
+                </Box>
+                  {/* <Typography variant="body2" className="flex-1 font-inherit text-left flex items-center justify-between">
+                    <span>{tab.label}</span>
+                    <Box className="flex items-center gap-1">
+                      {changesCount > 0 && (
+                        <span className="bg-amber-100 text-amber-700 text-[10px] font-bold px-1.5 py-0.5 rounded">
+                          {changesCount}
+                        </span>
+                      )}
+                      {pendingReviewsCount > 0 && (
+                        <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                          {pendingReviewsCount}
+                        </span>
+                      )}
+                    </Box>
+                  </Typography> */}
                 </Box>
               }
               id={`worklist-tab-${index}`}

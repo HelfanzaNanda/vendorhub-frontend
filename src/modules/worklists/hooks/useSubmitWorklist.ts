@@ -24,13 +24,13 @@ export const useVendorCategoryItems = (categoryId: string) => {
 }
 
 export const useSubmitWorklist = () => {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: ({ id, payload }: { id: string; payload: any }) => 
-      submitWorklistApi.submit(id, payload),
-    onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: WORKLIST_QUERY_KEYS.detail(id) })
-      queryClient.invalidateQueries({ queryKey: WORKLIST_QUERY_KEYS.lists() })
-    }
-  })
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: ({ id, payload }: { id: string; payload: any }) => 
+            submitWorklistApi.submit(id, payload),
+        onSuccess: (_, { id }) => {
+            queryClient.invalidateQueries({ queryKey: WORKLIST_QUERY_KEYS.detail(id) })
+            queryClient.invalidateQueries({ queryKey: WORKLIST_QUERY_KEYS.lists() })
+        },
+    })
 }

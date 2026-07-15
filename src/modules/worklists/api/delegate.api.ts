@@ -1,11 +1,12 @@
 import { api } from '@/services/api'
+import { DelegationUser } from '../context'
 
 export const delegateWorklistApi = {
-  getDelegateUsers: async (workflowTransactionId: string) => {
-    return api.get(`/worklists/${workflowTransactionId}/delegate-users`)
+  getDelegateUsers: async (workflowTransactionStepId: number) => {
+    return api.get<DelegationUser[]>(`/delegations/${workflowTransactionStepId}`)
   },
 
-  delegate: async (workflowTransactionId: string, payload: any) => {
-    return api.post(`/worklists/${workflowTransactionId}/delegate`, payload)
+  delegate: async (workflowTransactionStepId: number, payload: any) => {
+    return api.post(`/delegations/${workflowTransactionStepId}`, payload)
   }
 }

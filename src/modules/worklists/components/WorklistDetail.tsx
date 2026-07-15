@@ -16,13 +16,29 @@ interface WorklistDetailProps {
 export default function WorklistDetail({ workflowTransactionId }: WorklistDetailProps) {
   const { data, isLoading, isError } = useWorklistDetail(workflowTransactionId)
 
+  const [reviewValidation, setReviewValidation] = useState<any>(null)
+  const [activeTab, setActiveTab] = useState(0)
+
   const worklistContextValue = useMemo(() => {
-    if (!data) return { isReviewMode: false }
-    return {
-      isReviewMode: true,
-      worklistData: data,
+    if (!data) {
+        return { 
+            isReviewMode: false, 
+            worklistData: undefined,
+            reviewValidation,
+            setReviewValidation,
+            activeTab,
+            setActiveTab
+        }
     }
-  }, [data])
+    return {
+        isReviewMode: true,
+        worklistData: data,
+        reviewValidation,
+        setReviewValidation,
+        activeTab,
+        setActiveTab
+    }
+  }, [data, reviewValidation, activeTab])
 
   if (isLoading) {
     return (

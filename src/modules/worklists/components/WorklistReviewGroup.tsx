@@ -9,9 +9,10 @@ import WorklistMultipleReviewGroup from './WorklistMultipleReviewGroup'
 interface WorklistReviewGroupProps {
   group: WorklistDataGroupSchema
   workflowTransactionId: string
+  pendingReviews?: number
 }
 
-export default function WorklistReviewGroup({ group, workflowTransactionId }: WorklistReviewGroupProps) {
+export default function WorklistReviewGroup({ group, workflowTransactionId, pendingReviews = 0 }: WorklistReviewGroupProps) {
   const { data: response, isLoading, isError } = useQuery({
     queryKey: [group.endpoint, workflowTransactionId],
     queryFn: () => api.get(group.endpoint.replace(':workflowTransactionId', workflowTransactionId)),
@@ -40,9 +41,6 @@ export default function WorklistReviewGroup({ group, workflowTransactionId }: Wo
 
   return (
     <Box className="flex flex-col gap-4">
-      <Typography variant="h6" className="font-bold text-gray-800">
-        {group.title}
-      </Typography>
 
       {records.length === 0 ? (
         <Box className="p-6 bg-gray-50 border border-dashed border-gray-300 rounded text-center text-gray-500">
@@ -53,6 +51,7 @@ export default function WorklistReviewGroup({ group, workflowTransactionId }: Wo
           records={records}
           group={group}
           workflowTransactionId={workflowTransactionId}
+          pendingReviews={pendingReviews}
         />
       ) : (
         <Box className="flex flex-col gap-6">
@@ -62,6 +61,7 @@ export default function WorklistReviewGroup({ group, workflowTransactionId }: Wo
               record={record} 
               group={group} 
               workflowTransactionId={workflowTransactionId} 
+              pendingReviews={pendingReviews}
             />
           ))}
         </Box>

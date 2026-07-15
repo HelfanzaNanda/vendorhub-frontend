@@ -14,6 +14,7 @@ export type FieldComponentType =
   | 'customer-reference' 
   | 'tree-select' 
   | 'display'
+  | 'customer-reference-table'
 
 export type FormatterType = 'currency' | 'date' | 'phone' | 'percentage' | 'uppercase'
 
@@ -44,6 +45,11 @@ export interface WorklistCardSchema {
   collapsible?: boolean
 }
 
+export interface WorklistChildRecordConfig {
+  dataField: string;
+  group: WorklistDataGroupSchema;
+}
+
 export interface WorklistDataGroupSchema {
   id: string
   title: string
@@ -53,6 +59,7 @@ export interface WorklistDataGroupSchema {
   reviewSectionId: string // the unique section id for auto-save review
   card?: WorklistCardSchema // configuration for the wrapper card
   sections: WorklistSectionSchema[]
+  childRecords?: WorklistChildRecordConfig
 }
 
 export interface WorklistTabSchema {
@@ -66,4 +73,4 @@ export interface WorklistTabSchema {
 
 export interface WorklistProfileSchema {
   tabs: WorklistTabSchema[]
-
+}

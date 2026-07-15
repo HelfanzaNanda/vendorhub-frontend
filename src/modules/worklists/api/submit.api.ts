@@ -5,8 +5,8 @@ export const submitWorklistApi = {
     return api.get('/lookups/vendor-categories')
   },
 
-  getVendorCategoryItems: async (categoryId: string) => {
-    return api.get(`/lookups/vendor-category-items`, { categoryId })
+  getVendorCategoryItems: async (vendorCategoryId: number) => {
+    return api.get(`/lookups/vendor-category-items?vendorCategoryId=${vendorCategoryId}`)
   },
 
   submit: async (workflowTransactionId: string, payload: any) => {
