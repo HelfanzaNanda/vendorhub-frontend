@@ -7,6 +7,7 @@ import dayjs from 'dayjs'
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { toast } from 'sonner'
 import { Box, Typography, Divider, Button, CardContent, CardActions } from '@mui/material'
 
 import type { FormSchema } from '../schemas/types'
@@ -51,6 +52,7 @@ return {
         fields: sec.fields.map((f) => ({
           ...f,
           disabled: true,
+          verification: undefined,
         })),
       })),
     }
@@ -271,6 +273,34 @@ return data
   }
 
   const handleFormSubmit = async (rawData: any) => {
+    // 1. Validation Logic for verifications
+    const verifiedActions = (methods.getValues('verifiedActions') as Record<string, boolean>) || {}
+    let hasUnverified = false
+    let firstFailedField = ''
+
+    processedSchema.sections.forEach(s => {
+      s.fields.forEach(f => {
+        const isVisible = f.visibility ? f.visibility(rawData) : true
+        if (isVisible && f.verification && f.verification.length > 0) {
+          f.verification.forEach(action => {
+            if (action.required && !verifiedActions[action.id]) {
+              hasUnverified = true
+              const actionName = action.label.replace('Check ', '').replace('Verify ', '').trim()
+              const errorMessage = `Please verify ${actionName} first.`
+              methods.setError(f.name, { type: 'manual', message: errorMessage })
+              if (!firstFailedField) firstFailedField = f.name
+            }
+          })
+        }
+      })
+    })
+
+    if (hasUnverified) {
+      toast.error('Please complete all required verifications.')
+      if (firstFailedField) methods.setFocus(firstFailedField)
+      return
+    }
+
     // Merge formValues with rawData to ensure custom fields (like customerReferences) 
     // that may not be strictly registered as inputs are still included in the payload.
     const completeData = { ...formValues, ...rawData }
@@ -279,15 +309,36 @@ return data
 
     data = extractFileIds(data)
 
+    // Clean up internal UI state and verification tracking objects
+    const internalFields = [
+      'verifiedActions', 
+      'verifiedValues', 
+      'verificationState',
+      'emailAvailable',
+      'otpVerified'
+    ]
+    
+    Object.keys(data).forEach(key => {
+      if (internalFields.includes(key) || key.endsWith('Verification')) {
+        delete data[key]
+      }
+    })
+
     // Process schema-specific payload rules
     processedSchema.sections.forEach((section) => {
       section.fields.forEach((field) => {
-        // 1. Remove fields marked with excludeFromPayload
+        // 1. Check visibility - if not visible, remove from payload
+        const isVisible = field.visibility ? field.visibility(completeData) : true
+        if (!isVisible && data.hasOwnProperty(field.name)) {
+          delete data[field.name]
+        }
+
+        // 2. Remove fields marked with excludeFromPayload
         if (field.excludeFromPayload && data.hasOwnProperty(field.name)) {
           delete data[field.name]
         }
         
-        // 2. Format fields marked with submitAsObject
+        // 3. Format fields marked with submitAsObject
         if (field.submitAsObject && data[field.name] !== undefined && data[field.name] !== null) {
           if (typeof data[field.name] !== 'object' || Array.isArray(data[field.name])) {
             data[field.name] = { id: data[field.name] }
@@ -309,17 +360,6 @@ return
   }
 
   const isSaving = isSubmitting || saveMutation.isPending || isLoading
-
-  // Verification Logic
-  const needsEmailVerification = processedSchema.sections.some(s => s.fields.some(f => f.type === 'email-with-verification' || f.name === 'emailAvailable'))
-  const needsOtpVerification = processedSchema.sections.some(s => s.fields.some(f => f.type === 'verify-otp' || f.name === 'otpVerified'))
-  const needsPrivyVerification = processedSchema.sections.some(s => s.fields.some(f => f.type === 'verify-privy' || f.name === 'privyVerified'))
-  
-  const isInvalidEmail = needsEmailVerification && !formValues['emailAvailable']
-  const isInvalidOtp = needsOtpVerification && !formValues['otpVerified']
-  const isInvalidPrivy = needsPrivyVerification && !formValues['privyVerified']
-
-  const isInvalidVerification = isInvalidEmail || isInvalidOtp || isInvalidPrivy
 
   return (
     <FormProvider {...methods}>
@@ -350,15 +390,7 @@ return
         <Divider />
 
         <CardActions className="p-4 justify-between items-center gap-2 bg-gray-50 dark:bg-zinc-900/50 rounded-b-md">
-          <Box className="flex-grow">
-            {isInvalidVerification && mode !== 'view' && (
-              <Typography variant="body2" color="error" className="font-medium">
-                {isInvalidEmail 
-                  ? 'Complete email verification before saving.' 
-                  : isInvalidOtp ? 'Complete OTP verification before saving.' : 'Complete privy verification before saving.'}
-              </Typography>
-            )}
-          </Box>
+          <Box className="flex-grow"></Box>
           <Box className="flex gap-2">
             {onCancel && (
               <Button variant="outlined" color="secondary" onClick={onCancel} disabled={isSaving}>
@@ -371,7 +403,7 @@ return
                 variant="outlined" 
                 color="secondary"
                 onClick={() => saveDraft(schema.id, methods.getValues())}
-                disabled={isSaving || isInvalidVerification}
+                disabled={isSaving}
               >
                 Save Draft
               </Button>
@@ -382,7 +414,7 @@ return
                 type="submit" 
                 variant="contained" 
                 color="primary"
-                disabled={isSaving || isInvalidVerification}
+                disabled={isSaving}
                 startIcon={isSaving ? <i className="ri-loader-4-line animate-spin" /> : <i className="ri-save-line" />}
               >
                 {onCancel ? 'Save' : 'Save'}

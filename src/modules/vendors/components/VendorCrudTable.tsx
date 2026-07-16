@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 
 import type { SortingState, RowSelectionState } from '@tanstack/react-table'
 import { Box, Card, CardContent, Typography, Button, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
@@ -14,9 +14,10 @@ import DynamicForm from './DynamicForm'
 
 interface VendorCrudTableProps {
   config: DatatableConfig
+  onTotalChange?: (total: number) => void
 }
 
-export default function VendorCrudTable({ config }: VendorCrudTableProps) {
+export default function VendorCrudTable({ config, onTotalChange }: VendorCrudTableProps) {
   // Listing query and search states
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
@@ -72,6 +73,13 @@ export default function VendorCrudTable({ config }: VendorCrudTableProps) {
     isDeleting,
     getDetail,
   } = useCrudTable<any>(config.apiEndpoint, filters)
+
+  // Report total changes to parent
+  useEffect(() => {
+    if (onTotalChange && total !== undefined) {
+      onTotalChange(total)
+    }
+  }, [total, onTotalChange])
 
   const handleOpenModal = async (row: any, mode: 'view' | 'edit') => {
     try {
@@ -280,6 +288,20 @@ return field
     }
   }
 
+  const getAddLabel = (id: string, title: string) => {
+    switch (id) {
+      case 'BOARD_OF_DIRECTORS': return 'Add Board Director'
+      case 'SHAREHOLDER': return 'Add Shareholder'
+      case 'AUTHORIZED_SIGNER': return 'Add Authorized Signer'
+      case 'USER_ACCESS': return 'Add User Access'
+      case 'BANK_ACCOUNT': return 'Add Bank Account'
+      case 'AFFILIATE': return 'Add Company Affiliation'
+      case 'COMPETENCY': return 'Add Competency'
+      case 'FINANCIAL_REPORT': return 'Add Financial Report'
+      default: return `Add ${title}`
+    }
+  }
+
   return (
     <Box className="flex flex-col gap-4">
       <Card>
@@ -305,7 +327,7 @@ return field
               }}
               disabled={config.disableAdd}
             >
-              Add New
+              {getAddLabel(config.id, config.title)}
             </Button>
           </Box>
 
@@ -363,6 +385,7 @@ return field
                 selectedItem
                   ? { 
                       ...config.baseFilters,
+                      ...(config.apiEndpoint.startsWith('/vendor-personnel-temp') ? { personnelTypeCode: config.id } : {}),
                       ...selectedItem,
                       bankId: selectedItem.bankBranch?.bankId || selectedItem.bankBranch?.bank?.id || selectedItem.bankId,
                       countryId: selectedItem.bankBranch?.bank?.countryId || selectedItem.countryId,

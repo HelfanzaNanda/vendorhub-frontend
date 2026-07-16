@@ -45,9 +45,16 @@ export const userAccessModalSchema: FormSchema = {
           id: 'phone',
           name: 'phone',
           label: 'Phone Number',
-          type: 'telco-phone',
+          type: 'phone',
           required: true,
-          grid: { xs: 12, md: 6 }
+          grid: { xs: 12, md: 6 },
+          verification: [{
+              id: 'check-phone',
+              type: 'VERIFY_PHONE',
+              endpoint: '/identity/phone/check',
+              label: 'Check Phone',
+              required: true
+          }]
         },
         {
           id: 'effectiveEndDate',
@@ -60,27 +67,34 @@ export const userAccessModalSchema: FormSchema = {
           id: 'email',
           name: 'email',
           label: 'Email Address',
-          type: 'email-with-verification',
+          type: 'email',
           required: true,
           validation: z.string().email('Invalid email address'),
-          grid: { xs: 12 }
-        },
-        {
-          id: 'emailAvailable',
-          name: 'emailAvailable',
-          label: 'Email Availability',
-          type: 'text',
-          visibility: () => false,
-          validation: z.literal(true, { errorMap: () => ({ message: 'Complete email verification before saving.' }) }),
-        },
-        {
-          id: 'otpVerified',
-          name: 'otpVerified',
-          label: 'OTP',
-          type: 'verify-otp',
-          required: true,
           grid: { xs: 12 },
-          validation: z.literal(true, { errorMap: () => ({ message: 'Complete OTP verification before saving.' }) }),
+          verification: [
+              {
+                  id: 'check-email',
+                  type: 'VERIFY_EMAIL',
+                  endpoint: '/identity/email/check',
+                  label: 'Check Email'
+              },
+              {
+                  id: 'send-otp',
+                  type: 'SEND_OTP',
+                  endpoint: '/otp/send',
+                  label: 'Send OTP',
+                  purpose: 'VENDOR_USER_ACCESS',
+                  dependsOn: 'check-email'
+              },
+              {
+                  id: 'verify-otp',
+                  type: 'VERIFY_OTP',
+                  endpoint: '/otp/verify',
+                  label: 'Verify OTP',
+                  dependsOn: 'send-otp',
+                  required: true
+              }
+          ]
         },
         {
           id: 'roleIds',

@@ -11,6 +11,9 @@ interface FormSectionProps {
 }
 
 export default function FormSection({ section, formValues }: FormSectionProps) {
+  if (section.visibility && !section.visibility(formValues)) {
+    return null
+  }
   return (
     <Box>
       <Box className="mb-4">

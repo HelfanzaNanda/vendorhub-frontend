@@ -26,10 +26,7 @@ import FileUpload from './FileUpload'
 import CustomerReferenceField from './fields/CustomerReferenceField'
 import TreeSelectField from './fields/TreeSelectField'
 import IndustryClassificationField from './fields/IndustryClassificationField'
-import VerifyPrivyField from './fields/VerifyPrivyField'
-import EmailWithVerificationField from './fields/EmailWithVerificationField'
-import VerifyOTPField from './fields/VerifyOTPField'
-import TelcoPhoneField from './fields/TelcoPhoneField'
+import VerificationActions from './VerificationActions'
 import { AppReactDatepicker } from '@/components/common/AppReactDatepicker'
 import { AppNumericInput } from '@/components/common/AppNumericInput'
 import 'flatpickr/dist/plugins/monthSelect/style.css'
@@ -59,11 +56,19 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
         return undefined
     }, [field.dependsOn, field.dependencyParam, dependencyValue])
 
-    // Fetch dynamic lookup options
-    const shouldFetchLookup = field.lookupEndpoint && (!field.dependsOn || (field.dependsOn && dependencyValue))
-    const { options: lookupOptions, isLoading: isLoadingLookups } = useLookup(shouldFetchLookup ? field.lookupEndpoint : undefined, lookupParams)
+    // Get the current form values for evaluating dynamic endpoints
+    const formValues = watch()
 
-    const options = field.lookupEndpoint ? lookupOptions : (field.options || [])
+    // Evaluate dynamic lookup endpoint
+    const rawLookupEndpoint = typeof field.lookupEndpoint === 'function' 
+        ? field.lookupEndpoint(formValues) 
+        : field.lookupEndpoint
+
+    // Fetch dynamic lookup options
+    const shouldFetchLookup = rawLookupEndpoint && (!field.dependsOn || (field.dependsOn && dependencyValue))
+    const { options: lookupOptions, isLoading: isLoadingLookups } = useLookup(shouldFetchLookup ? rawLookupEndpoint : undefined, lookupParams)
+
+    const options = rawLookupEndpoint ? lookupOptions : (field.options || [])
 
     if (field.type === 'field-array') {
         return <FieldArrayRenderer field={field} />
@@ -81,21 +86,7 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
         return <IndustryClassificationField field={field} />
     }
 
-    if (field.type === 'verify-privy') {
-        return <VerifyPrivyField field={field} />
-    }
-
-    if (field.type === 'email-with-verification') {
-        return <EmailWithVerificationField field={field} />
-    }
-
-    if (field.type === 'verify-otp') {
-        return <VerifyOTPField field={field} />
-    }
-
-    if (field.type === 'telco-phone') {
-        return <TelcoPhoneField field={field} />
-    }
+    // Removed custom verification field types
 
     return (
         <Controller
@@ -113,6 +104,7 @@ export default function FormFieldRenderer({ field }: { field: FieldSchema }) {
                     disabled: field.disabled,
                     InputProps: {
                         readOnly: field.readonly,
+                        endAdornment: field.verification ? <VerificationActions field={field} /> : undefined
                     }
                 }
 
