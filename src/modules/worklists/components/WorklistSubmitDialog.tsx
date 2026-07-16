@@ -1,4 +1,7 @@
 import React, { useEffect } from 'react'
+
+import { useRouter } from 'next/navigation'
+
 import { 
   Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText,
   Button, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio,
@@ -6,13 +9,19 @@ import {
 } from '@mui/material'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { submitWorklistSchema, SubmitWorklistFormData } from '../schemas/submit-worklist.schema'
-import { useVendorCategories, useVendorCategoryItems, useSubmitWorklist } from '../hooks/useSubmitWorklist'
+
 import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
+
+import { AxiosError } from 'axios'
+
+import type { SubmitWorklistFormData } from '../schemas/submit-worklist.schema';
+import { submitWorklistSchema } from '../schemas/submit-worklist.schema'
+import { useVendorCategories, useVendorCategoryItems, useSubmitWorklist } from '../hooks/useSubmitWorklist'
+
+
 import { WorklistReviewContext } from '../context'
 import { worklistProfileSchema } from '../schemas'
-import { AxiosError } from 'axios'
+
 
 interface WorklistSubmitDialogProps {
   open: boolean
@@ -94,15 +103,20 @@ export default function WorklistSubmitDialog({ open, onClose, workflowTransactio
                 // Auto navigate to first tab with pending reviews
                 if (setActiveTab) {
                     const tabs = worklistProfileSchema.tabs
+
                     const firstPendingTabIndex = tabs.findIndex(tab => {
                         const tabValidation = data.reviewValidation[tab.id]
+
                         if (typeof tabValidation === 'number' && tabValidation > 0) return true
                         if (tabValidation && typeof tabValidation === 'object' && tabValidation.pendingReviews > 0) return true
-                        return false
+                        
+return false
                     })
+
                     if (firstPendingTabIndex !== -1) {
                         setActiveTab(firstPendingTabIndex)
                     }
+
                     onClose()
                 }
             } else {

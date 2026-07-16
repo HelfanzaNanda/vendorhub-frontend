@@ -45,7 +45,9 @@ export const financialModalSchema: FormSchema = {
             if (!dates || dates.length !== 2) return true; // Let required check handle empty cases
             const diffTime = Math.abs(dates[1].getTime() - dates[0].getTime())
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-            return diffDays <= 366 // Allow up to 366 days for leap year
+
+            
+return diffDays <= 366 // Allow up to 366 days for leap year
           }, { message: 'Total period duration cannot exceed 1 year' })
         },
         {

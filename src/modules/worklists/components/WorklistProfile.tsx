@@ -1,6 +1,8 @@
 import React, { useState, useContext } from 'react'
+
 import { Box, Card, Typography, Tab, Tabs } from '@mui/material'
-import { WorklistProfileSchema, WorklistTabSchema } from '../schemas/types'
+
+import type { WorklistProfileSchema, WorklistTabSchema } from '../schemas/types'
 import WorklistReviewTabContent from './WorklistReviewTabContent'
 import { useWorklistDetail } from '../hooks'
 import { WorklistReviewContext } from '../context'
@@ -67,8 +69,10 @@ export default function WorklistProfile({ schemaConfig, worklistTransactionId }:
             
             // Calculate pending reviews for this tab from reviewValidation
             let pendingReviewsCount = 0
+
             if (reviewValidation && reviewValidation[tab.id]) {
               const tabValidation = reviewValidation[tab.id]
+
               if (typeof tabValidation === 'number') {
                 pendingReviewsCount = tabValidation
               } else if (tabValidation && typeof tabValidation === 'object' && tabValidation.pendingReviews !== undefined) {

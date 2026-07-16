@@ -1,4 +1,4 @@
-import { WorklistProfileSchema } from './types'
+import type { WorklistProfileSchema } from './types'
 import { worklistCompanyGroup } from './company.schema'
 import { worklistPersonnelGroups } from './personnel.schema'
 import { worklistBankGroup } from './bank.schema'

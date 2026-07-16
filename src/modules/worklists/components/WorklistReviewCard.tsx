@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useMemo } from 'react'
+
 import { Box, Card, Typography, TextField, Grid, useTheme, alpha } from '@mui/material'
-import { WorklistDataGroupSchema, WorklistFieldSchema } from '../schemas/types'
+
 import { useMutation } from '@tanstack/react-query'
-import { api } from '@/services/api'
+
 import { toast } from 'sonner'
 import _get from 'lodash/get'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import CancelIcon from '@mui/icons-material/Cancel'
+
+import { api } from '@/services/api'
+import type { WorklistDataGroupSchema, WorklistFieldSchema } from '../schemas/types'
 import GenericFieldRenderer from './GenericFieldRenderer'
 import { WorklistReviewContext } from '../context'
 
@@ -69,6 +73,7 @@ export default function WorklistReviewCard({ record, group, workflowTransactionI
   const handleStatusChange = (status: 'OK' | 'NOT_OK') => {
     if (!canReview) return;
     setReviewStatus(status)
+
     if (status === 'OK') {
       setReviewRemark('')
     }
@@ -77,19 +82,23 @@ export default function WorklistReviewCard({ record, group, workflowTransactionI
   const changedCount = useMemo(() => {
     if (action !== 'UPDATE') return 0;
     let count = 0;
+
     group.sections.forEach(section => {
       section.fields.forEach(field => {
         const newVal = _get(record.data, field.id)
         const oldVal = _get(record.originalData, field.id)
+
         if (String(newVal) !== String(oldVal)) count++;
       })
     })
-    return count;
+    
+return count;
   }, [action, group, record])
 
   const getIconForTitle = (title: string) => {
     if (group.icon) return group.icon; // Use schema icon if provided
     const t = title.toLowerCase();
+
     if (t.includes('company')) return 'ri-building-4-line';
     if (t.includes('person')) return 'ri-user-settings-line';
     if (t.includes('bank')) return 'ri-bank-line';
@@ -98,7 +107,8 @@ export default function WorklistReviewCard({ record, group, workflowTransactionI
     if (t.includes('document')) return 'ri-folder-2-line';
     if (t.includes('financial')) return 'ri-money-dollar-circle-line';
     if (t.includes('affiliat')) return 'ri-git-branch-line';
-    return 'ri-file-list-3-line';
+    
+return 'ri-file-list-3-line';
   }
 
   const renderField = (field: WorklistFieldSchema) => {
@@ -258,6 +268,7 @@ export default function WorklistReviewCard({ record, group, workflowTransactionI
               // Default to grid layout
               const cols = section.columns || 2
               let gridClass = "grid gap-x-8 gap-y-2"
+
               if (cols === 1) gridClass += " grid-cols-1"
               else if (cols === 2) gridClass += " grid-cols-1 md:grid-cols-2"
               else if (cols === 3) gridClass += " grid-cols-1 md:grid-cols-2 lg:grid-cols-3"

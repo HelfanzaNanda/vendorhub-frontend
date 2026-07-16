@@ -12,7 +12,8 @@ const config: Config = {
   plugins: [tailwindcssLogical, tailwindPlugin],
   theme: {
     extend: {}
-  }
+  },
+  darkMode: 'class'
 }
 
 export default config

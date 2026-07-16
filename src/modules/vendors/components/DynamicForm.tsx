@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useMemo, useEffect } from 'react'
+
 import dayjs from 'dayjs'
 
 import { useForm, FormProvider } from 'react-hook-form'
@@ -130,6 +131,7 @@ return {
           if (field.visibility && field.required && !field.disabled) {
             // It's a conditionally required field
             const isVisible = field.visibility(data)
+
             if (isVisible) {
               const val = data[field.name]
               const isEmpty = val === null || val === undefined || val === '' || (Array.isArray(val) && val.length === 0)
@@ -308,6 +310,17 @@ return
 
   const isSaving = isSubmitting || saveMutation.isPending || isLoading
 
+  // Verification Logic
+  const needsEmailVerification = processedSchema.sections.some(s => s.fields.some(f => f.type === 'email-with-verification' || f.name === 'emailAvailable'))
+  const needsOtpVerification = processedSchema.sections.some(s => s.fields.some(f => f.type === 'verify-otp' || f.name === 'otpVerified'))
+  const needsPrivyVerification = processedSchema.sections.some(s => s.fields.some(f => f.type === 'verify-privy' || f.name === 'privyVerified'))
+  
+  const isInvalidEmail = needsEmailVerification && !formValues['emailAvailable']
+  const isInvalidOtp = needsOtpVerification && !formValues['otpVerified']
+  const isInvalidPrivy = needsPrivyVerification && !formValues['privyVerified']
+
+  const isInvalidVerification = isInvalidEmail || isInvalidOtp || isInvalidPrivy
+
   return (
     <FormProvider {...methods}>
       <form onSubmit={(e) => { e.stopPropagation(); handleSubmit(handleFormSubmit)(e) }} className="flex flex-col h-full">
@@ -336,35 +349,46 @@ return
 
         <Divider />
 
-        <CardActions className="p-6 justify-end gap-2 bg-gray-50 dark:bg-red-50 rounded-b-md">
-          {onCancel && (
-            <Button variant="outlined" color="secondary" onClick={onCancel} disabled={isSaving}>
-              Cancel
-            </Button>
-          )}
+        <CardActions className="p-4 justify-between items-center gap-2 bg-gray-50 dark:bg-zinc-900/50 rounded-b-md">
+          <Box className="flex-grow">
+            {isInvalidVerification && mode !== 'view' && (
+              <Typography variant="body2" color="error" className="font-medium">
+                {isInvalidEmail 
+                  ? 'Complete email verification before saving.' 
+                  : isInvalidOtp ? 'Complete OTP verification before saving.' : 'Complete privy verification before saving.'}
+              </Typography>
+            )}
+          </Box>
+          <Box className="flex gap-2">
+            {onCancel && (
+              <Button variant="outlined" color="secondary" onClick={onCancel} disabled={isSaving}>
+                Cancel
+              </Button>
+            )}
 
-          {showDraftButtons && !onCancel && (
-            <Button 
-              variant="outlined" 
-              color="secondary"
-              onClick={() => saveDraft(schema.id, methods.getValues())}
-              disabled={isSaving}
-            >
-              Save Draft
-            </Button>
-          )}
+            {showDraftButtons && !onCancel && (
+              <Button 
+                variant="outlined" 
+                color="secondary"
+                onClick={() => saveDraft(schema.id, methods.getValues())}
+                disabled={isSaving || isInvalidVerification}
+              >
+                Save Draft
+              </Button>
+            )}
 
-          {mode !== 'view' && (
-            <Button 
-              type="submit" 
-              variant="contained" 
-              color="primary"
-              disabled={isSaving}
-              startIcon={isSaving ? <i className="ri-loader-4-line animate-spin" /> : <i className="ri-save-line" />}
-            >
-              {onCancel ? 'Save' : 'Save'}
-            </Button>
-          )}
+            {mode !== 'view' && (
+              <Button 
+                type="submit" 
+                variant="contained" 
+                color="primary"
+                disabled={isSaving || isInvalidVerification}
+                startIcon={isSaving ? <i className="ri-loader-4-line animate-spin" /> : <i className="ri-save-line" />}
+              >
+                {onCancel ? 'Save' : 'Save'}
+              </Button>
+            )}
+          </Box>
         </CardActions>
       </form>
     </FormProvider>

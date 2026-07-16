@@ -17,6 +17,7 @@ export const submitWorklistSchema = z.object({
         path: ['vendorCategoryId'],
       });
     }
+
     if (!data.vendorCategoryItemId) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -24,6 +25,7 @@ export const submitWorklistSchema = z.object({
         path: ['vendorCategoryItemId'],
       });
     }
+
     if (!data.priority) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

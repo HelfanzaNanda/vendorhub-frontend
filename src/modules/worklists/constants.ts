@@ -1,5 +1,5 @@
 import type { WorklistFilters } from './types'
-import { WorkflowCode } from './enums/workflow-code.enum'
+import type { WorkflowCode } from './enums/workflow-code.enum'
 
 export const WORKLIST_QUERY_KEYS = {
   all: ['worklists'] as const,

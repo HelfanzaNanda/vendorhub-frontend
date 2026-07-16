@@ -83,7 +83,7 @@ function VendorCapabilityWrapper({ activeTab }: { activeTab: VendorTabSchema }) 
         />
       </Card>
       {activeTab.datatableConfigs && (
-        <Card className="flex flex-col">
+        <Box className="flex flex-col w-full">
           <DataTableSection
             key={`${activeTab.id}-datatable`}
             configs={activeTab.datatableConfigs.map(config => {
@@ -121,7 +121,7 @@ return field
 return config
             })}
           />
-        </Card>
+        </Box>
       )}
     </Box>
   )
@@ -235,12 +235,12 @@ export default function VendorProfile({ schemaConfig }: VendorProfileProps) {
             )}
 
             {(activeTab.type === 'datatable' || activeTab.type === 'mixed') && activeTab.datatableConfigs && (
-              <Card className="flex flex-col">
+              <Box className="flex flex-col w-full">
                 <DataTableSection
                   key={`${activeTab.id}-datatable`}
                   configs={activeTab.datatableConfigs}
                 />
-              </Card>
+              </Box>
             )}
           </>
         )}

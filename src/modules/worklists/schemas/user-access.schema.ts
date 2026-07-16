@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
-import { WorklistDataGroupSchema } from './types'
+
+import type { WorklistDataGroupSchema } from './types'
 
 export const worklistUserAccessGroup: WorklistDataGroupSchema = {
   id: 'user-access',
@@ -19,6 +20,7 @@ export const worklistUserAccessGroup: WorklistDataGroupSchema = {
       fields: [
         { id: 'firstname', label: 'First Name' },
         { id: 'lastname', label: 'Last Name' },
+
         // { id: 'username', label: 'username' },
         { id: 'email', label: 'Email' },
         { id: 'phone', label: 'Phone' },

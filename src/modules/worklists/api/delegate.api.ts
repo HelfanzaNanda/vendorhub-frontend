@@ -1,5 +1,5 @@
 import { api } from '@/services/api'
-import { DelegationUser } from '../context'
+import type { DelegationUser } from '../context'
 
 export const delegateWorklistApi = {
   getDelegateUsers: async (workflowTransactionStepId: number) => {

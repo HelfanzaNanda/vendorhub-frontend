@@ -1,4 +1,4 @@
-import { WorklistDataGroupSchema } from './types'
+import type { WorklistDataGroupSchema } from './types'
 
 export const worklistBusinessLicenseGroup: WorklistDataGroupSchema = {
   id: 'business-license',

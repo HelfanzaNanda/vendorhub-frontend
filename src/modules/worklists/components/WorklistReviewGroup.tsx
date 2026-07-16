@@ -1,8 +1,10 @@
 import React from 'react'
+
 import { Box, Typography, CircularProgress } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
+
 import { api } from '@/services/api'
-import { WorklistDataGroupSchema } from '../schemas/types'
+import type { WorklistDataGroupSchema } from '../schemas/types'
 import WorklistReviewCard from './WorklistReviewCard'
 import WorklistMultipleReviewGroup from './WorklistMultipleReviewGroup'
 

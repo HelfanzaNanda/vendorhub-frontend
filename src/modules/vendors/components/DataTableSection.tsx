@@ -11,7 +11,7 @@ interface DataTableSectionProps {
 
 export default function DataTableSection({ configs }: DataTableSectionProps) {
   return (
-    <Box className="flex flex-col h-full gap-8 p-6">
+    <Box className="flex flex-col h-full gap-4">
       {configs.map((config) => (
         <VendorCrudTable
           key={config.id}

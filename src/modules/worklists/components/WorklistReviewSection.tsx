@@ -1,10 +1,13 @@
 'use client'
 
 import React from 'react'
+
 import { Card, Box, Typography, RadioGroup, FormControlLabel, Radio, TextField, CircularProgress } from '@mui/material'
+
+import { toast } from 'sonner'
+
 import { useWorklistDetail, useSubmitReview } from '../hooks'
 import { useWorklistReview } from '../context'
-import { toast } from 'sonner'
 
 interface Props {
   sectionId: string;
@@ -77,6 +80,7 @@ export function WorklistReviewSection({ sectionId, transactionId }: Props) {
           defaultValue={review.remark || ''}
           onBlur={(e) => {
             if (!permissions?.canReview) return;
+
             if (e.target.value !== review.remark) {
               handleReviewChange(review.status || '', e.target.value)
             }

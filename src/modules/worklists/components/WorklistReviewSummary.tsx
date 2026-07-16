@@ -1,5 +1,7 @@
 import React, { useContext, useState } from 'react'
+
 import { Box, Card, Typography, Grid, Chip, Button, Divider } from '@mui/material'
+
 import { WorklistReviewContext } from '../context'
 import WorklistDelegateDialog from './WorklistDelegateDialog'
 
@@ -21,6 +23,7 @@ export default function WorklistReviewSummary({ workflowTransactionId }: Worklis
     const setOpenDelegateModal = (state: boolean, workflowTransactionStepId: number) => {
         if (canDelegate) {
             setIsDelegateModalOpen(state)
+
             if (state) {
                 setWorkflowTransactionStepId(workflowTransactionStepId)
             }

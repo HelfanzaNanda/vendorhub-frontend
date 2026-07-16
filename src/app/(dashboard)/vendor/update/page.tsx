@@ -35,6 +35,7 @@ function UpdateVendorPageContent() {
     },
     onError: (error: any) => {
       const message = error?.response?.data?.message || error?.message || 'Failed to submit registration'
+
       toast.error(message)
     }
   })

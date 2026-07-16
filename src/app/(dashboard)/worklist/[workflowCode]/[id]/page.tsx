@@ -1,7 +1,9 @@
 'use client'
 
 import { Suspense } from 'react'
+
 import { useParams } from 'next/navigation'
+
 import WorklistDetail from '@/modules/worklists/components/WorklistDetail'
 
 export default function WorklistDetailPage() {

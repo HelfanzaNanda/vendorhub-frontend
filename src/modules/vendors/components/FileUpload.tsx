@@ -93,19 +93,18 @@ return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
       />
       
       {!value && !isUploading && (
-        <Box 
-          onClick={() => !disabled && fileInputRef.current?.click()}
-          className={`flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-md cursor-pointer transition-colors
-            ${error ? 'border-error bg-error/5' : 'border-gray-300 hover:border-primary bg-zinc-50 dark:border-gray-700 dark:bg-zinc-900/50'}
-            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
-          `}
-        >
-          <i className="ri-upload-cloud-2-line text-4xl text-gray-400 mb-2" />
-          <Typography variant="body1" fontWeight="medium">
-            Click to upload document
-          </Typography>
+        <Box className="flex items-center gap-4">
+          <Button
+            variant="outlined"
+            onClick={() => !disabled && fileInputRef.current?.click()}
+            disabled={disabled}
+            startIcon={<i className="ri-upload-cloud-2-line" />}
+            color={error ? 'error' : 'primary'}
+          >
+            Upload File
+          </Button>
           <Typography variant="caption" color="text.secondary">
-            PDF, JPG, PNG up to 5MB
+            PDF, JPG, PNG (Max 5MB)
           </Typography>
         </Box>
       )}

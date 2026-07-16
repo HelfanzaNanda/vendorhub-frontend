@@ -1,7 +1,13 @@
 import React from 'react'
+
 import { Box, Chip, Link, Typography } from '@mui/material'
-import { FieldComponentType, FormatterType, WorklistFieldSchema } from '../schemas/types'
+
 import dayjs from 'dayjs'
+
+import type { WorklistFieldSchema } from '../schemas/types';
+import { FieldComponentType, FormatterType } from '../schemas/types'
+
+
 import WorklistCustomerReferenceTable from './WorklistCustomerReferenceTable'
 import PremiumDownloadCard from '@/components/common/File/PremiumDownloadCard'
 import DownloadFile from '@/components/common/File/DownloadFile'
@@ -37,6 +43,7 @@ export default function GenericFieldRenderer({ value, originalValue, field }: Ge
         } catch (e) {
           formattedValue = String(value)
         }
+
         break
       case 'phone':
         formattedValue = String(value).replace(/(\d{4})(\d{4})(\d+)/, '$1-$2-$3')

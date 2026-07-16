@@ -1,5 +1,5 @@
-import { WorkflowCode } from "./enums/workflow-code.enum"
-import { WorklistCard } from "./enums/worklist-card.enum"
+import type { WorkflowCode } from "./enums/workflow-code.enum"
+import type { WorklistCard } from "./enums/worklist-card.enum"
 
 export interface WorklistSummary {
   needMyReview: number

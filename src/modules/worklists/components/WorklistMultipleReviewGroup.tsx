@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react'
+
 import { Box, Card, Typography, TextField, Grid, useTheme, alpha, Accordion, AccordionSummary, AccordionDetails, Divider } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { WorklistDataGroupSchema, WorklistFieldSchema } from '../schemas/types'
+
 import { useMutation } from '@tanstack/react-query'
-import { api } from '@/services/api'
+
 import { toast } from 'sonner'
 import _get from 'lodash/get'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import CancelIcon from '@mui/icons-material/Cancel'
+
+import { api } from '@/services/api'
+import type { WorklistDataGroupSchema, WorklistFieldSchema } from '../schemas/types'
 import GenericFieldRenderer from './GenericFieldRenderer'
 import { WorklistReviewContext } from '../context'
 
@@ -56,6 +60,7 @@ const RecordItem = ({ record, group, workflowTransactionId, index, theme, canRev
   const handleStatusChange = (status: 'OK' | 'NOT_OK') => {
     if (!canReview) return
     setReviewStatus(status)
+
     if (status === 'OK') {
       setReviewRemark('')
     } else {
@@ -67,11 +72,13 @@ const RecordItem = ({ record, group, workflowTransactionId, index, theme, canRev
 
   const action = record.action || 'NO_ACTION'
   let changedCount = 0;
+
   if (action === 'UPDATE') {
     group.sections.forEach((section: any) => {
       section.fields.forEach((field: any) => {
         const newVal = _get(record.data, field.id)
         const oldVal = _get(record.originalData, field.id)
+
         if (String(newVal) !== String(oldVal)) changedCount++;
       })
     })
@@ -167,7 +174,9 @@ const RecordItem = ({ record, group, workflowTransactionId, index, theme, canRev
                 </Box>
               )
             }
-            return (
+
+            
+return (
               <Grid container spacing={3}>
                 {section.fields.map(renderField)}
               </Grid>
@@ -344,6 +353,7 @@ export default function WorklistMultipleReviewGroup({ records, group, workflowTr
   const getIconForTitle = (title: string) => {
     if (group.icon) return group.icon;
     const t = title.toLowerCase();
+
     if (t.includes('company')) return 'ri-building-4-line';
     if (t.includes('person')) return 'ri-user-settings-line';
     if (t.includes('bank')) return 'ri-bank-line';
@@ -352,7 +362,8 @@ export default function WorklistMultipleReviewGroup({ records, group, workflowTr
     if (t.includes('document')) return 'ri-folder-2-line';
     if (t.includes('financial')) return 'ri-money-dollar-circle-line';
     if (t.includes('affiliat')) return 'ri-git-branch-line';
-    return 'ri-file-list-3-line';
+    
+return 'ri-file-list-3-line';
   }
 
   return (

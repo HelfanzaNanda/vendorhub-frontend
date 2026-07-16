@@ -1,7 +1,9 @@
 'use client'
 
 import React from 'react'
+
 import { Card, Box, Typography, Grid } from '@mui/material'
+
 import { useWorklistReview } from '../context'
 
 export function WorklistSummaryTab() {
@@ -72,6 +74,7 @@ export function WorklistSummaryTab() {
                     const params = new URLSearchParams(window.location.search)
                     
                     let tabId = ''
+
                     if (item.section === 'Company') tabId = 'vendor_company'
                     else if (item.section === 'Personnel') tabId = 'vendor_personnel'
                     else if (item.section === 'User Access') tabId = 'vendor_user_access'

@@ -27,24 +27,6 @@ export const userAccessModalSchema: FormSchema = {
           grid: { xs: 12, md: 6 }
         },
         {
-          id: 'username',
-          name: 'username',
-          label: 'Username',
-          type: 'text',
-          required: true,
-          validation: z.string().min(4, 'Username must be at least 4 characters'),
-          grid: { xs: 12, md: 6 }
-        },
-        {
-          id: 'email',
-          name: 'email',
-          label: 'Email',
-          type: 'email',
-          required: true,
-          validation: z.string().email('Invalid email address'),
-          grid: { xs: 12, md: 6 }
-        },
-        {
           id: 'jobTitle',
           name: 'jobTitle',
           label: 'Job Title',
@@ -63,21 +45,8 @@ export const userAccessModalSchema: FormSchema = {
           id: 'phone',
           name: 'phone',
           label: 'Phone Number',
-          type: 'phone',
-          grid: { xs: 12, md: 6 }
-        },
-        {
-          id: 'fileId',
-          name: 'fileId',
-          label: 'Profile Document',
-          type: 'file',
-          grid: { xs: 12, md: 6 }
-        },
-        {
-          id: 'effectiveStartDate',
-          name: 'effectiveStartDate',
-          label: 'Effective Start Date',
-          type: 'date',
+          type: 'telco-phone',
+          required: true,
           grid: { xs: 12, md: 6 }
         },
         {
@@ -88,10 +57,36 @@ export const userAccessModalSchema: FormSchema = {
           grid: { xs: 12, md: 6 }
         },
         {
+          id: 'email',
+          name: 'email',
+          label: 'Email Address',
+          type: 'email-with-verification',
+          required: true,
+          validation: z.string().email('Invalid email address'),
+          grid: { xs: 12 }
+        },
+        {
+          id: 'emailAvailable',
+          name: 'emailAvailable',
+          label: 'Email Availability',
+          type: 'text',
+          visibility: () => false,
+          validation: z.literal(true, { errorMap: () => ({ message: 'Complete email verification before saving.' }) }),
+        },
+        {
+          id: 'otpVerified',
+          name: 'otpVerified',
+          label: 'OTP',
+          type: 'verify-otp',
+          required: true,
+          grid: { xs: 12 },
+          validation: z.literal(true, { errorMap: () => ({ message: 'Complete OTP verification before saving.' }) }),
+        },
+        {
           id: 'roleIds',
           name: 'roleIds',
           label: 'Roles',
-          type: 'checkbox-group',
+          type: 'multi-select',
           required: true,
           grid: { xs: 12, md: 6 },
           lookupEndpoint: 'roles?type=external',
@@ -100,10 +95,18 @@ export const userAccessModalSchema: FormSchema = {
           id: 'areaIds',
           name: 'areaIds',
           label: 'Areas',
-          type: 'checkbox-group',
+          type: 'multi-select',
           required: true,
           grid: { xs: 12, md: 6 },
           lookupEndpoint: 'areas',
+        },
+        {
+          id: 'formPengajuanFile',
+          name: 'formPengajuanFile',
+          label: 'Form Pengajuan Document',
+          type: 'file',
+          required: true,
+          grid: { xs: 12 }
         },
       ]
     }

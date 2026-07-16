@@ -23,6 +23,10 @@ export type FieldType =
   | 'custom-customer-references'
   | 'tree-select'
   | 'custom-industry-classifications'
+  | 'verify-privy'
+  | 'email-with-verification'
+  | 'verify-otp'
+  | 'telco-phone'
 
 export interface FieldOption {
   label: string

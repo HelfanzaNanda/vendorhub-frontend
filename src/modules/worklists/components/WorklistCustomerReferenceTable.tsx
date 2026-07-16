@@ -1,7 +1,10 @@
 import React from 'react';
+
 import { Box, Typography, Chip, Grid, alpha, useTheme } from '@mui/material';
-import { WorklistFieldSchema } from '../schemas/types';
+
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+
+import type { WorklistFieldSchema } from '../schemas/types';
 import GenericFieldRenderer from './GenericFieldRenderer';
 
 interface WorklistCustomerReferenceTableProps {
@@ -64,7 +67,7 @@ export default function WorklistCustomerReferenceTable({ value = [], field, orig
       {value.map((row, index) => {
         const action = row.action || 'NO CHANGE';
         
-        let badgeColor = 'default';
+        const badgeColor = 'default';
         let badgeBg = alpha(theme.palette.text.secondary, 0.1);
         let badgeText = 'text.secondary';
         

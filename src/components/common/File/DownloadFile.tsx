@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -8,6 +9,7 @@ export default function DownloadFile({ url, fileName }: { url: string, fileName:
 
   const handleDownload = async () => {
     setLoading(true);
+
     try {
       // Simulasi fetch file dari API
       const response = await fetch('https://api.example.com/download-report');
@@ -16,6 +18,7 @@ export default function DownloadFile({ url, fileName }: { url: string, fileName:
       // Membuat URL temporer untuk blob
       const url = window.URL.createObjectURL(new Blob([blob]));
       const link = document.createElement('a');
+
       link.href = url;
       link.setAttribute('download', fileName);
       

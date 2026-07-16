@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import { Card, CardContent, Typography, Box, IconButton, LinearProgress, Avatar } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
@@ -47,7 +48,9 @@ export default function PremiumDownloadCard({ url, fileName }: PremiumDownloadCa
     const timer = setInterval(() => {
       setProgress((oldProgress) => {
         const diff = Math.random() * 15;
-        return Math.min(oldProgress + diff, 90); // Stop at 90% until fetch finishes
+
+        
+return Math.min(oldProgress + diff, 90); // Stop at 90% until fetch finishes
       });
     }, 300);
 
@@ -61,6 +64,7 @@ export default function PremiumDownloadCard({ url, fileName }: PremiumDownloadCa
 
       const objectUrl = window.URL.createObjectURL(new Blob([blob]));
       const link = document.createElement('a');
+
       link.href = objectUrl;
       link.setAttribute('download', fileName || 'download');
       

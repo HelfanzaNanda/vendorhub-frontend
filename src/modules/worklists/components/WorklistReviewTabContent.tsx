@@ -1,6 +1,8 @@
 import React, { useContext } from 'react'
+
 import { Box, Typography, Card, Grid, Chip } from '@mui/material'
-import { WorklistTabSchema } from '../schemas/types'
+
+import type { WorklistTabSchema } from '../schemas/types'
 import WorklistReviewGroup from './WorklistReviewGroup'
 import WorklistReviewSummary from './WorklistReviewSummary'
 import WorklistApprovalHistory from './WorklistApprovalHistory'
@@ -39,6 +41,7 @@ export default function WorklistReviewTabContent({ tab, workflowTransactionId }:
             if (validation?.groups) {
               // Try direct mapping
               const camelCaseId = group.id.toLowerCase().replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+
               if (validation.groups[camelCaseId] !== undefined) {
                 groupPendingReviews = validation.groups[camelCaseId];
               } else {
@@ -48,6 +51,7 @@ export default function WorklistReviewTabContent({ tab, workflowTransactionId }:
                 
                 for (const key in validation.groups) {
                   const normalizedKey = key.toLowerCase().replace(/[^a-z0-9]/g, '');
+
                   if (normalizedKey === normalizedGroupId || normalizedKey === normalizedTitle || normalizedKey.includes(normalizedGroupId) || normalizedGroupId.includes(normalizedKey)) {
                     groupPendingReviews = validation.groups[key];
                     break;
