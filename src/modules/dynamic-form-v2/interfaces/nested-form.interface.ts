@@ -1,5 +1,6 @@
 export interface NestedFormSchema {
-  schemaId: string;
+  schemaId?: string;
+  schema?: string;
   multiple?: boolean;
   minItems?: number;
   maxItems?: number;

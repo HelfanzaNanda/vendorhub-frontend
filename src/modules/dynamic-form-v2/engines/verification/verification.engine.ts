@@ -35,4 +35,17 @@ export class VerificationEngine {
   static isVerified(state?: VerificationState): boolean {
     return !!state?.verified;
   }
+
+  static async verify(field: import('../../interfaces').FieldSchema, value: any): Promise<boolean> {
+    if (!field.verification) return true;
+    
+    try {
+      // Simulate verification API call
+      // In a real application, this would read field.verification.endpoint and fetch
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return true;
+    } catch (e) {
+      throw e;
+    }
+  }
 }

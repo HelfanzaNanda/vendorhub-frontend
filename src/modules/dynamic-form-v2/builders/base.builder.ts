@@ -1,7 +1,7 @@
-import { FieldSchema } from '@/modules/dynamic-form-v2/interfaces';
-import { DynamicComponent } from '@/modules/dynamic-form-v2/enums';
+import type { FieldSchema } from '@/modules/dynamic-form-v2/interfaces';
+import type { DynamicComponent } from '@/modules/dynamic-form-v2/enums';
 import { FullGrid, Component } from '@/modules/form-schemas/shared';
-import { FieldBuilderOptions } from './interfaces';
+import type { FieldBuilderOptions } from './interfaces';
 
 export const createField = (options: FieldBuilderOptions): FieldSchema => {
   return {

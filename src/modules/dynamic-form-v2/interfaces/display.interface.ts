@@ -1,4 +1,4 @@
-import { ConditionGroup } from './condition-group.interface';
+import type { ConditionGroup } from './condition-group.interface';
 
 export interface DisplaySchema {
   visible?: ConditionGroup;

@@ -31,4 +31,15 @@ export class SchemaEngine {
   static getNestedForms(schema: FormSchema): FieldSchema[] {
     return this.flattenFields(schema).filter(f => f.type === 'FORM' && f.nested);
   }
+
+  // Simplified schema registry for the engine
+  private static schemaRegistry = new Map<string, FormSchema>();
+
+  static registerSchema(schemaId: string, schema: FormSchema): void {
+    this.schemaRegistry.set(schemaId, schema);
+  }
+
+  static resolveNestedSchema(schemaId: string): FormSchema | undefined {
+    return this.schemaRegistry.get(schemaId);
+  }
 }

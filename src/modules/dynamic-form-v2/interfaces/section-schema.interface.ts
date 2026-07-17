@@ -1,5 +1,5 @@
-import { FormLayout } from '../enums/form-layout.enum';
-import { FieldSchema } from './field-schema.interface';
+import type { FormLayout } from '../enums/form-layout.enum';
+import type { FieldSchema } from './field-schema.interface';
 
 export interface SectionSchema {
   id: string;

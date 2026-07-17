@@ -4,4 +4,5 @@ export enum FormLayout {
   ACCORDION = 'ACCORDION',
   TABS = 'TABS',
   STEPPER = 'STEPPER',
+  GRID = 'GRID',
 }

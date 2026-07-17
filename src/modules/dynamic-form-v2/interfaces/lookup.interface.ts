@@ -1,4 +1,4 @@
-import { HttpMethod } from '../enums/http-method.enum';
+import type { HttpMethod } from '../enums/http-method.enum';
 
 export interface LookupSchema {
   endpoint: string;

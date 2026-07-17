@@ -1,4 +1,4 @@
-import { VerificationState } from './verification-state.interface';
+import type { VerificationState } from './verification-state.interface';
 
 export interface FormState {
   values: Record<string, unknown>;

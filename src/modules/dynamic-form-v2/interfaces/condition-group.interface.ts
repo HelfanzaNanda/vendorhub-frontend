@@ -1,5 +1,5 @@
-import { LogicalOperator } from '../enums/logical-operator.enum';
-import { ConditionOperator } from '../enums/condition-operator.enum';
+import type { LogicalOperator } from '../enums/logical-operator.enum';
+import type { ConditionOperator } from '../enums/condition-operator.enum';
 
 export interface ConditionItem {
   field: string;
