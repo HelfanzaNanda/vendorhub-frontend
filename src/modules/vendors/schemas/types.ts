@@ -1,6 +1,6 @@
 import type { ZodTypeAny } from 'zod'
 
-export type FieldType =
+export type FieldTypeVendor =
     | 'text'
     | 'textarea'
     | 'number'

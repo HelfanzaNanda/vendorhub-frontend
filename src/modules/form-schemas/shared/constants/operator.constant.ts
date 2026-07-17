@@ -1,0 +1,17 @@
+export const Operator = {
+  // Logical
+  AND: 'AND',
+  OR: 'OR',
+  
+  // Comparison
+  EQUALS: 'EQUALS',
+  NOT_EQUALS: 'NOT_EQUALS',
+  IN: 'IN',
+  NOT_IN: 'NOT_IN',
+  EMPTY: 'EMPTY',
+  NOT_EMPTY: 'NOT_EMPTY',
+  GREATER_THAN: 'GREATER_THAN',
+  LESS_THAN: 'LESS_THAN',
+  GREATER_THAN_OR_EQUAL: 'GREATER_THAN_OR_EQUAL',
+  LESS_THAN_OR_EQUAL: 'LESS_THAN_OR_EQUAL',
+} as const;
