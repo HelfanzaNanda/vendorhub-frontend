@@ -2,7 +2,8 @@
 
 import { useState, useCallback } from 'react';
 
-import type { UseDynamicFormOptions, UseDynamicFormReturn } from './use-dynamic-form.interface';
+import type { UseDynamicFormOptions } from './use-dynamic-form.interface';
+import type { DynamicFormContextValue } from '../context/dynamic-form-context.interface';
 import {
   ValidationEngine,
   SchemaEngine,
@@ -10,17 +11,29 @@ import {
   VisibilityEngine
 } from '../engines';
 import { ObjectUtil } from '../utils';
-import type { FormState } from '../interfaces';
+import type { FormState, VerificationState } from '../interfaces';
 
-export const useDynamicForm = (options: UseDynamicFormOptions): UseDynamicFormReturn => {
+/**
+ * useDynamicForm is the main entry point and single source of truth 
+ * for the Dynamic Form Engine V2.
+ * 
+ * It manages the complete lifecycle of a form, maintaining all 
+ * runtime states (values, errors, touched fields, verification) 
+ * in synchronization with the FormState interface.
+ * 
+ * The return value of this hook matches DynamicFormContextValue and 
+ * can be passed directly to DynamicFormProvider without mapping.
+ */
+export const useDynamicForm = (options: UseDynamicFormOptions): DynamicFormContextValue => {
   const { schema, initialValues = {}, mode = 'CREATE', readonly = false } = options;
 
-  const [values, setValuesState] = useState<Record<string, any>>(initialValues);
+  const [values, setValuesState] = useState<Record<string, unknown>>(initialValues);
   const [errors, setErrorsState] = useState<Record<string, string>>({});
   const [touched, setTouchedState] = useState<Record<string, boolean>>({});
   const [dirty, setDirtyState] = useState<Record<string, boolean>>({});
-  const [verification, setVerificationState] = useState<Record<string, any>>({});
+  const [verification, setVerificationState] = useState<Record<string, VerificationState>>({});
   const [loading] = useState(false);
+  const [submitting] = useState(false);
 
   const getFormState = useCallback((): FormState => ({
     schema,
@@ -28,47 +41,48 @@ export const useDynamicForm = (options: UseDynamicFormOptions): UseDynamicFormRe
     errors,
     touched,
     dirty,
-    mode,
-    readonly,
     verification,
-    loading
-  }), [schema, values, errors, touched, dirty, mode, readonly, verification, loading]);
+    loading,
+    submitting,
+    readonly,
+    mode
+  }), [schema, values, errors, touched, dirty, mode, readonly, verification, loading, submitting]);
 
   const getValue = useCallback((path: string) => {
     return ObjectUtil.get(values, path);
   }, [values]);
 
-  const setValue = useCallback((path: string, value: any) => {
+  const setValue = useCallback((path: string, value: unknown) => {
     setValuesState(prev => ObjectUtil.set(prev, path, value));
-    setDirtyState(prev => ObjectUtil.set(prev, path, true));
+    setDirtyState(prev => ObjectUtil.set(prev, path, true) as Record<string, boolean>);
   }, []);
 
   const getError = useCallback((path: string) => {
     return ObjectUtil.get(errors, path) as string | undefined;
   }, [errors]);
 
-  const setError = useCallback((path: string, error: string) => {
-    setErrorsState(prev => ObjectUtil.set(prev, path, error));
+  const setError = useCallback((path: string, error: string | string[]) => {
+    setErrorsState(prev => ObjectUtil.set(prev, path, error) as Record<string, string>);
   }, []);
 
   const clearError = useCallback((path: string) => {
-    setErrorsState(prev => ObjectUtil.unset(prev, path));
+    setErrorsState(prev => ObjectUtil.unset(prev, path) as Record<string, string>);
   }, []);
 
   const clearErrors = useCallback(() => {
     setErrorsState({});
   }, []);
 
-  const getVerification = useCallback((path: string) => {
-    return ObjectUtil.get(verification, path);
+  const getVerification = useCallback((path: string): VerificationState | undefined => {
+    return ObjectUtil.get(verification, path) as VerificationState | undefined;
   }, [verification]);
 
-  const setVerification = useCallback((path: string, state: any) => {
-    setVerificationState(prev => ObjectUtil.set(prev, path, state));
+  const setVerification = useCallback((path: string, state: VerificationState) => {
+    setVerificationState(prev => ObjectUtil.set(prev as Record<string, unknown>, path, state) as Record<string, VerificationState>);
   }, []);
 
   const touch = useCallback((path: string) => {
-    setTouchedState(prev => ObjectUtil.set(prev, path, true));
+    setTouchedState(prev => ObjectUtil.set(prev, path, true) as Record<string, boolean>);
   }, []);
 
   const reset = useCallback(() => {
@@ -95,8 +109,7 @@ export const useDynamicForm = (options: UseDynamicFormOptions): UseDynamicFormRe
 return true;
     }
 
-    const val = getValue(path);
-    const result = ValidationEngine.evaluate(field, val);
+    const result = ValidationEngine.evaluate(field, formState);
 
     if (!result.valid) {
       setError(path, result.messages[0] || 'Invalid field');
@@ -125,8 +138,7 @@ return true;
 
       if (!isVisible || isReadonly) return;
 
-      const val = ObjectUtil.get(values, path);
-      const result = ValidationEngine.evaluate(field, val);
+      const result = ValidationEngine.evaluate(field, formState);
 
       newTouched[path] = true;
 
@@ -143,8 +155,8 @@ return isValid;
   }, [schema, values, touched, getFormState]);
 
   const buildPayload = useCallback(() => {
-    return PayloadBuilder.build(schema, getFormState());
-  }, [schema, getFormState]);
+    return PayloadBuilder.build(getFormState());
+  }, [getFormState]);
 
   return {
     values,
@@ -153,8 +165,10 @@ return isValid;
     dirty,
     verification,
     loading,
+    submitting,
     readonly,
     mode,
+    schema,
 
     getValue,
     setValue,

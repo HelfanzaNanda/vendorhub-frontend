@@ -1,6 +1,8 @@
 import React from 'react';
+
 import { TextField as MuiTextField, CircularProgress, InputAdornment } from '@mui/material';
-import { BaseFieldProps } from './types';
+
+import type { BaseFieldProps } from './types';
 
 export const TextField: React.FC<BaseFieldProps> = ({
   name,

@@ -1,9 +1,12 @@
 import React from 'react';
+
 import { Box, Typography, Divider, Accordion, AccordionSummary, AccordionDetails, List } from '@mui/material';
-import { useDynamicFormContext } from '@/modules/dynamic-form-v2';
+
 import { createPortal } from 'react-dom';
+
+import { useDynamicFormContext } from '@/modules/dynamic-form-v2';
 import { SchemaEngine, VisibilityEngine } from '@/modules/dynamic-form-v2/engines';
-import { FormSchema, FieldSchema } from '@/modules/dynamic-form-v2/interfaces';
+import type { FormSchema, FieldSchema } from '@/modules/dynamic-form-v2/interfaces';
 import { SchemaRegistry } from '../registry';
 
 export const DependencyInspectorPortal: React.FC<{ active: boolean }> = ({ active }) => {
@@ -29,13 +32,17 @@ export const DependencyInspectorPortal: React.FC<{ active: boolean }> = ({ activ
         
         if (field.type === 'FORM' && field.nested) {
            const nestedSchemaId = field.nested.schema || field.nested.schemaId;
+
            if (nestedSchemaId) {
              let nestedSchema = SchemaEngine.resolveNestedSchema(nestedSchemaId);
+
              if (!nestedSchema) {
                nestedSchema = SchemaRegistry.find(s => s.id === nestedSchemaId || s.schema.id === nestedSchemaId)?.schema;
              }
+
              if (nestedSchema) {
                 const childPrefix = field.nested.multiple ? `${fullPath}[0]` : fullPath;
+
                 walkSchema(nestedSchema, childPrefix);
              }
            }
@@ -46,17 +53,7 @@ export const DependencyInspectorPortal: React.FC<{ active: boolean }> = ({ activ
 
   walkSchema(context.schema);
 
-  const formState: any = {
-    schema: context.schema,
-    values: context.values,
-    errors: context.errors,
-    touched: context.touched,
-    dirty: context.dirty,
-    mode: context.mode,
-    readonly: context.readonly,
-    verification: context.verification,
-    loading: context.loading
-  };
+  const formState = context;
 
   return createPortal(
     <Accordion sx={{ mb: 3 }} defaultExpanded>

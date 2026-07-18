@@ -1,24 +1,30 @@
-import { ConditionGroup, ConditionItem } from '../../interfaces';
+import type { ConditionGroup, ConditionItem, FormState } from '../../interfaces';
 import { LogicalOperator, ConditionOperator } from '../../enums';
 import { ObjectUtil } from '../../utils';
 
+/**
+ * ConditionEvaluator
+ * 
+ * Evaluates logical conditions (e.g. VISIBLE_IF) against the current FormState.
+ * Used internally by VisibilityEngine and DependencyEngine.
+ */
 export class ConditionEvaluator {
-  static evaluate(group: ConditionGroup | undefined, values: Record<string, unknown>): boolean {
+  static evaluate(group: ConditionGroup | undefined, formState: FormState): boolean {
     if (!group || !group.conditions || group.conditions.length === 0) {
       return true; // Default to true if no conditions
     }
 
     if (group.operator === LogicalOperator.AND) {
-      return group.conditions.every(condition => this.evaluateItem(condition, values));
+      return group.conditions.every(condition => this.evaluateItem(condition, formState));
     } else if (group.operator === LogicalOperator.OR) {
-      return group.conditions.some(condition => this.evaluateItem(condition, values));
+      return group.conditions.some(condition => this.evaluateItem(condition, formState));
     }
 
     return true;
   }
 
-  private static evaluateItem(condition: ConditionItem, values: Record<string, unknown>): boolean {
-    const fieldValue = ObjectUtil.get(values, condition.field);
+  private static evaluateItem(condition: ConditionItem, formState: FormState): boolean {
+    const fieldValue = ObjectUtil.get(formState.values, condition.field);
     const targetValue = condition.value;
 
     switch (condition.operator) {

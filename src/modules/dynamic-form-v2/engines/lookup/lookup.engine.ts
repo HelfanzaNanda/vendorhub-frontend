@@ -1,4 +1,4 @@
-import { FieldSchema } from '../../interfaces';
+import type { FieldSchema } from '../../interfaces';
 import { ObjectUtil } from '../../utils';
 
 export class LookupEngine {
@@ -14,6 +14,7 @@ export class LookupEngine {
     for (const [key, val] of Object.entries(rawParams)) {
       if (typeof val === 'string' && val.startsWith('${') && val.endsWith('}')) {
         const valuePath = val.substring(2, val.length - 1);
+
         resolvedParams[key] = ObjectUtil.get(values, valuePath);
       } else {
         resolvedParams[key] = val;
@@ -27,10 +28,11 @@ export class LookupEngine {
     };
   }
 
-  private static cache = new Map<string, any[]>();
+  private static cache = new Map<string, unknown[]>();
 
-  static async load(field: FieldSchema, values: Record<string, unknown>): Promise<any[]> {
+  static async load(field: FieldSchema, values: Record<string, unknown>): Promise<unknown[]> {
     const request = this.prepareLookupRequest(field, values);
+
     if (!request) return [];
 
     const cacheKey = JSON.stringify(request);
@@ -44,6 +46,7 @@ export class LookupEngine {
       // Here we simulate the network request and use fetch as a baseline.
       
       const queryParams = new URLSearchParams();
+
       if (request.method === 'GET') {
         Object.entries(request.params).forEach(([key, val]) => {
           if (val !== undefined && val !== null) {
@@ -74,7 +77,8 @@ export class LookupEngine {
       const result = Array.isArray(data) ? data : (data.data || []);
       
       this.cache.set(cacheKey, result);
-      return result;
+      
+return result;
     } catch (error) {
       console.error(`LookupEngine failed to load ${field.name}`, error);
       throw error;

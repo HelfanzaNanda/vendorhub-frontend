@@ -1,6 +1,8 @@
 import React from 'react';
+
 import { TextField as MuiTextField, CircularProgress, InputAdornment } from '@mui/material';
-import { BaseFieldProps } from './types';
+
+import type { BaseFieldProps } from './types';
 
 export const NumberField: React.FC<BaseFieldProps> = ({
   name, value, onChange, onBlur, ref, field, error, isReadonly, isDisabled, loading
@@ -13,6 +15,7 @@ export const NumberField: React.FC<BaseFieldProps> = ({
       value={value ?? ''}
       onChange={(e) => {
         const val = e.target.value === '' ? null : Number(e.target.value);
+
         onChange(val);
       }}
       onBlur={onBlur}

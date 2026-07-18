@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { Box, Typography } from '@mui/material';
+
 import type { LayoutComponentProps } from '../layout-renderer.interface';
 
 export const TableLayout: React.FC<LayoutComponentProps> = ({ title, description, children }) => {

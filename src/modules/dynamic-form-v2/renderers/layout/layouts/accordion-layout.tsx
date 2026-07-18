@@ -1,6 +1,8 @@
 import React from 'react';
+
 import { Accordion, AccordionSummary, AccordionDetails, Typography, Box } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
+
 import type { LayoutComponentProps } from '../layout-renderer.interface';
 
 export const AccordionLayout: React.FC<LayoutComponentProps> = ({ title, description, children, props }) => {

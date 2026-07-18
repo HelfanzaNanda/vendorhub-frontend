@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { FieldType } from '../../enums';
 import { useDynamicFormContext } from '../../context';
 import { fieldRendererRegistry } from '../registry';
 import { NestedFormRenderer } from '../nested';
+import { VisibilityEngine } from '../../engines/visibility/visibility.engine';
 import type { FieldRendererProps } from './field-renderer.interface';
 
 export const FieldRenderer: React.FC<FieldRendererProps> = React.memo((props) => {
@@ -11,13 +12,15 @@ export const FieldRenderer: React.FC<FieldRendererProps> = React.memo((props) =>
   const context = useDynamicFormContext();
   const name = field.name || field.code || field.id;
   
-  const value = context.values[name];
-  const error = context.errors[name];
-  const disabled = context.readonly;
-  const readonly = context.readonly;
+  const value = context.getValue(name);
+  const error = context.getError(name);
+  
+  const readonly = useMemo(() => VisibilityEngine.isReadonly(field, context), [field, context]);
+  const disabled = useMemo(() => VisibilityEngine.isDisabled(field, context), [field, context]);
+  
   const loading = context.loading;
   
-  const onChange = (val: any) => context.setValue(name, val);
+  const onChange = (val: unknown) => context.setValue(name, val);
   const onBlur = () => context.touch(name);
 
   if (field.type === FieldType.HIDDEN) {

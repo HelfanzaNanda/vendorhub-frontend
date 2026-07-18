@@ -1,13 +1,12 @@
 'use client';
 import React from 'react';
-import { Box, Card, CardContent, Typography, Divider, Button, Stack, Accordion, AccordionSummary, AccordionDetails, List, ListItem, ListItemText, Chip, Grid } from '@mui/material';
-import { PlaygroundSchema, SchemaRegistry } from '../registry';
-import { DynamicForm, useDynamicFormContext } from '@/modules/dynamic-form-v2';
+
+import { Box, Card, CardContent, Typography, Divider, Button, Stack, Grid } from '@mui/material';
+
+import type { PlaygroundSchema} from '../registry';
+import { DynamicForm } from '@/modules/dynamic-form-v2';
 import { SchemaErrorBoundary } from './SchemaErrorBoundary';
 import { generateMockData } from '../mock';
-import { createPortal } from 'react-dom';
-import { SchemaEngine, VisibilityEngine } from '@/modules/dynamic-form-v2/engines';
-import { FormSchema, FieldSchema } from '@/modules/dynamic-form-v2/interfaces';
 
 import { ValidationSummaryPortal } from './ValidationSummary';
 import { DependencyInspectorPortal } from './DependencyInspector';
@@ -26,7 +25,7 @@ interface PlaygroundContentProps {
 
 
 export const PlaygroundContent: React.FC<PlaygroundContentProps> = ({ selectedSchema, formMode, validationTrigger, showDependencyInspector, showLookupInspector, showPayloadPreview }) => {
-  const [formData, setFormData] = React.useState<Record<string, any>>({});
+  const [formData, setFormData] = React.useState<Record<string, unknown>>({});
 
   React.useEffect(() => {
     setFormData({});
@@ -83,16 +82,16 @@ export const PlaygroundContent: React.FC<PlaygroundContentProps> = ({ selectedSc
               <Divider sx={{ my: 3 }} />
               
               <SchemaErrorBoundary schemaId={selectedSchema.id}>
-                {React.createElement(DynamicForm as any, {
-                  schema: selectedSchema.schema,
-                  mode: formMode,
-                  value: formData
-                },
-                  <ValidationSummaryPortal key="validation" trigger={validationTrigger} />,
-                  <DependencyInspectorPortal key="dependency" active={showDependencyInspector} />,
-                  <LookupInspectorPortal key="lookup" active={showLookupInspector} />,
-                  showPayloadPreview ? <PayloadPreviewPortal key="payload" /> : null
-                )}
+                <DynamicForm
+                  schema={selectedSchema.schema}
+                  mode={formMode as 'CREATE' | 'EDIT' | 'VIEW'}
+                  initialValues={formData}
+                >
+                  <ValidationSummaryPortal key="validation" trigger={validationTrigger} />
+                  <DependencyInspectorPortal key="dependency" active={showDependencyInspector} />
+                  <LookupInspectorPortal key="lookup" active={showLookupInspector} />
+                  {showPayloadPreview ? <PayloadPreviewPortal key="payload" /> : null}
+                </DynamicForm>
               </SchemaErrorBoundary>
             </CardContent>
           </Card>

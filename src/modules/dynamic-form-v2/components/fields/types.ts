@@ -1,10 +1,11 @@
-import React from 'react';
-import { FieldSchema } from '../../interfaces';
+import type React from 'react';
+
+import type { FieldSchema } from '../../interfaces';
 
 export interface BaseFieldProps {
   name: string;
-  value: any;
-  onChange: (...event: any[]) => void;
+  value: unknown;
+  onChange: (value: unknown) => void;
   onBlur: () => void;
   ref?: React.Ref<any>;
   field: FieldSchema;

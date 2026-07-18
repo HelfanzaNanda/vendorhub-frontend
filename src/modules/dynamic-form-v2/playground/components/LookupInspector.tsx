@@ -1,9 +1,12 @@
 import React from 'react';
+
 import { Box, Typography, Divider, Accordion, AccordionSummary, AccordionDetails, List, Chip } from '@mui/material';
-import { useDynamicFormContext } from '@/modules/dynamic-form-v2';
+
 import { createPortal } from 'react-dom';
+
+import { useDynamicFormContext } from '@/modules/dynamic-form-v2';
 import { SchemaEngine } from '@/modules/dynamic-form-v2/engines';
-import { FormSchema, FieldSchema } from '@/modules/dynamic-form-v2/interfaces';
+import type { FormSchema, FieldSchema } from '@/modules/dynamic-form-v2/interfaces';
 import { SchemaRegistry } from '../registry';
 
 export const LookupInspectorPortal: React.FC<{ active: boolean }> = ({ active }) => {
@@ -23,19 +26,23 @@ export const LookupInspectorPortal: React.FC<{ active: boolean }> = ({ active })
       section.fields?.forEach(field => {
         const fullPath = prefix ? `${prefix}.${field.name}` : field.name;
         
-        if (field.lookup || field.props?.options || (field as any).options) {
+        if (field.lookup || field.props?.options || (field as { options?: unknown }).options) {
           lookups.push({ field, fullPath });
         }
         
         if (field.type === 'FORM' && field.nested) {
            const nestedSchemaId = field.nested.schema || field.nested.schemaId;
+
            if (nestedSchemaId) {
              let nestedSchema = SchemaEngine.resolveNestedSchema(nestedSchemaId);
+
              if (!nestedSchema) {
                nestedSchema = SchemaRegistry.find(s => s.id === nestedSchemaId || s.schema.id === nestedSchemaId)?.schema;
              }
+
              if (nestedSchema) {
                 const childPrefix = field.nested.multiple ? `${fullPath}[0]` : fullPath;
+
                 walkSchema(nestedSchema, childPrefix);
              }
            }
@@ -57,7 +64,7 @@ export const LookupInspectorPortal: React.FC<{ active: boolean }> = ({ active })
         ) : (
           <List dense sx={{ width: '100%', p: 0 }}>
             {lookups.map(({ field, fullPath }) => {
-              const options = (field.props?.options || (field as any).options || []) as any[];
+              const options = (field.props?.options || (field as { options?: { value: unknown, label: string }[] }).options || []) as { value: unknown, label: string }[];
               const isStatic = options.length > 0;
               const isDynamic = !!field.dependency;
               const isAsync = !!field.lookup?.endpoint && !isDynamic;
@@ -69,17 +76,21 @@ export const LookupInspectorPortal: React.FC<{ active: boolean }> = ({ active })
               const currentValue = context.getValue(fullPath);
               
               let resolvedParams = field.lookup?.params ? { ...field.lookup.params } : {};
+
               if (isDynamic && field.dependency?.params) {
                  resolvedParams = { ...resolvedParams, ...field.dependency.params };
               }
               
               let currentStatus = 'Ready';
+
               if (isStatic) currentStatus = 'Loaded';
               else if (isDynamic && !parentValue) currentStatus = 'Waiting For Dependency';
 
               let currentDisplayLabel = '';
+
               if (isStatic && currentValue !== undefined && currentValue !== null) {
                  const opt = options.find(o => String(o.value) === String(currentValue));
+
                  if (opt) currentDisplayLabel = opt.label;
               }
 

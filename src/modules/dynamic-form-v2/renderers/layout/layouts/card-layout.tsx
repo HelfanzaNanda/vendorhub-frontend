@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { Card, CardContent, CardHeader, Typography } from '@mui/material';
+
 import type { LayoutComponentProps } from '../layout-renderer.interface';
 
 export const CardLayout: React.FC<LayoutComponentProps> = ({ title, description, children }) => {

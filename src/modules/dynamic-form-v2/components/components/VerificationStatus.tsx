@@ -1,8 +1,11 @@
 import React from 'react';
+
 import { Chip } from '@mui/material';
-import { VerificationState } from '../../interfaces';
+
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+
+import type { VerificationState } from '../../interfaces';
 
 interface VerificationStatusProps {
   state: VerificationState;

@@ -1,13 +1,22 @@
-import { FieldSchema } from '../../interfaces';
+import type { FieldSchema, FormState } from '../../interfaces';
+import { ObjectUtil } from '../../utils';
 
 export interface ValidationResult {
   valid: boolean;
   messages: string[];
 }
 
+/**
+ * ValidationEngine
+ * 
+ * Evaluates field validation rules against the current FormState.
+ * Returns valid status and messages without side effects.
+ */
 export class ValidationEngine {
-  static evaluate(field: FieldSchema, value: unknown): ValidationResult {
+  static evaluate(field: FieldSchema, formState: FormState): ValidationResult {
     const messages: string[] = [];
+    const path = field.name || field.code || field.id;
+    const value = ObjectUtil.get(formState.values, path);
     const validation = field.validation;
 
     if (!validation) {
@@ -18,7 +27,8 @@ export class ValidationEngine {
     
     if (validation.required && isEmpty) {
       messages.push(validation.message || `${field.label || field.name} is required`);
-      return { valid: false, messages };
+      
+return { valid: false, messages };
     }
 
     if (isEmpty) {
@@ -55,6 +65,7 @@ export class ValidationEngine {
       };
 
       const pattern = regexPatterns[validation.regexCode];
+
       if (pattern && !pattern.test(strValue)) {
         messages.push(validation.message || `Invalid format for ${validation.regexCode}`);
       }

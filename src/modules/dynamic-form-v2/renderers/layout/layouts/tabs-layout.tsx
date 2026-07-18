@@ -1,7 +1,9 @@
 "use client"
 
 import React, { useState } from 'react';
+
 import { Box, Tabs, Tab, Typography } from '@mui/material';
+
 import type { LayoutComponentProps } from '../layout-renderer.interface';
 
 export const TabsLayout: React.FC<LayoutComponentProps> = ({ title, description, children, props }) => {

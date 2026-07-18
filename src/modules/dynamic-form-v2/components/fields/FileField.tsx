@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { BaseFieldProps } from './types';
-import { UploadCard } from '../components/UploadCard';
+
 import { CircularProgress, Box, Typography } from '@mui/material';
+
+import type { BaseFieldProps } from './types';
+import { UploadCard } from '../components/UploadCard';
 
 interface FileMetadata {
   accept?: string;
@@ -25,7 +27,8 @@ export const FileField: React.FC<BaseFieldProps> = ({
     
     if (!documentTypeCode) {
       setLoadingMetadata(false);
-      return;
+      
+return;
     }
 
     const fetchMetadata = async () => {
@@ -33,13 +36,16 @@ export const FileField: React.FC<BaseFieldProps> = ({
         // Fetch metadata generically based on schema's documentTypeCode
         // E.g., /api/metadata/documents/COMPANY_PROFILE
         const response = await fetch(`/api/metadata/documents/${documentTypeCode}`);
+
         if (!response.ok) {
           // Non-blocking fallback for dev without endpoints
           if (active) setMetadata({ maxSize: 5242880 }); 
-          return;
+          
+return;
         }
         
         const data = await response.json();
+
         if (active) {
           setMetadata({
             accept: data.accept || data.allowedExtensions?.join(','),
@@ -55,7 +61,8 @@ export const FileField: React.FC<BaseFieldProps> = ({
     };
 
     fetchMetadata();
-    return () => { active = false; };
+    
+return () => { active = false; };
   }, [field.file?.documentTypeCode]);
 
   const handleUpload = async (files: File[]) => {
@@ -64,7 +71,8 @@ export const FileField: React.FC<BaseFieldProps> = ({
 
     if (metadata.maxSize && file.size > metadata.maxSize) {
       alert(`File size exceeds ${(metadata.maxSize / 1024 / 1024).toFixed(2)}MB limit`);
-      return;
+      
+return;
     }
 
     setUploading(true);
@@ -75,6 +83,7 @@ export const FileField: React.FC<BaseFieldProps> = ({
       const interval = setInterval(() => setProgress(p => Math.min((p || 0) + 10, 90)), 200);
       
       const formData = new FormData();
+
       formData.append('file', file);
       
       // Generic upload endpoint, vendor agnostic
@@ -93,10 +102,12 @@ export const FileField: React.FC<BaseFieldProps> = ({
           setUploading(false);
           setProgress(undefined);
         }, 500);
-        return;
+        
+return;
       }
       
       const data = await response.json();
+
       onChange(data);
     } catch (err) {
       console.error("Upload failed", err);
@@ -111,8 +122,10 @@ export const FileField: React.FC<BaseFieldProps> = ({
   };
 
   const handleDownload = () => {
-    if (value?.url) {
-      window.open(value.url, '_blank');
+    const fileValue = value as { url?: string } | undefined | null;
+
+    if (fileValue?.url) {
+      window.open(fileValue.url, '_blank');
     }
   };
 

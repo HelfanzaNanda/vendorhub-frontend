@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+
 import { Button, CircularProgress } from '@mui/material';
-import { VerificationEngine } from '../../engine';
-import { VerificationState, VerificationSchema } from '../../interfaces';
+
+import { VerificationEngine } from '../../engines';
+import type { VerificationState, VerificationSchema } from '../../interfaces';
 
 interface VerificationButtonProps {
   schema: VerificationSchema;
@@ -19,6 +21,7 @@ export const VerificationButton: React.FC<VerificationButtonProps> = ({
     if (!value) return;
 
     const loadingState = VerificationEngine.markLoading();
+
     setState(loadingState);
     onVerifyStatusChange(loadingState);
 
@@ -28,9 +31,11 @@ export const VerificationButton: React.FC<VerificationButtonProps> = ({
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       let nextState;
+
       if (schema.otp) {
         // Only requested OTP, not strictly verified yet
         nextState = VerificationEngine.reset();
+
         // Typically a custom state/flag might be emitted here to toggle OTP visibility in parent
       } else {
         nextState = VerificationEngine.markVerified('Verification Successful');
@@ -40,6 +45,7 @@ export const VerificationButton: React.FC<VerificationButtonProps> = ({
       onVerifyStatusChange(nextState);
     } catch (err) {
       const errorState = VerificationEngine.markUnverified('Verification Failed');
+
       setState(errorState);
       onVerifyStatusChange(errorState);
     }

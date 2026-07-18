@@ -1,11 +1,19 @@
-import { FormSchema, FieldSchema, SectionSchema } from '../../interfaces';
+import type { FormSchema, FieldSchema, SectionSchema } from '../../interfaces';
+import { SchemaRegistry } from '../../registries/schema.registry';
 
+/**
+ * SchemaEngine
+ * 
+ * Handles schema searching, flattening, traversal, and manipulation.
+ * Purely focused on schema logic, contains no state.
+ */
 export class SchemaEngine {
   static walk(schema: FormSchema, callback: (field: FieldSchema, section: SectionSchema) => void): void {
     if (!schema.sections) return;
     
     for (const section of schema.sections) {
       if (!section.fields) continue;
+
       for (const field of section.fields) {
         callback(field, section);
       }
@@ -14,10 +22,12 @@ export class SchemaEngine {
 
   static flattenFields(schema: FormSchema): FieldSchema[] {
     const fields: FieldSchema[] = [];
+
     this.walk(schema, (field) => {
       fields.push(field);
     });
-    return fields;
+    
+return fields;
   }
 
   static findField(schema: FormSchema, fieldName: string): FieldSchema | undefined {
@@ -32,14 +42,11 @@ export class SchemaEngine {
     return this.flattenFields(schema).filter(f => f.type === 'FORM' && f.nested);
   }
 
-  // Simplified schema registry for the engine
-  private static schemaRegistry = new Map<string, FormSchema>();
-
   static registerSchema(schemaId: string, schema: FormSchema): void {
-    this.schemaRegistry.set(schemaId, schema);
+    SchemaRegistry.register(schemaId, schema);
   }
 
   static resolveNestedSchema(schemaId: string): FormSchema | undefined {
-    return this.schemaRegistry.get(schemaId);
+    return SchemaRegistry.resolve(schemaId);
   }
 }

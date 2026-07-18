@@ -1,6 +1,8 @@
 import React from 'react';
+
 import { FormControl, FormControlLabel, Checkbox, FormHelperText, FormGroup } from '@mui/material';
-import { BaseFieldProps } from './types';
+
+import type { BaseFieldProps } from './types';
 
 export const CheckboxField: React.FC<BaseFieldProps> = ({
   name, value, onChange, onBlur, ref, field, error, isReadonly, isDisabled

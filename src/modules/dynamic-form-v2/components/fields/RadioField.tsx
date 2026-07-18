@@ -1,11 +1,14 @@
 import React from 'react';
+
 import { FormControl, FormControlLabel, Radio, RadioGroup, FormHelperText, FormLabel } from '@mui/material';
-import { BaseFieldProps } from './types';
+
+import type { BaseFieldProps } from './types';
+import type { OptionSchema } from '../../interfaces';
 
 export const RadioField: React.FC<BaseFieldProps> = ({
   name, value, onChange, onBlur, ref, field, error, isReadonly, isDisabled
 }) => {
-  const options = (field.props?.options as any[]) || [];
+  const options = (field.props?.options as OptionSchema[]) || [];
 
   return (
     <FormControl error={!!error} required={field.validation?.required} disabled={isDisabled}>
@@ -18,7 +21,7 @@ export const RadioField: React.FC<BaseFieldProps> = ({
         onChange={(e) => onChange(e.target.value)}
         onBlur={onBlur}
       >
-        {options.map((opt: any) => (
+        {options.map((opt: OptionSchema) => (
           <FormControlLabel
             key={opt.value || opt.id}
             value={opt.value || opt.id}

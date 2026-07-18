@@ -12,3 +12,4 @@ export * from './field-schema.interface';
 export * from './section-schema.interface';
 export * from './form-schema.interface';
 export * from './form-state.interface';
+export * from './options.interface';

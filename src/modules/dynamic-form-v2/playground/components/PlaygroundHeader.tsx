@@ -1,7 +1,9 @@
 'use client';
 import React from 'react';
+
 import { Box, Typography, Divider, FormControl, InputLabel, Select, MenuItem, Button, FormControlLabel, Switch } from '@mui/material';
-import { PlaygroundSchema } from '../registry';
+
+import type { PlaygroundSchema } from '../registry';
 
 interface PlaygroundHeaderProps {
   selectedSchema: PlaygroundSchema | null;

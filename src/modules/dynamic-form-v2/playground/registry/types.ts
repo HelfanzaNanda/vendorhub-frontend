@@ -1,5 +1,5 @@
-import { FormSchema } from '@/modules/dynamic-form-v2/interfaces';
-import { SchemaCategory } from './schema-category';
+import type { FormSchema } from '@/modules/dynamic-form-v2/interfaces';
+import type { SchemaCategory } from './schema-category';
 
 export interface PlaygroundSchema {
   id: string;

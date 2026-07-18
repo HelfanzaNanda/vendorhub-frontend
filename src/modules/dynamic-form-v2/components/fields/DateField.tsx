@@ -1,6 +1,8 @@
 import React from 'react';
+
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { BaseFieldProps } from './types';
+
+import type { BaseFieldProps } from './types';
 
 export const DateField: React.FC<BaseFieldProps> = ({
   name, value, onChange, ref, field, error, isReadonly, isDisabled

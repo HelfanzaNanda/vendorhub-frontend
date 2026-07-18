@@ -9,8 +9,8 @@ import type {
   NestedFormSchema,
   DependencySchema,
 } from '@/modules/dynamic-form-v2/interfaces';
-import { VisibilitySchema } from '../../interfaces/visibility.interface';
-import { OptionSchema } from '../../interfaces/options.interface';
+import type { VisibilitySchema } from '../../interfaces/visibility.interface';
+import type { OptionSchema } from '../../interfaces/options.interface';
 
 export interface FieldBuilderOptions {
     name: string;

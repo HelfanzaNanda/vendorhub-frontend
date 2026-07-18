@@ -1,7 +1,10 @@
 import React from 'react';
+
 import { Typography, Accordion, AccordionSummary, AccordionDetails, List, ListItem, ListItemText, Chip } from '@mui/material';
-import { useDynamicFormContext } from '@/modules/dynamic-form-v2';
+
 import { createPortal } from 'react-dom';
+
+import { useDynamicFormContext } from '@/modules/dynamic-form-v2';
 
 export const ValidationSummaryPortal: React.FC<{ trigger: number }> = ({ trigger }) => {
   const context = useDynamicFormContext();
@@ -17,6 +20,7 @@ export const ValidationSummaryPortal: React.FC<{ trigger: number }> = ({ trigger
       if ((context.mode as string) !== 'DISABLED') {
         context.validate();
       }
+
       setHasValidated(true);
     }
   }, [trigger, context]);
@@ -27,11 +31,14 @@ export const ValidationSummaryPortal: React.FC<{ trigger: number }> = ({ trigger
 
   const getFieldLabel = (path: string): string => {
     const lastPart = path.split('.').pop()?.replace(/\[\d+\]/g, '') || path;
-    return lastPart.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+
+    
+return lastPart.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
   };
 
   const handleScrollToField = (field: string) => {
     const el = document.querySelector(`[name="${field}"]`) || document.getElementById(field);
+
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       (el as HTMLElement).focus?.();

@@ -39,17 +39,16 @@ return SchemaEngine.resolveNestedSchema(schemaId);
   // Normalize items based on multiple flag
   const items = useMemo(() => {
     if (isMultiple) {
-      return Array.isArray(rawValue) ? rawValue : [];
+      return (Array.isArray(rawValue) ? rawValue : []) as Array<Record<string, unknown>>;
     }
 
-    
-return rawValue && typeof rawValue === 'object' ? rawValue : {};
+    return (rawValue && typeof rawValue === 'object' ? rawValue : {}) as Record<string, unknown>;
   }, [isMultiple, rawValue]);
 
-  const count = isMultiple ? (items as any[]).length : (Object.keys(items).length > 0 ? 1 : 0);
+  const count = isMultiple ? (items as unknown[]).length : (Object.keys(items).length > 0 ? 1 : 0);
   const isEmpty = count === 0;
 
-  const add = useCallback((item: Record<string, any> = {}) => {
+  const add = useCallback((item: Record<string, unknown> = {}) => {
     if (!isMultiple) {
       context.setValue(path, item);
       
@@ -73,7 +72,7 @@ return;
     context.setValue(path, current.filter((_, i) => i !== index));
   }, [isMultiple, context, path, rawValue]);
 
-  const update = useCallback((index: number, value: Record<string, any>) => {
+  const update = useCallback((index: number, value: Record<string, unknown>) => {
     if (!isMultiple) {
       context.setValue(path, value);
       
@@ -87,7 +86,7 @@ return;
     context.setValue(path, next);
   }, [isMultiple, context, path, rawValue]);
 
-  const replace = useCallback((newItems: Array<Record<string, any>> | Record<string, any>) => {
+  const replace = useCallback((newItems: Array<Record<string, unknown>> | Record<string, unknown>) => {
     context.setValue(path, newItems);
   }, [context, path]);
 

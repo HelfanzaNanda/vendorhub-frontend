@@ -1,27 +1,31 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+
 import { Autocomplete, TextField, CircularProgress } from '@mui/material';
-import { useFormContext } from 'react-hook-form';
-import { BaseFieldProps } from './types';
+
+import { useDynamicFormContext } from '../../context';
+import type { BaseFieldProps } from './types';
+import type { OptionSchema } from '../../interfaces';
 import { LookupEngine } from '../../engines';
 
 export const AutocompleteField: React.FC<BaseFieldProps> = ({
   name, value, onChange, onBlur, ref, field, error, isReadonly, isDisabled
 }) => {
   const [open, setOpen] = useState(false);
-  const [options, setOptions] = useState<any[]>([]);
+  const [options, setOptions] = useState<OptionSchema[]>([]);
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState('');
   
-  const { getValues } = useFormContext();
+  const context = useDynamicFormContext();
 
   useEffect(() => {
     let active = true;
 
     if (!field.lookup) {
-      setOptions((field.props?.options as any[]) || []);
-      return undefined;
+      setOptions((field.props?.options as OptionSchema[]) || []);
+      
+return undefined;
     }
 
     if (!open && inputValue === '') {
@@ -30,17 +34,21 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
 
     const fetchOptions = async () => {
       setLoading(true);
+
       try {
-        const formValues = getValues();
+        const formValues = context.values;
+
         // Uses Lookup Engine purely for rules/params parsing
         const requestConfig = LookupEngine.prepareLookupRequest(field, formValues);
         
         if (!requestConfig) {
           setOptions([]);
-          return;
+          
+return;
         }
         
         const queryParams = new URLSearchParams(requestConfig.params as Record<string, string>);
+
         if (inputValue && field.lookup?.searchParam) {
           queryParams.append(field.lookup.searchParam, inputValue);
         }
@@ -70,7 +78,7 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
       active = false;
       clearTimeout(timeout);
     };
-  }, [field, inputValue, open, getValues]);
+  }, [field, inputValue, open, context.values]);
 
   const multiple = field.props?.multiple === true;
   const valueField = field.lookup?.valueField || 'id';
@@ -83,8 +91,8 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
       open={open}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
-      isOptionEqualToValue={(option, val) => option[valueField] === val[valueField]}
-      getOptionLabel={(option) => option[labelField] || ''}
+      isOptionEqualToValue={(option, val) => (option as Record<string, unknown>)[valueField] === (val as Record<string, unknown>)[valueField]}
+      getOptionLabel={(option) => String((option as Record<string, unknown>)[labelField] || '')}
       options={options}
       loading={loading}
       value={value ?? (multiple ? [] : null)}

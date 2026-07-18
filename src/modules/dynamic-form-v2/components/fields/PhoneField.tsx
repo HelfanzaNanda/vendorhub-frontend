@@ -1,6 +1,8 @@
 import React from 'react';
+
 import { TextField as MuiTextField, CircularProgress, InputAdornment } from '@mui/material';
-import { BaseFieldProps } from './types';
+
+import type { BaseFieldProps } from './types';
 
 export const PhoneField: React.FC<BaseFieldProps> = ({
   name, value, onChange, onBlur, ref, field, error, isReadonly, isDisabled, loading
@@ -8,6 +10,7 @@ export const PhoneField: React.FC<BaseFieldProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // purely numeric and plus sign mapping
     const rawValue = e.target.value.replace(/[^0-9+]/g, '');
+
     onChange(rawValue);
   };
 

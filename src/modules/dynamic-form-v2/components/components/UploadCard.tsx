@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
+
 import { Box, Typography, CircularProgress, IconButton, Paper } from '@mui/material';
 import { Delete, CloudUpload, InsertDriveFile, Download } from '@mui/icons-material';
 
@@ -32,22 +33,26 @@ export const UploadCard: React.FC<UploadCardProps> = ({
     e.preventDefault();
     if (!isReadonly && !isDisabled && !loading) setIsDragOver(true);
   };
+
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
   };
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
     if (isReadonly || isDisabled || loading) return;
     
     const files = Array.from(e.dataTransfer.files);
+
     onUpload(files);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length) {
       onUpload(Array.from(e.target.files));
+
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }

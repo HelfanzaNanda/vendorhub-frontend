@@ -19,7 +19,6 @@ import {
   SelectField,
   AutocompleteField,
   FileField,
-  FormField,
   HiddenField,
 } from '../../components/fields';
 import type { RendererRegistry } from './renderer-registry.interface';
@@ -44,6 +43,5 @@ export const fieldRendererRegistry: RendererRegistry = {
   [FieldType.SELECT]: SelectField,
   [FieldType.AUTOCOMPLETE]: AutocompleteField,
   [FieldType.FILE]: FileField,
-  [FieldType.FORM]: FormField,
   [FieldType.HIDDEN]: HiddenField,
 };

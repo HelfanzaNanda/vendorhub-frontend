@@ -1,7 +1,7 @@
 import { FieldType } from '@/modules/dynamic-form-v2/enums';
-import { FieldSchema } from '@/modules/dynamic-form-v2/interfaces';
+import type { FieldSchema, OptionSchema } from '@/modules/dynamic-form-v2/interfaces';
 
-export const getMockValueForField = (field: FieldSchema): any => {
+export const getMockValueForField = (field: FieldSchema): unknown => {
   switch (field.type) {
     case FieldType.TEXT:
       return "Sample Text";
@@ -24,10 +24,13 @@ export const getMockValueForField = (field: FieldSchema): any => {
     case FieldType.SELECT:
     case FieldType.RADIO:
       // Try static options
-      const options = field.props?.options || (field as any).options;
+      const options = (field.props?.options || (field as { options?: OptionSchema[] }).options) as OptionSchema[];
+
       if (options && options.length > 0) {
         return options[0].value;
       }
+
+
       // If we had lookup options resolved, we could use them, but we only have schema static options here.
       return null;
     case FieldType.FILE:

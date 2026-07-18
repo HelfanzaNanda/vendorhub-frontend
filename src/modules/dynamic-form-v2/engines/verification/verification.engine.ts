@@ -1,5 +1,11 @@
-import { VerificationState } from '../../interfaces';
+import type { VerificationState, FieldSchema, FormState } from '../../interfaces';
 
+/**
+ * VerificationEngine
+ * 
+ * Manages OTP/verification workflows for specific fields.
+ * Validates verification status and simulates API interactions.
+ */
 export class VerificationEngine {
   static markVerified(message?: string): VerificationState {
     return {
@@ -36,14 +42,15 @@ export class VerificationEngine {
     return !!state?.verified;
   }
 
-  static async verify(field: import('../../interfaces').FieldSchema, value: any): Promise<boolean> {
+  static async verify(field: FieldSchema, formState: FormState): Promise<boolean> {
     if (!field.verification) return true;
     
     try {
       // Simulate verification API call
       // In a real application, this would read field.verification.endpoint and fetch
       await new Promise(resolve => setTimeout(resolve, 1000));
-      return true;
+      
+return true;
     } catch (e) {
       throw e;
     }

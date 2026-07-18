@@ -1,7 +1,10 @@
-import React, { useState, useRef, useEffect, KeyboardEvent, ClipboardEvent } from 'react';
+import type { KeyboardEvent, ClipboardEvent } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+
 import { Box, Typography, TextField, Button, CircularProgress } from '@mui/material';
-import { VerificationEngine } from '../../engine';
-import { VerificationState } from '../../interfaces';
+
+import { VerificationEngine } from '../../engines';
+import type { VerificationState } from '../../interfaces';
 
 interface OTPInputProps {
   length?: number;
@@ -23,7 +26,9 @@ export const OTPInput: React.FC<OTPInputProps> = ({
   useEffect(() => {
     if (countdown > 0) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-      return () => clearTimeout(timer);
+
+      
+return () => clearTimeout(timer);
     }
   }, [countdown]);
 
@@ -34,6 +39,7 @@ export const OTPInput: React.FC<OTPInputProps> = ({
 
   const handleResend = async () => {
     updateState(VerificationEngine.markLoading());
+
     try {
       await onResend();
       setCountdown(60);
@@ -47,8 +53,10 @@ export const OTPInput: React.FC<OTPInputProps> = ({
 
   const submitOtp = async (code: string) => {
     updateState(VerificationEngine.markLoading());
+
     try {
       const success = await onVerify(code);
+
       if (success) {
         updateState(VerificationEngine.markVerified('OTP Verified Successfully'));
       } else {
@@ -61,9 +69,11 @@ export const OTPInput: React.FC<OTPInputProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const val = e.target.value.replace(/[^0-9]/g, '');
+
     if (!val) return;
     
     const newOtp = [...otp];
+
     newOtp[index] = val.substring(val.length - 1);
     setOtp(newOtp);
 
@@ -73,6 +83,7 @@ export const OTPInput: React.FC<OTPInputProps> = ({
     }
 
     const currentOtp = newOtp.join('');
+
     if (currentOtp.length === length) {
       submitOtp(currentOtp);
     }
@@ -82,8 +93,10 @@ export const OTPInput: React.FC<OTPInputProps> = ({
     if (e.key === 'Backspace') {
       e.preventDefault();
       const newOtp = [...otp];
+
       newOtp[index] = '';
       setOtp(newOtp);
+
       if (index > 0) {
         setActiveInput(index - 1);
         inputRefs.current[index - 1]?.focus();
@@ -94,15 +107,18 @@ export const OTPInput: React.FC<OTPInputProps> = ({
   const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData('text/plain').replace(/[^0-9]/g, '').slice(0, length);
+
     if (!pastedData) return;
 
     const newOtp = [...otp];
+
     pastedData.split('').forEach((char, idx) => {
       newOtp[idx] = char;
     });
     setOtp(newOtp);
     
     const focusIndex = Math.min(pastedData.length, length - 1);
+
     setActiveInput(focusIndex);
     inputRefs.current[focusIndex]?.focus();
 

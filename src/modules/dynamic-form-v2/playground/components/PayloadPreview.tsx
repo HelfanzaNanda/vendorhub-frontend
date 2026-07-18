@@ -1,7 +1,10 @@
 import React from 'react';
+
 import { Box, Typography, Accordion, AccordionSummary, AccordionDetails, Button, Card, CardContent } from '@mui/material';
-import { useDynamicFormContext } from '@/modules/dynamic-form-v2';
+
 import { createPortal } from 'react-dom';
+
+import { useDynamicFormContext } from '@/modules/dynamic-form-v2';
 
 export const PayloadPreviewPortal: React.FC = () => {
   const context = useDynamicFormContext();
@@ -25,6 +28,7 @@ export const PayloadPreviewPortal: React.FC = () => {
   const handleDownload = () => {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
     const dlAnchorElem = document.createElement('a');
+
     dlAnchorElem.setAttribute("href", dataStr);
     dlAnchorElem.setAttribute("download", "payload.json");
     document.body.appendChild(dlAnchorElem);

@@ -1,11 +1,14 @@
 import React from 'react';
+
 import { FormControl, InputLabel, Select, MenuItem, FormHelperText } from '@mui/material';
-import { BaseFieldProps } from './types';
+
+import type { BaseFieldProps } from './types';
+import type { OptionSchema } from '../../interfaces';
 
 export const SelectField: React.FC<BaseFieldProps> = ({
   name, value, onChange, onBlur, ref, field, error, isReadonly, isDisabled, loading
 }) => {
-  const options = (field.props?.options as any[]) || [];
+  const options = (field.props?.options as OptionSchema[]) || [];
 
   return (
     <FormControl fullWidth error={!!error} required={field.validation?.required} disabled={isDisabled || loading}>
@@ -21,7 +24,7 @@ export const SelectField: React.FC<BaseFieldProps> = ({
         inputRef={ref}
         inputProps={{ readOnly: isReadonly }}
       >
-        {options.map((opt: any) => (
+        {options.map((opt: OptionSchema) => (
           <MenuItem key={opt.value || opt.id} value={opt.value || opt.id}>
             {opt.label || opt.name}
           </MenuItem>

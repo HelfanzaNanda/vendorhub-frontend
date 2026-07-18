@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { FormSchema, useDynamicForm, DynamicFormProvider } from '@/modules/dynamic-form-v2';
 import { DynamicController } from './DynamicController';
 
@@ -23,7 +24,7 @@ export const DynamicForm = React.memo(({
   });
 
   return (
-    <DynamicFormProvider contextValue={form}>
+    <DynamicFormProvider value={form}>
       <form 
         className={className} 
         style={style} 

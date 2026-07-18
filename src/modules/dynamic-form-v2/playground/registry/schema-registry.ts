@@ -10,7 +10,7 @@ import {
   VendorAffiliateSchema
 } from '@/modules/form-schemas/vendor/local/schemas';
 import { SchemaCategory } from './schema-category';
-import { PlaygroundSchema } from './types';
+import type { PlaygroundSchema } from './types';
 
 export const SchemaRegistry: readonly PlaygroundSchema[] = [
   {

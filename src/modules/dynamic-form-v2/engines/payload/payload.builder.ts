@@ -1,10 +1,18 @@
-import { FormSchema, FormState } from '../../interfaces';
+import type { FormState } from '../../interfaces';
+import { FormSchema } from '../../interfaces';
 import { SchemaEngine } from '../schema/schema.engine';
 import { VisibilityEngine } from '../visibility/visibility.engine';
 import { ObjectUtil } from '../../utils';
 
+/**
+ * PayloadBuilder
+ * 
+ * Generates API payloads from the current FormState by traversing
+ * the schema, filtering hidden/readonly fields, and collecting values.
+ */
 export class PayloadBuilder {
-  static build(schema: FormSchema, formState: FormState): Record<string, unknown> {
+  static build(formState: FormState): Record<string, unknown> {
+    const schema = formState.schema;
     const payload: Record<string, unknown> = {};
     const fields = SchemaEngine.flattenFields(schema);
 
@@ -18,7 +26,7 @@ export class PayloadBuilder {
 
       if (!isVisible || isReadonly) continue;
 
-      let val = ObjectUtil.get(formState.values, field.name);
+      const val = ObjectUtil.get(formState.values, field.name);
       
       // Ignore undefined/null unless it's a specific requirement
       if (val === undefined || val === null) continue;
@@ -42,48 +50,64 @@ export class PayloadBuilder {
     return payload;
   }
 
-  static buildDraft(schema: FormSchema, formState: FormState): Record<string, unknown> {
+  static buildDraft(formState: FormState): Record<string, unknown> {
+    const schema = formState.schema;
+
     // Draft might include everything including readonly/hidden fields, just to save state
     const payload: Record<string, unknown> = {};
     const fields = SchemaEngine.flattenFields(schema);
+
     for (const field of fields) {
-      let val = ObjectUtil.get(formState.values, field.name);
+      const val = ObjectUtil.get(formState.values, field.name);
+
       if (val !== undefined) {
         payload[field.name] = val;
       }
     }
-    return payload;
+
+    
+return payload;
   }
 
-  static buildSubmit(schema: FormSchema, formState: FormState): Record<string, unknown> {
+  static buildSubmit(formState: FormState): Record<string, unknown> {
     // Standard build is typically the submit payload
-    return this.build(schema, formState);
+    return this.build(formState);
   }
 
-  static buildSection(schema: FormSchema, formState: FormState, sectionId: string): Record<string, unknown> {
+  static buildSection(formState: FormState, sectionId: string): Record<string, unknown> {
+    const schema = formState.schema;
     const section = SchemaEngine.findSection(schema, sectionId);
+
     if (!section || !section.fields) return {};
 
     const payload: Record<string, unknown> = {};
+
     for (const field of section.fields) {
       const isVisible = VisibilityEngine.isVisible(field, formState);
       const isReadonly = VisibilityEngine.isReadonly(field, formState);
+
       if (!isVisible || isReadonly) continue;
 
-      let val = ObjectUtil.get(formState.values, field.name);
+      const val = ObjectUtil.get(formState.values, field.name);
+
       if (val !== undefined && val !== null) {
         payload[field.name] = val;
       }
     }
-    return payload;
+
+    
+return payload;
   }
 
-  static buildField(schema: FormSchema, formState: FormState, fieldPath: string): unknown {
+  static buildField(formState: FormState, fieldPath: string): unknown {
+    const schema = formState.schema;
     const field = SchemaEngine.findField(schema, fieldPath);
+
     if (!field) return undefined;
     
     const isVisible = VisibilityEngine.isVisible(field, formState);
     const isReadonly = VisibilityEngine.isReadonly(field, formState);
+
     if (!isVisible || isReadonly) return undefined;
 
     return ObjectUtil.get(formState.values, field.name);

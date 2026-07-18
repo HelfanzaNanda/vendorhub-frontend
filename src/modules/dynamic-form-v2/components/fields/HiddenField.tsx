@@ -1,5 +1,6 @@
 import React from 'react';
-import { BaseFieldProps } from './types';
+
+import type { BaseFieldProps } from './types';
 
 export const HiddenField: React.FC<BaseFieldProps> = ({
   name,
@@ -10,8 +11,8 @@ export const HiddenField: React.FC<BaseFieldProps> = ({
     <input 
       type="hidden" 
       name={name} 
-      value={value ?? ''} 
-      ref={ref} 
+      value={(value as string | number) ?? ''} 
+      ref={ref as any} 
     />
   );
 };

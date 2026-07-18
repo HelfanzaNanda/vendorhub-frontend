@@ -1,6 +1,8 @@
 import React from 'react';
+
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { BaseFieldProps } from './types';
+
+import type { BaseFieldProps } from './types';
 
 export const DatetimeField: React.FC<BaseFieldProps> = ({
   name, value, onChange, ref, field, error, isReadonly, isDisabled

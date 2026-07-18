@@ -6,7 +6,6 @@ export type SystemFieldOptions = Partial<Omit<FieldBuilderOptions, 'type' | 'gri
 
 export const idField = (options?: SystemFieldOptions): FieldSchema => {
   return hiddenField({
-    id: 'id',
     name: 'id',
     code: 'id',
     label: 'ID',
@@ -16,7 +15,6 @@ export const idField = (options?: SystemFieldOptions): FieldSchema => {
 
 export const uuidField = (options?: SystemFieldOptions): FieldSchema => {
   return hiddenField({
-    id: 'uuid',
     name: 'uuid',
     code: 'uuid',
     label: 'UUID',
@@ -26,7 +24,6 @@ export const uuidField = (options?: SystemFieldOptions): FieldSchema => {
 
 export const createdAtField = (options?: SystemFieldOptions): FieldSchema => {
   return hiddenField({
-    id: 'createdAt',
     name: 'createdAt',
     code: 'createdAt',
     label: 'Created At',
@@ -36,7 +33,6 @@ export const createdAtField = (options?: SystemFieldOptions): FieldSchema => {
 
 export const updatedAtField = (options?: SystemFieldOptions): FieldSchema => {
   return hiddenField({
-    id: 'updatedAt',
     name: 'updatedAt',
     code: 'updatedAt',
     label: 'Updated At',
@@ -46,7 +42,6 @@ export const updatedAtField = (options?: SystemFieldOptions): FieldSchema => {
 
 export const deletedAtField = (options?: SystemFieldOptions): FieldSchema => {
   return hiddenField({
-    id: 'deletedAt',
     name: 'deletedAt',
     code: 'deletedAt',
     label: 'Deleted At',
@@ -56,7 +51,6 @@ export const deletedAtField = (options?: SystemFieldOptions): FieldSchema => {
 
 export const versionField = (options?: SystemFieldOptions): FieldSchema => {
   return hiddenField({
-    id: 'version',
     name: 'version',
     code: 'version',
     label: 'Version',

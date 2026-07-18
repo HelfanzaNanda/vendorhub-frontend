@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+
 import { TextField as MuiTextField, CircularProgress, InputAdornment, IconButton } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material'; // standard MUI icons
-import { BaseFieldProps } from './types';
+
+import type { BaseFieldProps } from './types';
 
 export const PasswordField: React.FC<BaseFieldProps> = ({
   name,
@@ -20,6 +22,7 @@ export const PasswordField: React.FC<BaseFieldProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };

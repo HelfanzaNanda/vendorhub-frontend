@@ -1,4 +1,4 @@
-import { ConditionOperator } from "../enums";
+import type { ConditionOperator } from "../enums";
 
 export interface VisibilitySchema {
     condition?: {

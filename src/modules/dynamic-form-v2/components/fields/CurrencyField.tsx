@@ -1,14 +1,18 @@
 import React from 'react';
+
 import { TextField as MuiTextField, CircularProgress, InputAdornment } from '@mui/material';
-import { BaseFieldProps } from './types';
+
+import type { BaseFieldProps } from './types';
 
 export const CurrencyField: React.FC<BaseFieldProps> = ({
   name, value, onChange, onBlur, ref, field, error, isReadonly, isDisabled, loading
 }) => {
-  const formatCurrency = (val: any) => {
+  const formatCurrency = (val: unknown) => {
     if (val === null || val === undefined || val === '') return '';
     const numericStr = String(val).replace(/[^0-9]/g, '');
+
     if (!numericStr) return '';
+
     // Format using thousand separator
     return Number(numericStr).toLocaleString('id-ID'); 
   };
@@ -16,6 +20,7 @@ export const CurrencyField: React.FC<BaseFieldProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value.replace(/[^0-9]/g, '');
     const numValue = rawValue === '' ? null : Number(rawValue);
+
     onChange(numValue);
   };
 
@@ -36,7 +41,7 @@ export const CurrencyField: React.FC<BaseFieldProps> = ({
       fullWidth
       InputProps={{
         readOnly: isReadonly,
-        startAdornment: <InputAdornment position="start">{field.props?.currency || 'Rp'}</InputAdornment>,
+        startAdornment: <InputAdornment position="start">{(field.props?.currency as string) || 'Rp'}</InputAdornment>,
         endAdornment: loading ? (
           <InputAdornment position="end">
             <CircularProgress color="inherit" size={20} />

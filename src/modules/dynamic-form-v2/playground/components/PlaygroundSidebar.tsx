@@ -1,7 +1,10 @@
 'use client';
 import React from 'react';
+
 import { Box, Typography, Paper, List, ListItem, ListItemText, ListItemButton, ListSubheader } from '@mui/material';
-import { SchemaRegistry, PlaygroundSchema, SchemaCategory } from '../registry';
+
+import type { PlaygroundSchema, SchemaCategory } from '../registry';
+import { SchemaRegistry } from '../registry';
 
 interface PlaygroundSidebarProps {
   selectedSchema: PlaygroundSchema | null;
@@ -13,8 +16,10 @@ export const PlaygroundSidebar: React.FC<PlaygroundSidebarProps> = ({ selectedSc
     if (!acc[curr.category]) {
       acc[curr.category] = [];
     }
+
     acc[curr.category].push(curr);
-    return acc;
+    
+return acc;
   }, {} as Record<SchemaCategory, PlaygroundSchema[]>);
 
   return (
