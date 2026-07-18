@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import { BaseFieldProps } from './types';
 import { UploadCard } from '../components/UploadCard';

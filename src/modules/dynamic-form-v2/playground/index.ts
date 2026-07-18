@@ -1,4 +1,4 @@
+export * from './components';
+export * from './registry';
+export * from './mock';
 export * from './PlaygroundLayout';
-export * from './PlaygroundSidebar';
-export * from './PlaygroundContent';
-export * from './PlaygroundHeader';

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useRef, useState } from 'react';
 import { Box, Typography, CircularProgress, IconButton, Paper } from '@mui/material';
 import { Delete, CloudUpload, InsertDriveFile, Download } from '@mui/icons-material';

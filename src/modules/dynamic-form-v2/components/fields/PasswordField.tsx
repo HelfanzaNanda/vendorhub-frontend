@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { TextField as MuiTextField, CircularProgress, InputAdornment, IconButton } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material'; // standard MUI icons

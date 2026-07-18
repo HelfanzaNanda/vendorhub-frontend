@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { Box, Card, CardContent, CardHeader, IconButton, Button, Collapse, Typography, CircularProgress } from '@mui/material';
 import { Add, Delete, ExpandMore, ExpandLess } from '@mui/icons-material';
