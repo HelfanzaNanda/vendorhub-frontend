@@ -4,9 +4,10 @@ import {
   textField, 
   textareaField,  
   numberField,
-  autocompleteField
+  autocompleteField,
+  NumberField
 } from '@/modules/dynamic-form-v2';
-import { FullGrid, HalfGrid, QuarterGrid, RequiredValidation } from '@/modules/form-schemas/shared';
+import { FullGrid, HalfGrid, MapsUrlValidation, QuarterGrid, RequiredValidation, ThirdGrid, WebsiteValidation } from '@/modules/form-schemas/shared';
 
 import { CountryLookup, ProvinceLookup, CityLookup, BusinessEntityLookup, SiteLookup } from '@/modules/form-schemas/shared/lookups';
 import { CompanyConstants } from '@/modules/form-schemas/vendor/common';
@@ -25,7 +26,7 @@ export const VendorCompanySchema: FormSchema = {
       layout: FormLayout.CARD,
       fields: [
         textField({ 
-            name: 'companyName', 
+            name: 'name', 
             label: 'Company Name', 
             validation: { required: RequiredValidation.required, maxLength: CompanyConstants.MAX_COMPANY_NAME_LENGTH }, 
             grid: HalfGrid 
@@ -36,7 +37,11 @@ export const VendorCompanySchema: FormSchema = {
             label: 'Site', 
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid,
-            lookup: SiteLookup 
+            lookup: SiteLookup,
+            payload: {
+                key: 'siteId',
+                pick: 'value'
+            }
         }),
 
         autocompleteField({ 
@@ -65,7 +70,7 @@ export const VendorCompanySchema: FormSchema = {
           name: 'country', 
           label: 'Country', 
           validation: { required: RequiredValidation.required }, 
-          grid: QuarterGrid,
+          grid: ThirdGrid,
           lookup: CountryLookup,
           display: {
             readonly: true
@@ -79,7 +84,7 @@ export const VendorCompanySchema: FormSchema = {
           name: 'province', 
           label: 'Province', 
           validation: { required: RequiredValidation.required }, 
-          grid: QuarterGrid,
+          grid: ThirdGrid,
           lookup: ProvinceLookup,
           dependency: { parent: 'country.value', clearOnChange: true }
         }),
@@ -87,20 +92,20 @@ export const VendorCompanySchema: FormSchema = {
           name: 'city', 
           label: 'City', 
           validation: { required: RequiredValidation.required }, 
-          grid: QuarterGrid,
+          grid: ThirdGrid,
           lookup: CityLookup,
           dependency: { parent: 'province.value', clearOnChange: true }
         }),
-        textField({ 
+        numberField({ 
           name: 'postalCode', 
           label: 'Postal Code', 
-          validation: { required: RequiredValidation.required }, 
+          validation: { required: RequiredValidation.required, maxLength: 6 }, 
           grid: HalfGrid 
         }),
         textField({ 
           name: 'website', 
           label: 'Website', 
-          validation: { required: RequiredValidation.required }, 
+          validation: { required: RequiredValidation.required, website: WebsiteValidation.website }, 
           grid: HalfGrid 
         }),
         textareaField({ 
@@ -112,7 +117,7 @@ export const VendorCompanySchema: FormSchema = {
         textField({ 
           name: 'mapsUrl', 
           label: 'Maps URL', 
-          validation: { required: RequiredValidation.required }, 
+          validation: { required: RequiredValidation.required, mapsUrl: MapsUrlValidation.mapsUrl }, 
           grid: FullGrid 
         }),
       ]

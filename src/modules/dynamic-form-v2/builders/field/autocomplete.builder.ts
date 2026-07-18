@@ -14,5 +14,6 @@ export const autocompleteField = (
     validation: options.validation ?? OptionalValidation,
     lookup: options.lookup,
     component: options.component ?? (Component.AUTOCOMPLETE as DynamicComponent),
+    payload: options.payload,
   });
 };

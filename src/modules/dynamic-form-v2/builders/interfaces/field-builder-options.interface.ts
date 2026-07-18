@@ -11,6 +11,7 @@ import type {
 } from '@/modules/dynamic-form-v2/interfaces';
 import type { VisibilitySchema } from '../../interfaces/visibility.interface';
 import type { OptionSchema } from '../../interfaces/options.interface';
+import { PayloadSchema } from '../../interfaces/payload-schema.interface ';
 
 export interface FieldBuilderOptions {
     name: string;
@@ -32,4 +33,5 @@ export interface FieldBuilderOptions {
     defaultValue?: unknown;
     component?: DynamicComponent;
     visibility?: VisibilitySchema;
+    payload?: PayloadSchema;
 }

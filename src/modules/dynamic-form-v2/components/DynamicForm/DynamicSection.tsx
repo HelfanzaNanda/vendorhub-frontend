@@ -3,6 +3,7 @@ import React from 'react';
 import type { SectionSchema} from '@/modules/dynamic-form-v2';
 import { FormSchema, useDynamicFormContext, LayoutRenderer } from '@/modules/dynamic-form-v2';
 import { DynamicField } from './DynamicField';
+import { Grid } from '@mui/material';
 
 export interface DynamicSectionProps {
   section: SectionSchema;
@@ -24,9 +25,21 @@ export const DynamicSection: React.FC<DynamicSectionProps> = React.memo(({
       title={section.title}
       description={section.description}
     >
-      {fields.map(field => (
-        <DynamicField key={field.id} field={field} />
-      ))}
+        <Grid container spacing={3}>
+            {fields.map(field => (
+                <Grid
+                    key={field.id}
+                    item
+                    xs={field.grid?.xs ?? 12}
+                    sm={field.grid?.sm}
+                    md={field.grid?.md}
+                    lg={field.grid?.lg}
+                    xl={field.grid?.xl}
+                    >
+                    <DynamicField key={field.id} field={field} />
+                </Grid>
+            ))}
+        </Grid>
     </LayoutRenderer>
   );
 });

@@ -12,3 +12,5 @@ export { NpwpValidation } from './npwp.validation';
 export { PrivyValidation } from './privy.validation';
 export { UrlValidation } from './url.validation';
 export { OptionalValidation } from './optional.validation';
+export { WebsiteValidation } from './website.validation';
+export { MapsUrlValidation } from './maps-url.validation';

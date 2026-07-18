@@ -11,12 +11,17 @@ export const NumberField: React.FC<BaseFieldProps> = ({
     <MuiTextField
       inputRef={ref}
       name={name}
-      type="number"
+      type="text"
+      inputMode="numeric"
       value={value ?? ''}
-      onChange={(e) => {
-        const val = e.target.value === '' ? null : Number(e.target.value);
-
-        onChange(val);
+      onKeyDown={(e) => {
+        if (['e', 'E', '+', '-', ','].includes(e.key)) {
+          e.preventDefault();
+        }
+      }}
+      onChange={(event : React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value.replace(/\D/g, '');
+        onChange(value);
       }}
       onBlur={onBlur}
       label={field.label}
@@ -33,6 +38,19 @@ export const NumberField: React.FC<BaseFieldProps> = ({
             <CircularProgress color="inherit" size={20} />
           </InputAdornment>
         ) : undefined,
+      }}
+      slotProps={{
+        htmlInput: {
+            style: {
+                MozAppearance: 'textfield'
+            }
+        }
+      }}
+      sx={{
+        '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
+          WebkitAppearance: 'none',
+          margin: 0
+        }
       }}
     />
   );

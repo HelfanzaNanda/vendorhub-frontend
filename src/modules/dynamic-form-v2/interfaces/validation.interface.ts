@@ -6,4 +6,8 @@ export interface ValidationSchema {
   maxLength?: number;
   regexCode?: string;
   message?: string;
+  email?: boolean;
+  website?: boolean;
+  phone?: boolean;
+  mapsUrl?: boolean;
 }

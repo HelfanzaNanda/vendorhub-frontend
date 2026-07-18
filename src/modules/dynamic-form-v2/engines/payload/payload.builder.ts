@@ -17,7 +17,6 @@ export class PayloadBuilder {
         const fields = SchemaEngine.flattenFields(schema);
 
 
-
         for (const field of fields) {
             // Ignore specific types
             if (field.type === 'HIDDEN') continue;

@@ -21,7 +21,9 @@ export const TextField: React.FC<BaseFieldProps> = ({
       inputRef={ref}
       name={name}
       value={value ?? ''}
-      onChange={onChange}
+      onChange={(event : React.ChangeEvent<HTMLInputElement>) => {
+        onChange(event.target.value);
+      }}
       onBlur={onBlur}
       label={field.label}
       placeholder={field.placeholder}

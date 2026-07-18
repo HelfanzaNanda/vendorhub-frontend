@@ -20,6 +20,10 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
 
     const context = useDynamicFormContext();
 
+    const parentValue = field.dependency?.parent
+    ? context.getValue(field.dependency.parent)
+    : undefined;
+
     useEffect(() => {
         let active = true;
 
@@ -83,7 +87,15 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
             active = false;
             clearTimeout(timeout);
         };
-    }, [field, inputValue, open, context.values]);
+    }, field.dependency?.parent ? [field.id, open, inputValue, parentValue] : [field.id, open, inputValue]
+    // [
+    //     field,
+    //     inputValue,
+    //     open,
+    //     context.values,
+    //     parentValue
+    // ]
+    );
 
     const multiple = field.props?.multiple === true;
     const valueField = field.lookup?.valueField || 'id';

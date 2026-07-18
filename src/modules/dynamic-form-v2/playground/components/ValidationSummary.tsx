@@ -23,7 +23,7 @@ export const ValidationSummaryPortal: React.FC<{ trigger: number }> = ({ trigger
 
       setHasValidated(true);
     }
-  }, [trigger, context]);
+  }, [trigger]);
 
   if (!hasValidated || (context.mode as string) === 'DISABLED' || !target) return null;
 
