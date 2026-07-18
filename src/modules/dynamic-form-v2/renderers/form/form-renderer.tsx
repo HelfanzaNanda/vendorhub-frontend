@@ -10,6 +10,8 @@ export const FormRenderer: React.FC<FormRendererProps> = React.memo(({ schema: p
   const context = useDynamicFormContext();
   const schema = propSchema || context.schema;
 
+  console.log('ini schema nya : ', schema);
+
   if (!schema) {
     return null;
   }

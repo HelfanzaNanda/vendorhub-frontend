@@ -1,3 +1,5 @@
+"use client"
+
 import { useMemo, useCallback } from 'react';
 
 import type { UseNestedFormOptions, UseNestedFormResult } from './use-nested-form.interface';

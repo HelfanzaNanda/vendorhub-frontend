@@ -1,3 +1,5 @@
+"use client"
+
 import { useMemo, useCallback } from 'react';
 
 import type { UseFieldOptions, UseFieldResult } from './use-field.interface';

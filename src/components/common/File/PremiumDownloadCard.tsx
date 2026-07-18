@@ -45,14 +45,16 @@ export default function PremiumDownloadCard({ url, fileName }: PremiumDownloadCa
     setProgress(0);
 
     // Simulasi progress bar berjalan (bisa diganti dengan axios onDownloadProgress)
-    const timer = setInterval(() => {
-      setProgress((oldProgress) => {
-        const diff = Math.random() * 15;
+//     const timer = setInterval(() => {
+//       setProgress((oldProgress) => {
+//         const diff = Math.random() * 15;
 
         
-return Math.min(oldProgress + diff, 90); // Stop at 90% until fetch finishes
-      });
-    }, 300);
+// return Math.min(oldProgress + diff, 90); // Stop at 90% until fetch finishes
+//       });
+//     }, 300);
+
+    const timer = undefined;
 
     try {
       const response = await fetch(url || 'https://api.example.com/download-report');

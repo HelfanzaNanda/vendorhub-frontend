@@ -28,6 +28,7 @@ export const PlaygroundHeader: React.FC<PlaygroundHeaderProps> = ({
   showPayloadPreview,
   onTogglePayloadPreview
 }) => {
+
   return (
     <Box sx={{ px: 3, pt: 3, pb: 2, bgcolor: 'background.paper' }}>
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'flex-start', md: 'center' }, gap: 2 }}>

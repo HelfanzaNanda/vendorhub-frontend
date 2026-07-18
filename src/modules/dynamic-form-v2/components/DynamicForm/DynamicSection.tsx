@@ -16,6 +16,8 @@ export const DynamicSection: React.FC<DynamicSectionProps> = React.memo(({
 }) => {
   // Consume context to ensure we are connected, even if we just delegate to LayoutRenderer.
   // FieldRenderer will read from context internally.
+  console.log('section apa nihh?? :', section);
+  
   const context = useDynamicFormContext();
 
   return (

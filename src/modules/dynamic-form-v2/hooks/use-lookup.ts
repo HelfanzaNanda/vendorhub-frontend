@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import type { UseLookupOptions, UseLookupResult } from './use-lookup.interface';

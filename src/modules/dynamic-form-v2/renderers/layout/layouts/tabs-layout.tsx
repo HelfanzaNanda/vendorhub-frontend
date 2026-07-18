@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from 'react';
 import { Box, Tabs, Tab, Typography } from '@mui/material';
 import type { LayoutComponentProps } from '../layout-renderer.interface';

@@ -1,3 +1,5 @@
+"use client"
+
 import { useMemo, useCallback, useEffect, useRef } from 'react';
 
 import type { UseVerificationOptions, UseVerificationResult } from './use-verification.interface';

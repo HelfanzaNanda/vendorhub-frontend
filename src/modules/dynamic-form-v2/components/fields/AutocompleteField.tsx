@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Autocomplete, TextField, CircularProgress } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 import { BaseFieldProps } from './types';
-import { LookupEngine } from '../../engine/lookup/lookup.engine';
+import { LookupEngine } from '../../engines';
 
 export const AutocompleteField: React.FC<BaseFieldProps> = ({
   name, value, onChange, onBlur, ref, field, error, isReadonly, isDisabled

@@ -1,3 +1,5 @@
+"use client"
+
 import { useMemo, useCallback, useEffect, useRef } from 'react';
 
 import type { UseDependencyOptions, UseDependencyResult } from './use-dependency.interface';

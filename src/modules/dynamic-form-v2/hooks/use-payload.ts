@@ -1,3 +1,5 @@
+"use client"
+
 import { useMemo, useCallback } from 'react';
 
 import type { UsePayloadOptions, UsePayloadResult } from './use-payload.interface';

@@ -1,3 +1,5 @@
+"use client"
+
 import { createContext } from 'react';
 
 import type { DynamicFormContextValue } from './dynamic-form-context.interface';
