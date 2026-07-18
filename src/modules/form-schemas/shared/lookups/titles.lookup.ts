@@ -4,6 +4,6 @@ import { HttpMethod } from '@/modules/dynamic-form-v2/enums/http-method.enum';
 export const TitleLookup: LookupSchema = {
   endpoint: '/lookups/titles',
   method: HttpMethod.GET,
-  valueField: 'id',
-  labelField: 'name',
+  valueField: 'value',
+  labelField: 'label',
 };

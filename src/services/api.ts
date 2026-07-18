@@ -1,5 +1,7 @@
 import { apiClient } from './axios'
 
+export { apiClient }
+
 export interface ApiResponse<T = any> {
   status: boolean
   data: T

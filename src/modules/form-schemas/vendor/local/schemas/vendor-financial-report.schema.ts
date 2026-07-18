@@ -2,7 +2,7 @@ import {
   FormSchema, 
   FormLayout, 
   formField, 
-  selectField, 
+  autocompleteField, 
   dateField,
   currencyField,
   fileField,
@@ -28,21 +28,21 @@ const FinancialReportInlineSchema: FormSchema = {
       description: FinancialReportConstants.SECTION_FINANCIAL_REPORT_DETAIL_DESCRIPTION,
       layout: FormLayout.CARD,
       fields: [
-        selectField({
+        autocompleteField({
             name: 'reportType',
             label: 'Report Type',
             validation: { required: RequiredValidation.required },
             grid: HalfGrid,
             lookup : ReportTypeLookup
         }),
-        selectField({
+        autocompleteField({
             name: 'auditStatus',
             label: 'Audit Status',
             validation: { required: RequiredValidation.required },
             grid: HalfGrid,
             lookup : ReportTypeLookup
         }),
-        selectField({
+        autocompleteField({
             name: 'currencyId',
             label: 'Currency',
             validation: { required: RequiredValidation.required },

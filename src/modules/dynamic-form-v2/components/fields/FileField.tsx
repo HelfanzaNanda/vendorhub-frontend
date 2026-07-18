@@ -6,6 +6,7 @@ import { CircularProgress, Box, Typography } from '@mui/material';
 
 import type { BaseFieldProps } from './types';
 import { UploadCard } from '../components/UploadCard';
+import { apiClient } from '@/services/api';
 
 interface FileMetadata {
   accept?: string;
@@ -35,16 +36,9 @@ return;
       try {
         // Fetch metadata generically based on schema's documentTypeCode
         // E.g., /api/metadata/documents/COMPANY_PROFILE
-        const response = await fetch(`/api/metadata/documents/${documentTypeCode}`);
+        const response = await apiClient.get(`/metadata/documents/${documentTypeCode}`);
 
-        if (!response.ok) {
-          // Non-blocking fallback for dev without endpoints
-          if (active) setMetadata({ maxSize: 5242880 }); 
-          
-return;
-        }
-        
-        const data = await response.json();
+        const data = response.data;
 
         if (active) {
           setMetadata({
@@ -55,6 +49,8 @@ return;
         }
       } catch (err) {
         console.error("Failed to fetch document metadata:", err);
+        // Non-blocking fallback for dev without endpoints
+        if (active) setMetadata({ maxSize: 5242880 }); 
       } finally {
         if (active) setLoadingMetadata(false);
       }
@@ -87,30 +83,26 @@ return;
       formData.append('file', file);
       
       // Generic upload endpoint, vendor agnostic
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
+      const response = await apiClient.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
       
       clearInterval(interval);
       setProgress(100);
       
-      if (!response.ok) {
-        // Fallback fake file for UI demonstration when API doesn't exist
-        setTimeout(() => {
-          onChange({ id: 'fake-id', name: file.name, url: '#' });
-          setUploading(false);
-          setProgress(undefined);
-        }, 500);
-        
-return;
-      }
-      
-      const data = await response.json();
+      const data = response.data;
 
       onChange(data);
     } catch (err) {
       console.error("Upload failed", err);
+      // Fallback fake file for UI demonstration when API doesn't exist
+      setTimeout(() => {
+        onChange({ id: 'fake-id', name: file.name, url: '#' });
+        setUploading(false);
+        setProgress(undefined);
+      }, 500);
     } finally {
       setUploading(false);
       setProgress(undefined);

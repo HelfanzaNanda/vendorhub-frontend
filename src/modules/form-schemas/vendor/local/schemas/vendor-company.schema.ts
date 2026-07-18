@@ -2,9 +2,9 @@ import {
   FormSchema, 
   FormLayout, 
   textField, 
-  textareaField, 
-  selectField, 
-  numberField
+  textareaField,  
+  numberField,
+  autocompleteField
 } from '@/modules/dynamic-form-v2';
 import { FullGrid, HalfGrid, QuarterGrid, RequiredValidation } from '@/modules/form-schemas/shared';
 
@@ -31,7 +31,7 @@ export const VendorCompanySchema: FormSchema = {
             grid: HalfGrid 
         }),
 
-        selectField({ 
+        autocompleteField({ 
             name: 'site', 
             label: 'Site', 
             validation: { required: RequiredValidation.required }, 
@@ -39,7 +39,7 @@ export const VendorCompanySchema: FormSchema = {
             lookup: SiteLookup 
         }),
 
-        selectField({ 
+        autocompleteField({ 
             name: 'businessEntity', 
             label: 'Business Entity', 
             validation: { required: RequiredValidation.required }, 
@@ -61,28 +61,35 @@ export const VendorCompanySchema: FormSchema = {
       code: CompanyConstants.SECTION_ADDRESS_INFO_CODE,
       layout: FormLayout.CARD,
       fields: [
-        selectField({ 
+        autocompleteField({ 
           name: 'country', 
           label: 'Country', 
           validation: { required: RequiredValidation.required }, 
           grid: QuarterGrid,
           lookup: CountryLookup,
+          display: {
+            readonly: true
+          },
+          defaultValue: {
+            value: 27,
+            label: 'Indonesia'
+          }
         }),
-        selectField({ 
+        autocompleteField({ 
           name: 'province', 
           label: 'Province', 
           validation: { required: RequiredValidation.required }, 
           grid: QuarterGrid,
           lookup: ProvinceLookup,
-          dependency: { parent: 'country', clearOnChange: true }
+          dependency: { parent: 'country.value', clearOnChange: true }
         }),
-        selectField({ 
+        autocompleteField({ 
           name: 'city', 
           label: 'City', 
           validation: { required: RequiredValidation.required }, 
           grid: QuarterGrid,
           lookup: CityLookup,
-          dependency: { parent: 'province', clearOnChange: true }
+          dependency: { parent: 'province.value', clearOnChange: true }
         }),
         textField({ 
           name: 'postalCode', 

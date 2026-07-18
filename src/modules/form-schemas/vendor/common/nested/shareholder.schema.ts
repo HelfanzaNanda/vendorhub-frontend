@@ -3,7 +3,7 @@ import {
   FormLayout, 
   textField, 
   percentageField, 
-  selectField, 
+  autocompleteField, 
   ConditionOperator,
   numberField
 } from '@/modules/dynamic-form-v2';
@@ -23,7 +23,7 @@ export const ShareholderSchema: FormSchema = {
       description: PersonnelConstants.SECTION_SHAREHOLDER_DESCRIPTION,
       layout: FormLayout.CARD,
       fields: [
-        selectField({
+        autocompleteField({
             name: 'title',
             label: 'Title',
             validation: { required: RequiredValidation.required }, 
@@ -49,7 +49,7 @@ export const ShareholderSchema: FormSchema = {
                 }
             }
         }),
-        selectField({
+        autocompleteField({
             name: 'identityType',
             label: 'Identity Type',
             validation: { required: RequiredValidation.required }, 

@@ -15,7 +15,7 @@ export const PlaygroundLayout: React.FC = () => {
   const [showPayloadPreview, setShowPayloadPreview] = useState(true);
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', bgcolor: 'background.default' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', bgcolor: 'background.default',  position: 'fixed', inset: 0, }}>
       <PlaygroundHeader 
         selectedSchema={selectedSchema} 
         formMode={formMode}

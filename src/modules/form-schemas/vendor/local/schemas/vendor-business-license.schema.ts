@@ -3,7 +3,7 @@ import {
   FormLayout, 
   formField, 
   textField, 
-  selectField, 
+  autocompleteField, 
   switchField, 
   textareaField,
   dateField,
@@ -32,7 +32,7 @@ const KbliNestedSchema: FormSchema = {
       description: BusinessLicenseConstants.SECTION_INDUSTRY_CLASSIFICATION_DESCRIPTION,
       layout: FormLayout.CARD,
       fields: [
-        selectField({
+        autocompleteField({
             name: 'kbliId',
             label: 'KBLI',
             validation: { required: RequiredValidation.required },

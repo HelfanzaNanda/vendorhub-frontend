@@ -13,6 +13,5 @@ export const textField = (
     grid: options.grid ?? HalfGrid,
     validation: options.validation ?? OptionalValidation,
     component: options.component ?? (Component.DEFAULT as DynamicComponent),
-
   });
 };

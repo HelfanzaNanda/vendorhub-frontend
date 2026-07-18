@@ -3,7 +3,7 @@ import {
   FormLayout, 
   formField, 
   textField, 
-  selectField, 
+  autocompleteField, 
   dateField, 
   textareaField 
 } from '@/modules/dynamic-form-v2';
@@ -24,14 +24,14 @@ const AffiliateCompanyInlineSchema: FormSchema = {
       code: AffiliateConstants.SECTION_AFFILIATE_CODE,
       layout: FormLayout.CARD,
       fields: [
-        selectField({
+        autocompleteField({
             name: 'affiliateTypeId',
             label: 'Relationship Type',
             validation: { required: RequiredValidation.required },
             grid: HalfGrid,
             lookup: AffiliateTypeLookup
         }),
-        selectField({
+        autocompleteField({
             name: 'businessEntityTypeId',
             label: 'Business Entity',
             validation: { required: RequiredValidation.required },

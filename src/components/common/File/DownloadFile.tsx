@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import DownloadIcon from '@mui/icons-material/Download';
+import { apiClient } from '@/services/api';
 
 export default function DownloadFile({ url, fileName }: { url: string, fileName: string }) {
   const [loading, setLoading] = useState(false);
@@ -12,14 +13,14 @@ export default function DownloadFile({ url, fileName }: { url: string, fileName:
 
     try {
       // Simulasi fetch file dari API
-      const response = await fetch('https://api.example.com/download-report');
-      const blob = await response.blob();
+      const response = await apiClient.get(url, { responseType: 'blob' });
+      const blob = response.data;
       
       // Membuat URL temporer untuk blob
-      const url = window.URL.createObjectURL(new Blob([blob]));
+      const objectUrl = window.URL.createObjectURL(new Blob([blob]));
       const link = document.createElement('a');
 
-      link.href = url;
+      link.href = objectUrl;
       link.setAttribute('download', fileName);
       
       // Memicu unduhan
@@ -27,8 +28,8 @@ export default function DownloadFile({ url, fileName }: { url: string, fileName:
       link.click();
       
       // Cleanup
-      link.parentNode.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      link.parentNode?.removeChild(link);
+      window.URL.revokeObjectURL(objectUrl);
     } catch (error) {
       console.error("Gagal mengunduh file:", error);
     } finally {

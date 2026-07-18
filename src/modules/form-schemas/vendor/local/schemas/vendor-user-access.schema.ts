@@ -5,7 +5,7 @@ import {
   textField, 
   emailField, 
   phoneField, 
-  selectField, 
+  autocompleteField, 
   switchField, 
   textareaField, 
   dateField,
@@ -48,7 +48,7 @@ export const UserAccessSchema: FormSchema = {
             grid: HalfGrid
         }),
 
-        selectField({
+        autocompleteField({
             name: 'position',
             label: 'Position',
             validation: { required: RequiredValidation.required },
@@ -76,7 +76,7 @@ export const UserAccessSchema: FormSchema = {
             validation: { required: RequiredValidation.required },
         }),
         
-        selectField({
+        autocompleteField({
             name: 'roleIds',
             label: 'Role',
             validation: { required: RequiredValidation.required },
@@ -85,7 +85,7 @@ export const UserAccessSchema: FormSchema = {
             lookup: RoleLookup
         }),
 
-        selectField({
+        autocompleteField({
             name: 'areaIds',
             label: 'Working Area',
             validation: { required: RequiredValidation.required },

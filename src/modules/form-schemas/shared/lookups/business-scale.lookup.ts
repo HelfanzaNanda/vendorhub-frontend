@@ -4,6 +4,6 @@ import { HttpMethod } from '@/modules/dynamic-form-v2/enums/http-method.enum';
 export const BusinessScaleLookup: LookupSchema = {
   endpoint: '/lookups/business-scales',
   method: HttpMethod.GET,
-  valueField: 'id',
-  labelField: 'name',
+  valueField: 'value',
+  labelField: 'label',
 };

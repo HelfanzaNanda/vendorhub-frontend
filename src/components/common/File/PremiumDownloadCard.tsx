@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import DownloadIcon from '@mui/icons-material/Download';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { apiClient } from '@/services/api';
 
 // 1. Custom Styling untuk Card agar terlihat modern & smooth
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -57,8 +58,8 @@ export default function PremiumDownloadCard({ url, fileName }: PremiumDownloadCa
     const timer = undefined;
 
     try {
-      const response = await fetch(url || 'https://api.example.com/download-report');
-      const blob = await response.blob();
+      const response = await apiClient.get(url, { responseType: 'blob' });
+      const blob = response.data;
       
       clearInterval(timer);
       setProgress(100);

@@ -7,7 +7,7 @@ import {
   textareaField, 
   fileField, 
   numberField,
-  selectField
+  autocompleteField
 } from '@/modules/dynamic-form-v2';
 import { DocumentType, CustomerConstants } from '../constants';
 import { FullGrid, HalfGrid, RequiredValidation, YearLookup } from '@/modules/form-schemas/shared';
@@ -44,7 +44,7 @@ export const CustomerReferenceSchema: FormSchema = {
             grid: FullGrid
         }),
         
-        selectField({
+        autocompleteField({
             name: 'year',
             label: 'Year',
             validation: { required: RequiredValidation.required }, 

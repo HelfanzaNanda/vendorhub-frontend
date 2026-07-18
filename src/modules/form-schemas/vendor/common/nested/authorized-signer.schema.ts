@@ -4,7 +4,7 @@ import {
   textField, 
   emailField, 
   phoneField, 
-  selectField, 
+  autocompleteField, 
   fileField, 
   checkboxField, 
   textareaField,
@@ -27,7 +27,7 @@ export const AuthorizedSignerSchema: FormSchema = {
       description: PersonnelConstants.SECTION_AUTHORIZED_SIGNER_DESCRIPTION,
       layout: FormLayout.CARD,
       fields: [
-        selectField({
+        autocompleteField({
             name: 'title',
             label: 'Title',
             validation: { required: RequiredValidation.required }, 
@@ -40,7 +40,7 @@ export const AuthorizedSignerSchema: FormSchema = {
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid
         }),
-        selectField({
+        autocompleteField({
             name: 'jobType',
             label: 'Job Type',
             validation: { required: RequiredValidation.required }, 
@@ -53,7 +53,7 @@ export const AuthorizedSignerSchema: FormSchema = {
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid
         }),
-        selectField({
+        autocompleteField({
             name: 'identityType',
             label: 'Identity Type',
             validation: { required: RequiredValidation.required }, 

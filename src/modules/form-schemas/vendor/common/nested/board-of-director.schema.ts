@@ -6,7 +6,7 @@ import {
   phoneField, 
   dateField, 
   textareaField, 
-  selectField 
+  autocompleteField 
 } from '@/modules/dynamic-form-v2';
 import { PersonnelConstants } from '../constants';
 import { HalfGrid, IdentityLookup, JobTypeLookup, RequiredValidation, TitleLookup } from '@/modules/form-schemas/shared';
@@ -24,7 +24,7 @@ export const BoardOfDirectorSchema: FormSchema = {
       description: PersonnelConstants.SECTION_BOARD_OF_DIRECTORS_DESCRIPTION,
       layout: FormLayout.CARD,
       fields: [
-        selectField({
+        autocompleteField({
             name: 'title',
             label: 'Title',
             validation: { required: RequiredValidation.required }, 
@@ -37,7 +37,7 @@ export const BoardOfDirectorSchema: FormSchema = {
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid
         }),
-        selectField({
+        autocompleteField({
             name: 'jobType',
             label: 'Job Type',
             validation: { required: RequiredValidation.required }, 
@@ -50,7 +50,7 @@ export const BoardOfDirectorSchema: FormSchema = {
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid
         }),
-        selectField({
+        autocompleteField({
             name: 'identityType',
             label: 'Identity Type',
             validation: { required: RequiredValidation.required }, 

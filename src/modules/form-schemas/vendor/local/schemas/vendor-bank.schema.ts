@@ -3,7 +3,7 @@ import {
   FormLayout, 
   formField, 
   textField, 
-  selectField, 
+  autocompleteField, 
   switchField, 
   textareaField, 
   fileField
@@ -26,7 +26,7 @@ const BankAccountSchema: FormSchema = {
       description: BankConstants.SECTION_ACCOUNT_INFO_DESCRIPTION,
       layout: FormLayout.CARD,
       fields: [
-        selectField({
+        autocompleteField({
             name: 'countryId',
             label: 'Country',
             validation: { required: RequiredValidation.required },
@@ -34,7 +34,7 @@ const BankAccountSchema: FormSchema = {
             lookup: CountryLookup
         }),
 
-        selectField({
+        autocompleteField({
             name: 'bankId',
             label: 'Bank',
             validation: { required: RequiredValidation.required },
@@ -42,7 +42,7 @@ const BankAccountSchema: FormSchema = {
             lookup: BankLookup
         }),
 
-        selectField({
+        autocompleteField({
             name: 'bankBranchId',
             label: 'Bank Branch',
             validation: { required: RequiredValidation.required },
@@ -50,7 +50,7 @@ const BankAccountSchema: FormSchema = {
             lookup: BankBranchLookup
         }),
 
-        selectField({
+        autocompleteField({
             name: 'currencyId',
             label: 'Currency',
             validation: { required: RequiredValidation.required },

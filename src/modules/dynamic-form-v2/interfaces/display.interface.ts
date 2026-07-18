@@ -1,7 +1,7 @@
 import type { ConditionGroup } from './condition-group.interface';
 
 export interface DisplaySchema {
-  visible?: ConditionGroup;
-  readonly?: ConditionGroup;
-  disabled?: ConditionGroup;
+  visible?: boolean | ConditionGroup;
+  readonly?: boolean | ConditionGroup;
+  disabled?: boolean | ConditionGroup;
 }

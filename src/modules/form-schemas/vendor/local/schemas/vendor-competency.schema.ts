@@ -3,7 +3,7 @@ import {
   FormLayout, 
   formField, 
   textField, 
-  selectField, 
+  autocompleteField, 
   dateField,
   textareaField,
   fileField
@@ -26,7 +26,7 @@ const CompetencyCertificateSchema: FormSchema = {
       description: CompetencyConstants.SECTION_COMPETENCY_DESCRIPTION,
       layout: FormLayout.CARD,
       fields: [
-        selectField({
+        autocompleteField({
             name: 'competency',
             label: 'Competency',
             validation: { required: true },
