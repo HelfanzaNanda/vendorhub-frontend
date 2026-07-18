@@ -8,11 +8,10 @@ import { useNestedForm } from '../../hooks';
 import type { NestedFormRendererProps } from './nested-form-renderer.interface';
 
 export const NestedFormRenderer: React.FC<NestedFormRendererProps> = React.memo((props) => {
-  const { field } = props;
+  const { field, schema } = props;
   
   const {
     items,
-    schema,
     multiple: isMultiple,
     add,
     remove

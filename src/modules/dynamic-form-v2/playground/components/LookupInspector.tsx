@@ -7,7 +7,7 @@ import { createPortal } from 'react-dom';
 import { useDynamicFormContext } from '@/modules/dynamic-form-v2';
 import { SchemaEngine } from '@/modules/dynamic-form-v2/engines';
 import type { FormSchema, FieldSchema } from '@/modules/dynamic-form-v2/interfaces';
-import { SchemaRegistry } from '../registry';
+import { SchemaRegistry } from '../../registries/schema.registry';
 
 export const LookupInspectorPortal: React.FC<{ active: boolean }> = ({ active }) => {
   const context = useDynamicFormContext();
@@ -37,7 +37,7 @@ export const LookupInspectorPortal: React.FC<{ active: boolean }> = ({ active })
              let nestedSchema = SchemaEngine.resolveNestedSchema(nestedSchemaId);
 
              if (!nestedSchema) {
-               nestedSchema = SchemaRegistry.find(s => s.id === nestedSchemaId || s.schema.id === nestedSchemaId)?.schema;
+               nestedSchema = SchemaRegistry.getAll().find(s => s.id === nestedSchemaId || s.schema.id === nestedSchemaId)?.schema;
              }
 
              if (nestedSchema) {

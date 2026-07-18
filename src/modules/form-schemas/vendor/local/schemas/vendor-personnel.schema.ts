@@ -25,8 +25,9 @@ export const VendorPersonnelSchema: FormSchema = {
           grid: FullGrid,
           nested: {
             multiple: true,
-            schema: BoardOfDirectorSchema.id,
-            minItems: 1
+            schema: BoardOfDirectorSchema,
+            minItems: 1,
+            
           },
           validation: {
             required: RequiredValidation.required
@@ -46,7 +47,7 @@ export const VendorPersonnelSchema: FormSchema = {
           grid: FullGrid,
           nested: {
             multiple: true,
-            schema: ShareholderSchema.id,
+            schema: ShareholderSchema,
             minItems: 1
           },
           validation: {
@@ -67,7 +68,7 @@ export const VendorPersonnelSchema: FormSchema = {
           grid: FullGrid,
           nested: {
             multiple: true,
-            schema: AuthorizedSignerSchema.id,
+            schema: AuthorizedSignerSchema,
             minItems: 1
           },
           validation: {

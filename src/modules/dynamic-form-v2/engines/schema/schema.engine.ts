@@ -47,8 +47,28 @@ export class SchemaEngine {
         SchemaRegistry.register(schemaId, schema);
     }
 
-    static resolveNestedSchema(schemaId: string): FormSchema | undefined {
-        return SchemaRegistry.resolve(schemaId);
+    static resolveNestedSchema(schemaId: string): FormSchema | undefined {    
+        // const findNested = (schema : FormSchema, schemaId : string) : SectionSchema | undefined => {
+        //     let result: SectionSchema | undefined;
+        //     for (const section of schema.sections) {
+        //         if (section.id === schemaId) {
+        //             result = section
+        //             break;
+        //         }
+        //     }
+        //     return result
+        // }
+        // for (const root of SchemaRegistry.getAll()) {
+        //     if (root.schema.id === schemaId)
+        //         return root.schema;
+
+        //     const nested = findNested(root.schema, schemaId);
+
+        //     if (nested) {
+        //         return nested;
+        //     }
+        // }
+        return undefined;
     }
 
     static buildDefaultValues(schema: FormSchema): Record<string, unknown> {

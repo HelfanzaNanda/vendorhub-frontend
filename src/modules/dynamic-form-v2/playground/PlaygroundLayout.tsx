@@ -4,10 +4,13 @@ import React, { useState } from 'react';
 import { Box } from '@mui/material';
 
 import { PlaygroundHeader, PlaygroundSidebar, PlaygroundContent } from './components';
-import { SchemaRegistry } from './registry';
+import { SchemaRegistry } from '../registries/schema.registry';
+
+import type { PlaygroundSchema } from './registry';
+import './registry/init';
 
 export const PlaygroundLayout: React.FC = () => {
-  const [selectedSchema, setSelectedSchema] = useState(SchemaRegistry[0] || null);
+  const [selectedSchema, setSelectedSchema] = useState<PlaygroundSchema | null>((SchemaRegistry.getAll()[0] as PlaygroundSchema) || null);
   const [formMode, setFormMode] = useState<string>('CREATE');
   const [validationTrigger, setValidationTrigger] = useState(0);
   const [showDependencyInspector, setShowDependencyInspector] = useState(false);

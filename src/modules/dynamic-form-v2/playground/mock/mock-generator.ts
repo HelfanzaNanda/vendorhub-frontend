@@ -1,7 +1,7 @@
 import type { FormSchema } from '@/modules/dynamic-form-v2/interfaces';
 import { SchemaEngine } from '@/modules/dynamic-form-v2/engines/schema/schema.engine';
 import { getMockValueForField } from './mock-value';
-import { SchemaRegistry } from '../registry';
+import { SchemaRegistry } from '../../registries/schema.registry';
 
 export const generateMockData = (schema: FormSchema): Record<string, unknown> => {
   const result: Record<string, unknown> = {};
@@ -15,7 +15,7 @@ export const generateMockData = (schema: FormSchema): Record<string, unknown> =>
           let nestedSchema = SchemaEngine.resolveNestedSchema(schemaId);
 
           if (!nestedSchema) {
-            nestedSchema = SchemaRegistry.find(s => s.id === schemaId || s.schema.id === schemaId)?.schema;
+            nestedSchema = SchemaRegistry.getAll().find(s => s.id === schemaId || s.schema.id === schemaId)?.schema;
           }
 
           if (nestedSchema) {

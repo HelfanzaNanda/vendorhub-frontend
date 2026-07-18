@@ -20,4 +20,5 @@ export enum FieldType {
   FILE = 'FILE',
   FORM = 'FORM',
   HIDDEN = 'HIDDEN',
+  TABLE = 'TABLE'
 }
