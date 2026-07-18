@@ -1,4 +1,3 @@
-export { DocumentType } from './document-type.constant';
 export { VerificationAction } from './verification-action.constant';
 export { Regex } from './regex.constant';
 export { Lookup } from './lookup.constant';

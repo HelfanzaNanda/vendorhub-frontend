@@ -1,0 +1,81 @@
+import { 
+  FormSchema, 
+  FormLayout, 
+  textField, 
+  emailField, 
+  phoneField, 
+  dateField, 
+  textareaField, 
+  selectField 
+} from '@/modules/dynamic-form-v2';
+import { PersonnelConstants } from '../constants';
+import { HalfGrid, IdentityLookup, JobTypeLookup, RequiredValidation, TitleLookup } from '@/modules/form-schemas/shared';
+
+export const BoardOfDirectorSchema: FormSchema = {
+  id: PersonnelConstants.SECTION_BOARD_OF_DIRECTORS_ID,
+  title: PersonnelConstants.SECTION_BOARD_OF_DIRECTORS_TITLE,
+  code: PersonnelConstants.SECTION_BOARD_OF_DIRECTORS_CODE,
+  layout: FormLayout.CARD,
+  sections: [
+    {
+      id: PersonnelConstants.SECTION_BOARD_OF_DIRECTORS_ID,
+      title: PersonnelConstants.SECTION_BOARD_OF_DIRECTORS_TITLE,
+      code: PersonnelConstants.SECTION_BOARD_OF_DIRECTORS_CODE,
+      description: PersonnelConstants.SECTION_BOARD_OF_DIRECTORS_DESCRIPTION,
+      layout: FormLayout.CARD,
+      fields: [
+        selectField({
+            name: 'title',
+            label: 'Title',
+            validation: { required: RequiredValidation.required }, 
+            grid: HalfGrid,
+            lookup: TitleLookup
+        }),
+        textField({
+            name: 'fullName',
+            label: 'Full Name',
+            validation: { required: RequiredValidation.required }, 
+            grid: HalfGrid
+        }),
+        selectField({
+            name: 'jobType',
+            label: 'Job Type',
+            validation: { required: RequiredValidation.required }, 
+            grid: HalfGrid,
+            lookup: JobTypeLookup
+        }),
+        textField({
+            name: 'position',
+            label: 'Position',
+            validation: { required: RequiredValidation.required }, 
+            grid: HalfGrid
+        }),
+        selectField({
+            name: 'identityType',
+            label: 'Identity Type',
+            validation: { required: RequiredValidation.required }, 
+            grid: HalfGrid,
+            lookup: IdentityLookup
+        }),
+        textField({
+            name: 'identityNumber',
+            label: 'Identity Number',
+            validation: { required: RequiredValidation.required }, 
+            grid: HalfGrid
+        }),
+        emailField({
+            name: 'email',
+            label: 'Email',
+            validation: { required: RequiredValidation.required }, 
+            grid: HalfGrid
+        }),
+        phoneField({
+            name: 'phone',
+            label: 'Phone',
+            validation: { required: RequiredValidation.required }, 
+            grid: HalfGrid
+        }),
+      ]
+    }
+  ]
+};

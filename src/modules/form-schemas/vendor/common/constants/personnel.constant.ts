@@ -1,0 +1,46 @@
+export enum PersonnelType {
+  BOARD_OF_DIRECTORS = 'BOARD_OF_DIRECTORS',
+  SHAREHOLDER = 'SHAREHOLDER',
+  AUTHORIZED_SIGNER = 'AUTHORIZED_SIGNER',
+}
+
+
+export const PersonnelConstants = {
+  // Schema
+  SCHEMA_ID: 'vendorPersonnelSchema',
+  SCHEMA_TITLE: 'Personnel Information',
+
+  // Sections
+  SECTION_PERSONNEL_INFO_ID: 'personnelInfo',
+  SECTION_PERSONNEL_INFO_CODE: 'PERSONNEL_INFO',
+  SECTION_PERSONNEL_INFO_TITLE: 'Personnel Information',
+
+  // Lengths
+  MAX_NAME_LENGTH: 100,
+  MAX_POSITION_LENGTH: 100,
+  MAX_EMAIL_LENGTH: 100,
+  MAX_PHONE_LENGTH: 20,
+
+  // Field
+  FIELD_BOARD_OF_DIRECTORS: 'boardOfDirectors',
+  FIELD_SHAREHOLDERS: 'shareholders',
+  FIELD_AUTHORIZED_SIGNERS: 'authorizedSigners',
+
+  // Field Descriptions
+  SECTION_BOARD_OF_DIRECTORS_ID: 'boardOfDirectors',
+  SECTION_BOARD_OF_DIRECTORS_CODE: 'BOARD_OF_DIRECTORS',
+  SECTION_BOARD_OF_DIRECTORS_TITLE: 'Board Of Directors',
+  SECTION_BOARD_OF_DIRECTORS_DESCRIPTION: 'Manage the board of directors.',
+
+  SECTION_SHAREHOLDER_ID: 'shareholder',
+  SECTION_SHAREHOLDER_CODE: 'SHAREHOLDER',
+  SECTION_SHAREHOLDER_TITLE: 'Shareholder',
+  SECTION_SHAREHOLDER_DESCRIPTION: 'Manage company shareholders and ownership percentages.',
+
+  SECTION_AUTHORIZED_SIGNER_ID: 'authorizedSigner',
+  SECTION_AUTHORIZED_SIGNER_CODE: 'AUTHORIZED_SIGNER',
+  SECTION_AUTHORIZED_SIGNER_TITLE: 'Authorized Signer',
+  SECTION_AUTHORIZED_SIGNER_DESCRIPTION: 'Manage personnel authorized to sign legal documents.',
+
+} as const;
+

@@ -1,54 +1,60 @@
 import React from 'react';
-import { FieldSchema } from '../../interfaces';
-import { FieldType } from '../../enums';
-import { ControllerRenderProps, ControllerFieldState } from 'react-hook-form';
-import * as Fields from '../fields';
+import {
+  FieldSchema,
+  FieldRenderer,
+  useField,
+  useLookup,
+  useVisibility,
+  useValidation,
+  useVerification,
+  useDependency,
+  useNestedForm
+} from '@/modules/dynamic-form-v2';
 
-interface DynamicFieldProps {
+export interface DynamicFieldProps {
   field: FieldSchema;
-  controllerField: ControllerRenderProps<any, any>;
-  fieldState: ControllerFieldState;
-  isReadonly: boolean;
-  isDisabled: boolean;
+  readonly?: boolean;
+  loading?: boolean;
 }
 
-export const DynamicField: React.FC<DynamicFieldProps> = ({ 
-  field, 
-  controllerField, 
-  fieldState, 
-  isReadonly, 
-  isDisabled 
+export const DynamicField: React.FC<DynamicFieldProps> = React.memo(({
+  field,
+  readonly,
+  loading
 }) => {
-  const commonProps = {
-    ...controllerField,
-    field,
-    error: fieldState.error?.message,
-    isReadonly,
-    isDisabled,
+  // Obtain runtime from Hooks
+  const visibility = useVisibility({ field });
+  const fieldState = useField({ field });
+  const validation = useValidation({ field });
+  const lookup = useLookup({ field });
+  const verification = useVerification({ field });
+  const dependency = useDependency({ field });
+  const nestedForm = useNestedForm({ field });
+
+  // Visibility decision must come from useVisibility()
+  if (!visibility.visible) {
+    return null;
+  }
+
+  // Combine runtime to pass to FieldRenderer
+  const runtime = {
+    ...visibility,
+    ...fieldState,
+    ...validation,
+    ...lookup,
+    ...verification,
+    ...dependency,
+    ...nestedForm,
+    readonly: readonly ?? visibility.readonly,
+    loading: loading ?? fieldState.loading,
   };
 
-  switch (field.type) {
-    case FieldType.TEXT: return <Fields.TextField {...commonProps} />;
-    case FieldType.TEXTAREA: return <Fields.TextAreaField {...commonProps} />;
-    case FieldType.NUMBER: return <Fields.NumberField {...commonProps} />;
-    case FieldType.DECIMAL: return <Fields.DecimalField {...commonProps} />;
-    case FieldType.CURRENCY: return <Fields.CurrencyField {...commonProps} />;
-    case FieldType.PERCENTAGE: return <Fields.PercentageField {...commonProps} />;
-    case FieldType.EMAIL: return <Fields.EmailField {...commonProps} />;
-    case FieldType.PHONE: return <Fields.PhoneField {...commonProps} />;
-    case FieldType.PASSWORD: return <Fields.PasswordField {...commonProps} />;
-    case FieldType.DATE: return <Fields.DateField {...commonProps} />;
-    case FieldType.DATETIME: return <Fields.DatetimeField {...commonProps} />;
-    case FieldType.MONTH: return <Fields.MonthField {...commonProps} />;
-    case FieldType.YEAR: return <Fields.YearField {...commonProps} />;
-    case FieldType.SWITCH: return <Fields.SwitchField {...commonProps} />;
-    case FieldType.CHECKBOX: return <Fields.CheckboxField {...commonProps} />;
-    case FieldType.RADIO: return <Fields.RadioField {...commonProps} />;
-    case FieldType.SELECT: return <Fields.SelectField {...commonProps} />;
-    case FieldType.AUTOCOMPLETE: return <Fields.AutocompleteField {...commonProps} />;
-    case FieldType.FILE: return <Fields.FileField {...commonProps} />;
-    case FieldType.FORM: return <Fields.FormField {...commonProps} />;
-    case FieldType.HIDDEN: return <Fields.HiddenField {...commonProps} />;
-    default: return <Fields.TextField {...commonProps} />;
-  }
-};
+  return (
+    <FieldRenderer
+      field={field}
+      runtime={runtime}
+    />
+  );
+});
+
+DynamicField.displayName = 'DynamicField';

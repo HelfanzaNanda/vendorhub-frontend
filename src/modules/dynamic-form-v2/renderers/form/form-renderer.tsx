@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { LayoutRenderer } from '../layout';
-import { SectionRenderer } from '../section';
+import { DynamicSection } from '../../components/DynamicForm';
 import type { FormRendererProps } from './form-renderer.interface';
 
 import { useDynamicFormContext } from '../../context';
@@ -30,7 +30,7 @@ export const FormRenderer: React.FC<FormRendererProps> = React.memo(({ schema: p
       props={layoutProps}
     >
       {schema.sections.map(section => (
-        <SectionRenderer key={section.id} section={section} />
+        <DynamicSection key={section.id} section={section} />
       ))}
     </LayoutRenderer>
   );

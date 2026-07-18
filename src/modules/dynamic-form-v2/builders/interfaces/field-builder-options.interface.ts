@@ -9,24 +9,27 @@ import type {
   NestedFormSchema,
   DependencySchema,
 } from '@/modules/dynamic-form-v2/interfaces';
+import { VisibilitySchema } from '../../interfaces/visibility.interface';
+import { OptionSchema } from '../../interfaces/options.interface';
 
 export interface FieldBuilderOptions {
-  id: string;
-  type: FieldType;
-  label: string;
-  code?: string;
-  name?: string;
-  placeholder?: string;
-  helperText?: string;
-  defaultValue?: unknown;
-  grid?: GridSchema;
-  validation?: ValidationSchema;
-  lookup?: LookupSchema;
-  dependency?: DependencySchema;
-  verification?: VerificationSchema;
-  display?: DisplaySchema;
-  file?: FileSchema;
-  nested?: NestedFormSchema;
-  props?: Record<string, unknown>;
-  component?: DynamicComponent;
+    name: string;
+    label: string;
+    code?: string;
+    type: FieldType;
+    placeholder?: string;
+    helperText?: string;
+    grid?: GridSchema;
+    validation?: ValidationSchema;
+    options?: OptionSchema[];
+    lookup?: LookupSchema;
+    dependency?: DependencySchema;
+    verification?: VerificationSchema;
+    display?: DisplaySchema;
+    file?: FileSchema;
+    nested?: NestedFormSchema;
+    props?: Record<string, unknown>;
+    defaultValue?: unknown;
+    component?: DynamicComponent;
+    visibility?: VisibilitySchema;
 }

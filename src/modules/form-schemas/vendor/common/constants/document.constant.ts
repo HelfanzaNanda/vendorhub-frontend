@@ -1,0 +1,56 @@
+export const DocumentConstants = {
+  // Lengths
+  MAX_COMPANY_NAME_LENGTH: 100,
+  MAX_WEBSITE_LENGTH: 100,
+  MAX_EMAIL_LENGTH: 100,
+  MAX_PHONE_LENGTH: 20,
+
+  // Schema
+  SCHEMA_ID: 'vendorDocumentSchema',
+  SCHEMA_CODE: 'VENDOR_DOCUMENT',
+  SCHEMA_TITLE: 'Document Information',
+
+  SECTION_DOCUMENT_INFO_ID: 'documentInfo',
+  SECTION_DOCUMENT_INFO_CODE: 'DOCUMENT_INFO',
+  SECTION_DOCUMENT_INFO_TITLE: 'Legal Documents',
+  SECTION_DOCUMENT_INFO_DESCRIPTION: 'Upload and manage your required legal corporate documents.',
+
+
+  SECTION_DOCUMENT_NPWP_ID: 'npwpDocument',
+  SECTION_DOCUMENT_NPWP_CODE: 'DOCUMENT_NPWP',
+  SECTION_DOCUMENT_NPWP_TITLE: 'NPWP (Tax ID)',
+  SECTION_DOCUMENT_NPWP_DESCRIPTION: 'Upload and manage your required legal corporate documents.',
+
+  SECTION_DOCUMENT_TAXPAYER_ID: 'taxpayerIdDocument',
+  SECTION_DOCUMENT_TAXPAYER_CODE: 'DOCUMENT_TAXPAYER_ID',
+  SECTION_DOCUMENT_TAXPAYER_TITLE: 'Taxpayer ID (Tax ID)',
+  SECTION_DOCUMENT_TAXPAYER_DESCRIPTION: 'Upload and manage your required legal corporate documents.',
+
+  SECTION_DOCUMENT_DEED_OF_ESTABLISHMENT_ID: 'deedOfEstablishmentDocument',
+  SECTION_DOCUMENT_DEED_OF_ESTABLISHMENT_CODE: 'DOCUMENT_DEED_OF_ESTABLISHMENT',
+  SECTION_DOCUMENT_DEED_OF_ESTABLISHMENT_TITLE: 'Deed of Establishment',
+  SECTION_DOCUMENT_DEED_OF_ESTABLISHMENT_DESCRIPTION: 'Upload and manage your required legal corporate documents.',
+
+  SECTION_DOCUMENT_DEED_OF_AMENDMENT_ID: 'deedOfAmendmentDocument',
+  SECTION_DOCUMENT_DEED_OF_AMENDMENT_CODE: 'DOCUMENT_DEED_OF_AMENDMENT',
+  SECTION_DOCUMENT_DEED_OF_AMENDMENT_TITLE: 'Deed of Amendment',
+  SECTION_DOCUMENT_DEED_OF_AMENDMENT_DESCRIPTION: 'Upload and manage your required legal corporate documents.',
+
+  SECTION_DOCUMENT_BUSINESS_LICENSE_ID: 'businessLicenseDocument',
+  SECTION_DOCUMENT_BUSINESS_LICENSE_CODE: 'DOCUMENT_BUSINESS_LICENSE',
+  SECTION_DOCUMENT_BUSINESS_LICENSE_TITLE: 'Business License',
+  SECTION_DOCUMENT_BUSINESS_LICENSE_DESCRIPTION: 'Upload and manage your required legal corporate documents.',
+
+  SECTION_DOCUMENT_ORGANIZATION_STRUCTURE_ID: 'organizationStructureDocument',
+  SECTION_DOCUMENT_ORGANIZATION_STRUCTURE_CODE: 'DOCUMENT_ORGANIZATION_STRUCTURE',
+  SECTION_DOCUMENT_ORGANIZATION_STRUCTURE_TITLE: 'Organization Structure',
+  SECTION_DOCUMENT_ORGANIZATION_STRUCTURE_DESCRIPTION: 'Upload and manage your required legal corporate documents.',
+
+
+
+
+  // Layout Codes
+  LAYOUT_DEFAULT: 'default',
+
+  
+} as const;

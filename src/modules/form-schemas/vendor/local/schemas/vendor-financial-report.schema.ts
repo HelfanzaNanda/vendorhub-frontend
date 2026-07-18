@@ -1,0 +1,135 @@
+import { 
+  FormSchema, 
+  FormLayout, 
+  formField, 
+  selectField, 
+  dateField,
+  currencyField,
+  fileField,
+  ConditionOperator,
+  numberField
+} from '@/modules/dynamic-form-v2';
+
+import { FinancialReportConstants, FinancialReportType, AuditStatus, DocumentType } from '@/modules/form-schemas/vendor/common';
+import { CurrencyLookup, YearLookup } from '@/modules/form-schemas/shared/lookups';
+import { FullGrid, HalfGrid, RequiredValidation } from '@/modules/form-schemas/shared';
+import { ReportTypeLookup } from '@/modules/form-schemas/shared/lookups/report-type.lookup';
+
+const FinancialReportInlineSchema: FormSchema = {
+  id: FinancialReportConstants.SCHEMA_ID,
+  title: FinancialReportConstants.SCHEMA_TITLE,
+  code: FinancialReportConstants.DOCUMENT_ID,
+  layout: FormLayout.CARD,
+  sections: [
+    {
+      id: FinancialReportConstants.SECTION_FINANCIAL_REPORT_DETAIL_ID,
+      code: FinancialReportConstants.SECTION_FINANCIAL_REPORT_DETAIL_CODE,
+      title: FinancialReportConstants.SECTION_FINANCIAL_REPORT_DETAIL_TITLE,
+      description: FinancialReportConstants.SECTION_FINANCIAL_REPORT_DETAIL_DESCRIPTION,
+      layout: FormLayout.CARD,
+      fields: [
+        selectField({
+            name: 'reportType',
+            label: 'Report Type',
+            validation: { required: RequiredValidation.required },
+            grid: HalfGrid,
+            lookup : ReportTypeLookup
+        }),
+        selectField({
+            name: 'auditStatus',
+            label: 'Audit Status',
+            validation: { required: RequiredValidation.required },
+            grid: HalfGrid,
+            lookup : ReportTypeLookup
+        }),
+        selectField({
+            name: 'currencyId',
+            label: 'Currency',
+            validation: { required: RequiredValidation.required },
+            grid: HalfGrid,
+            lookup : CurrencyLookup
+        }),
+
+        fileField({ 
+            name: 'fileId', 
+            label: 'Financial Report Document', 
+            grid: HalfGrid, 
+            props: { 
+                documentType: FinancialReportConstants.DOCUMENT_ID 
+            }
+        }),
+      ]
+    },
+    {
+      id: FinancialReportConstants.SECTION_FINANCIAL_REPORT_FIGURE_ID,
+      code: FinancialReportConstants.SECTION_FINANCIAL_REPORT_FIGURE_CODE,
+      title: FinancialReportConstants.SECTION_FINANCIAL_REPORT_FIGURE_TITLE,
+      description: FinancialReportConstants.SECTION_FINANCIAL_REPORT_FIGURE_DESCRIPTION,
+      layout: FormLayout.CARD,
+      fields: [
+        currencyField({
+            name: 'currentAssets',
+            label: 'Current Assets',
+            validation: { required: RequiredValidation.required },
+            grid: HalfGrid,
+        }),
+        currencyField({
+            name: 'totalAssets',
+            label: 'Total Assets',
+            validation: { required: RequiredValidation.required },
+            grid: HalfGrid,
+        }),
+        currencyField({
+            name: 'currentLiabilities',
+            label: 'Current Liabilities',
+            validation: { required: RequiredValidation.required },
+            grid: HalfGrid,
+        }),
+        currencyField({
+            name: 'totalLiabilities',
+            label: 'Total Liabilities',
+            validation: { required: RequiredValidation.required },
+            grid: HalfGrid,
+        }),
+        currencyField({
+            name: 'totalRevenue',
+            label: 'Total Revenue',
+            validation: { required: RequiredValidation.required },
+            grid: HalfGrid,
+        }),
+        currencyField({
+            name: 'netProfitLossAfterTax',
+            label: 'Net Profit / Loss After Tax',
+            validation: { required: RequiredValidation.required },
+            grid: HalfGrid,
+        })
+      ]
+    }
+  ]
+};
+
+export const VendorFinancialReportSchema: FormSchema = {
+  id: 'vendorFinancialReportSchema',
+  title: 'Financial Reports',
+  code: 'VENDOR_FINANCIAL_REPORTS',
+  layout: FormLayout.CARD,
+  sections: [
+    {
+      id: 'financialReportsSection',
+      code: 'FINANCIAL_REPORTS_SECTION',
+      title: 'Financial Reports',
+      layout: FormLayout.CARD,
+      fields: [
+        formField({
+          name: 'financialReports',
+          label: 'Financial Reports',
+          grid: FullGrid,
+          nested: {
+            multiple: true,
+            schema: FinancialReportInlineSchema.id
+          }
+        })
+      ]
+    }
+  ]
+};
