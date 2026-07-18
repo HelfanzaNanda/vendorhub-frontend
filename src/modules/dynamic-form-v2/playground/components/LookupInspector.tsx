@@ -30,23 +30,26 @@ export const LookupInspectorPortal: React.FC<{ active: boolean }> = ({ active })
           lookups.push({ field, fullPath });
         }
         
-        if (field.type === 'FORM' && field.nested) {
-           const nestedSchemaId = field.nested.schema || field.nested.schemaId;
-
-           if (nestedSchemaId) {
-             let nestedSchema = SchemaEngine.resolveNestedSchema(nestedSchemaId);
-
-             if (!nestedSchema) {
-               nestedSchema = SchemaRegistry.getAll().find(s => s.id === nestedSchemaId || s.schema.id === nestedSchemaId)?.schema;
-             }
-
-             if (nestedSchema) {
-                const childPrefix = field.nested.multiple ? `${fullPath}[0]` : fullPath;
-
-                walkSchema(nestedSchema, childPrefix);
+         if (field.type === 'FORM' && field.nested) {
+           let nestedSchema: FormSchema | undefined;
+           
+           if (typeof field.nested.schema === 'object') {
+             nestedSchema = field.nested.schema;
+           } else {
+             const nestedSchemaId = field.nested.schema || field.nested.schemaId;
+             if (nestedSchemaId) {
+               nestedSchema = SchemaEngine.resolveNestedSchema(nestedSchemaId as string);
+               if (!nestedSchema) {
+                 nestedSchema = SchemaRegistry.getAll().find(s => s.id === nestedSchemaId || s.schema.id === nestedSchemaId)?.schema;
+               }
              }
            }
-        }
+
+           if (nestedSchema) {
+              const childPrefix = field.nested.multiple ? `${fullPath}[0]` : fullPath;
+              walkSchema(nestedSchema, childPrefix);
+           }
+         }
       });
     });
   };

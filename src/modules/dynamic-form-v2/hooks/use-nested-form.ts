@@ -28,13 +28,12 @@ export const useNestedForm = (options: UseNestedFormOptions): UseNestedFormResul
   const nestedConfig = field.nested || {};
   const isMultiple = !!nestedConfig.multiple;
   
-  const schemaId = nestedConfig.schema || nestedConfig.schemaId;
-
   const schema = useMemo(() => {
+    if (typeof nestedConfig.schema === 'object') return nestedConfig.schema;
+    const schemaId = nestedConfig.schema || nestedConfig.schemaId;
     if (!schemaId) return undefined;
-    
-return SchemaEngine.resolveNestedSchema(schemaId);
-  }, [schemaId]);
+    return SchemaEngine.resolveNestedSchema(schemaId);
+  }, [nestedConfig.schema, nestedConfig.schemaId]);
 
   // Normalize items based on multiple flag
   const items = useMemo(() => {

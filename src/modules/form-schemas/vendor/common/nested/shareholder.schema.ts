@@ -5,10 +5,11 @@ import {
   percentageField, 
   autocompleteField, 
   ConditionOperator,
-  numberField
+  numberField,
+  LogicalOperator
 } from '@/modules/dynamic-form-v2';
 import { PersonnelConstants } from '../constants';
-import { RequiredValidation, TitleLookup, HalfGrid, QuarterGrid, IdentityLookup, Operator } from '@/modules/form-schemas/shared';
+import { RequiredValidation, TitleLookup, HalfGrid, QuarterGrid, IdentityLookup, Operator, ThirdGrid, AutoGrid, FullGrid } from '@/modules/form-schemas/shared';
 
 export const ShareholderSchema: FormSchema = {
   id: PersonnelConstants.SECTION_SHAREHOLDER_ID,
@@ -20,7 +21,6 @@ export const ShareholderSchema: FormSchema = {
       id: PersonnelConstants.SECTION_SHAREHOLDER_ID,
       title: PersonnelConstants.SECTION_SHAREHOLDER_TITLE,
       code: PersonnelConstants.SECTION_SHAREHOLDER_CODE,
-      description: PersonnelConstants.SECTION_SHAREHOLDER_DESCRIPTION,
       layout: FormLayout.CARD,
       fields: [
         autocompleteField({
@@ -34,16 +34,16 @@ export const ShareholderSchema: FormSchema = {
             name: 'fullName',
             label: 'Full Name',
             validation: { required: RequiredValidation.required }, 
-            grid: QuarterGrid
+            grid: AutoGrid
         }),
         textField({
             name: 'position',
             label: 'Position',
             validation: { required: RequiredValidation.required }, 
-            grid: QuarterGrid,
+            grid: ThirdGrid,
             visibility: {
                 condition : {
-                    field: 'title',
+                    field: 'title.label',
                     operator: ConditionOperator.NOT_EQUALS,
                     value: 'Perusahaan'
                 }
@@ -55,11 +55,16 @@ export const ShareholderSchema: FormSchema = {
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid,
             lookup: IdentityLookup,
-            visibility: {
-                condition : {
-                    field: 'title',
-                    operator: ConditionOperator.NOT_EQUALS,
-                    value: 'Perusahaan'
+            display: {
+                visible : {
+                    operator : LogicalOperator.AND,
+                    conditions : [
+                        {
+                            field: 'title.label',
+                            operator: ConditionOperator.NOT_EQUALS,
+                            value: 'Perusahaan'
+                        }
+                    ]
                 }
             }
         }),
@@ -68,24 +73,34 @@ export const ShareholderSchema: FormSchema = {
             label: 'Identity Number',
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid,
-            visibility: {
-                condition : {
-                    field: 'title',
-                    operator: ConditionOperator.NOT_EQUALS,
-                    value: 'Perusahaan'
+            display: {
+                visible : {
+                    operator : LogicalOperator.AND,
+                    conditions : [
+                        {
+                            field: 'title.label',
+                            operator: ConditionOperator.NOT_EQUALS,
+                            value: 'Perusahaan'
+                        }
+                    ]
                 }
             }
         }),
         numberField({
-            name: 'identityNumber',
+            name: 'npwp',
             label: 'NPWP',
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid,
-            visibility: {
-                condition : {
-                    field: 'title',
-                    operator: ConditionOperator.EQUALS,
-                    value: 'Perusahaan'
+            display: {
+                visible : {
+                    operator : LogicalOperator.AND,
+                    conditions : [
+                        {
+                            field: 'title.label',
+                            operator: ConditionOperator.EQUALS,
+                            value: 'Perusahaan'
+                        }
+                    ]
                 }
             }
         }),
@@ -93,7 +108,7 @@ export const ShareholderSchema: FormSchema = {
             name: 'ownershipPercentage', 
             label: 'Ownership Percentage', 
             validation: { required: RequiredValidation.required }, 
-            grid: QuarterGrid
+            grid: FullGrid
         }),
       ]
     }

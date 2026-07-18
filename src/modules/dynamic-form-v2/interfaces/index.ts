@@ -13,3 +13,5 @@ export * from './section-schema.interface';
 export * from './form-schema.interface';
 export * from './form-state.interface';
 export * from './options.interface';
+export * from './payload-schema.interface';
+export * from './table-schema.interface';

@@ -21,3 +21,4 @@ export * from './RadioField';
 export * from './SelectField';
 export * from './AutocompleteField';
 export * from './FileField';
+export * from './TableField';

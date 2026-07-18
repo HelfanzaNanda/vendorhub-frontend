@@ -17,4 +17,5 @@ export const Component = {
   CHECKBOX: 'CHECKBOX',
   RADIO: 'RADIO',
   FORM: 'FORM',
+  TABLE: 'TABLE',
 } as const;

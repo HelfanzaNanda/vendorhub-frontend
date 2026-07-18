@@ -20,6 +20,7 @@ import {
   AutocompleteField,
   FileField,
   HiddenField,
+  TableField,
 } from '../../components/fields';
 import type { RendererRegistry } from './renderer-registry.interface';
 
@@ -44,4 +45,5 @@ export const fieldRendererRegistry: RendererRegistry = {
   [FieldType.AUTOCOMPLETE]: AutocompleteField,
   [FieldType.FILE]: FileField,
   [FieldType.HIDDEN]: HiddenField,
+  [FieldType.TABLE]: TableField,
 };

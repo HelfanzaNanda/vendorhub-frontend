@@ -24,7 +24,6 @@ export const AuthorizedSignerSchema: FormSchema = {
       id: PersonnelConstants.SECTION_AUTHORIZED_SIGNER_ID,
       title: PersonnelConstants.SECTION_AUTHORIZED_SIGNER_TITLE,
       code: PersonnelConstants.SECTION_AUTHORIZED_SIGNER_CODE,
-      description: PersonnelConstants.SECTION_AUTHORIZED_SIGNER_DESCRIPTION,
       layout: FormLayout.CARD,
       fields: [
         autocompleteField({

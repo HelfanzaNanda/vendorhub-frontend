@@ -21,7 +21,6 @@ export const BoardOfDirectorSchema: FormSchema = {
       id: PersonnelConstants.SECTION_BOARD_OF_DIRECTORS_ID,
       title: PersonnelConstants.SECTION_BOARD_OF_DIRECTORS_TITLE,
       code: PersonnelConstants.SECTION_BOARD_OF_DIRECTORS_CODE,
-      description: PersonnelConstants.SECTION_BOARD_OF_DIRECTORS_DESCRIPTION,
       layout: FormLayout.CARD,
       fields: [
         autocompleteField({

@@ -7,7 +7,9 @@ import type { VerificationSchema } from "./verification.interface";
 import type { DisplaySchema } from "./display.interface";
 import type { FileSchema } from "./file.interface";
 import type { NestedFormSchema } from "./nested-form.interface";
-import { PayloadSchema } from "./payload-schema.interface ";
+import type { PayloadSchema } from "./payload-schema.interface";
+import type { TableConfigSchema } from "./table-schema.interface";
+import type { FormSchema } from "./form-schema.interface";
 
 export interface FieldSchema {
   id: string;
@@ -27,6 +29,8 @@ export interface FieldSchema {
   display?: DisplaySchema;
   file?: FileSchema;
   nested?: NestedFormSchema;
+  table?: TableConfigSchema;
+  schema?: FormSchema;
   props?: Record<string, unknown>;
   payload?: PayloadSchema;
 }
