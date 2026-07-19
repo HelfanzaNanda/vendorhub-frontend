@@ -49,13 +49,13 @@ const playgroundSchemas: readonly PlaygroundSchema[] = [
         description: 'Schema for managing vendor affiliated companies.',
         schema: VendorAffiliateSchema
     },
-    // {
-    //     id: 'vendor-competency',
-    //     title: 'Capability & Portfilio',
-    //     category: SchemaCategory.VENDOR,
-    //     description: 'Schema for managing vendor competencies and customer references.',
-    //     schema: VendorCompetencySchema
-    // },
+    {
+        id: 'vendor-competency',
+        title: 'Capability & Portfilio',
+        category: SchemaCategory.VENDOR,
+        description: 'Schema for managing vendor competencies and customer references.',
+        schema: VendorCompetencySchema
+    },
     {
         id: 'vendor-document',
         title: 'Document',

@@ -6,15 +6,19 @@ import {
   autocompleteField, 
   dateField,
   textareaField,
-  fileField
+  fileField,
+  tableField
 } from '@/modules/dynamic-form-v2';
 
-import { CompetencyConstants, DocumentType, CustomerConstants } from '@/modules/form-schemas/vendor/common';
+import { CompetencyConstants, DocumentType, CustomerConstants, BusinessLicenseConstants } from '@/modules/form-schemas/vendor/common';
 import { CompetencyLookup, IssuedByLookup } from '@/modules/form-schemas/shared/lookups';
 import { FullGrid } from '@/modules/dynamic-form-v2/grids';
 import { CustomerReferenceSchema } from '../nested';
+import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
+import { VendorCompetencyTable } from '@/modules/form-schemas/shared/tables/vendor-competency.table';
+import { KbliNestedSchema } from './vendor-business-license.schema';
 
-const CompetencyCertificateSchema: FormSchema = {
+const CompetencyInlineSchema: FormSchema = {
   id: CompetencyConstants.SECTION_COMPETENCY_ID,
   title: CompetencyConstants.SECTION_COMPETENCY_TITLE,
   code: CompetencyConstants.SECTION_COMPETENCY_CODE,
@@ -35,32 +39,6 @@ const CompetencyCertificateSchema: FormSchema = {
             lookup: CompetencyLookup
         }),
       ]
-    }
-  ]
-};
-
-export const VendorCompetencySchema: FormSchema = {
-  id: CompetencyConstants.SCHEMA_ID,
-  title: CompetencyConstants.SCHEMA_TITLE,
-  code: CompetencyConstants.SECTION_COMPETENCY_CODE,
-  layout: FormLayout.CARD,
-  sections: [
-    {
-      id: CompetencyConstants.SECTION_COMPETENCY_ID,
-      code: CompetencyConstants.SECTION_COMPETENCY_CODE,
-      title: CompetencyConstants.SECTION_COMPETENCY_TITLE,
-      layout: FormLayout.CARD,
-      fields: [
-        formField({
-          name: 'competencyCertificates',
-          label: 'Competency Certificates',
-          grid: FullGrid,
-          nested: {
-            multiple: true,
-            schema: CompetencyCertificateSchema
-          }
-        })
-      ]
     },
     {
       id: CustomerConstants.SECTION_ID,
@@ -79,5 +57,70 @@ export const VendorCompetencySchema: FormSchema = {
         })
       ]
     }
+  ]
+};
+
+export const VendorCompetencySchema: FormSchema = {
+  id: CompetencyConstants.SCHEMA_ID,
+  title: CompetencyConstants.SCHEMA_TITLE,
+  code: CompetencyConstants.SECTION_COMPETENCY_CODE,
+  layout: FormLayout.CARD,
+  sections: [
+    {
+        id: BusinessLicenseConstants.SECTION_LICENSE_INFO_ID,
+        code: BusinessLicenseConstants.SECTION_LICENSE_INFO_CODE,
+        title: BusinessLicenseConstants.SECTION_LICENSE_INFO_TITLE,
+        layout: FormLayout.CARD,
+        fields: [
+        fileField({ 
+            name: 'fileId', 
+            label: 'NIB Document', 
+            grid: FullGrid, 
+            props: { 
+                documentType: BusinessLicenseConstants.DOCUMENT_ID 
+            }
+        }),
+        ]
+    },
+    {
+        id: BusinessLicenseConstants.SECTION_INDUSTRY_CLASSIFICATION_ID,
+        code: BusinessLicenseConstants.SECTION_INDUSTRY_CLASSIFICATION_CODE,
+        title: BusinessLicenseConstants.SECTION_INDUSTRY_CLASSIFICATION_TITLE,
+        layout: FormLayout.CARD,
+        fields: [
+        formField({
+            name: 'kbliList',
+            label: 'KBLI List',
+            grid: FullGrid,
+            nested: {
+            multiple: true,
+            minItems: 1,
+            schema: KbliNestedSchema
+            },
+            validation: {
+            required: true
+            }
+        })
+        ]
+    },
+    {
+      id: CompetencyConstants.SECTION_COMPETENCY_ID,
+      code: CompetencyConstants.SECTION_COMPETENCY_CODE,
+      title: CompetencyConstants.SECTION_COMPETENCY_TITLE,
+      layout: FormLayout.TABLE,
+      fields: [
+        tableField({
+            name: CompetencyConstants.SCHEMA_ID,
+            label: CompetencyConstants.SCHEMA_TITLE,
+            helperText: CompetencyConstants.SCHEMA_TITLE,
+            grid: FullGrid,
+            table: VendorCompetencyTable,
+            schema: CompetencyInlineSchema,
+            validation: {
+                required: RequiredValidation.required
+            }
+        })
+      ]
+    },
   ]
 };

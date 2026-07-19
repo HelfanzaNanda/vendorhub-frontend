@@ -18,7 +18,7 @@ import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
 import { FullGrid, QuarterGrid } from '@/modules/dynamic-form-v2/grids';
 import { KbliLookup, BusinessCategoryLookup, BusinessScaleLookup } from '@/modules/form-schemas/shared';
 
-const KbliNestedSchema: FormSchema = {
+export const KbliNestedSchema: FormSchema = {
   id: BusinessLicenseConstants.SECTION_INDUSTRY_CLASSIFICATION_ID,
   title: BusinessLicenseConstants.SECTION_INDUSTRY_CLASSIFICATION_TITLE,
   code: BusinessLicenseConstants.SECTION_INDUSTRY_CLASSIFICATION_CODE,
