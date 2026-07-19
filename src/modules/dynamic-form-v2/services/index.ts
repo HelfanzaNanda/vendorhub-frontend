@@ -1,1 +1,5 @@
 export * from './vendor-crud.service'
+export * from './privy-verification.service'
+export * from './email-verification.service'
+export * from './phone-verification.service'
+// export * from './otp-verification.service'

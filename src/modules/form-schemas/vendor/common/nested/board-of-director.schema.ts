@@ -9,7 +9,8 @@ import {
   autocompleteField 
 } from '@/modules/dynamic-form-v2';
 import { PersonnelConstants } from '../constants';
-import { HalfGrid, IdentityLookup, JobTypeLookup, RequiredValidation, TitleLookup } from '@/modules/form-schemas/shared';
+import { HalfGrid, IdentityLookup, JobTypeLookup, PhoneVerification, RequiredValidation, TitleLookup } from '@/modules/form-schemas/shared';
+import { BalanceGrid } from '@/modules/form-schemas/shared/grids/balance.grid';
 
 export const BoardOfDirectorSchema: FormSchema = {
   id: PersonnelConstants.SECTION_BOARD_OF_DIRECTORS_ID,
@@ -72,7 +73,8 @@ export const BoardOfDirectorSchema: FormSchema = {
             name: 'phone',
             label: 'Phone',
             validation: { required: RequiredValidation.required }, 
-            grid: HalfGrid
+            grid: HalfGrid,
+            verification: PhoneVerification
         }),
       ]
     }

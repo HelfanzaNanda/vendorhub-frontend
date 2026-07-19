@@ -1,6 +1,7 @@
 import type React from 'react';
 
 import type { FieldSchema } from '../../interfaces';
+import { DynamicFormContextValue } from '../../context';
 
 export interface BaseFieldProps {
   name: string;
@@ -13,4 +14,5 @@ export interface BaseFieldProps {
   isReadonly?: boolean;
   isDisabled?: boolean;
   loading?: boolean;
+  context: DynamicFormContextValue
 }

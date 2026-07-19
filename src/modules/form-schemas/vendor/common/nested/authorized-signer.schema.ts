@@ -9,10 +9,11 @@ import {
   checkboxField, 
   textareaField,
   ConditionOperator,
-  dateField
+  dateField,
+  LogicalOperator
 } from '@/modules/dynamic-form-v2';
 import { DocumentType, PersonnelConstants, PersonnelType } from '../constants';
-import { FullGrid, HalfGrid, IdentityLookup, JobTypeLookup, RequiredValidation, TitleLookup } from '@/modules/form-schemas/shared';
+import { FullGrid, HalfGrid, IdentityLookup, JobTypeLookup, PrivyVerification, RequiredValidation, TitleLookup, VerificationAction } from '@/modules/form-schemas/shared';
 
 export const AuthorizedSignerSchema: FormSchema = {
   id: PersonnelConstants.SECTION_AUTHORIZED_SIGNER_ID,
@@ -75,7 +76,8 @@ export const AuthorizedSignerSchema: FormSchema = {
             name: 'privyId',
             label: 'Privy Id',
             validation: { required: RequiredValidation.required }, 
-            grid: HalfGrid
+            grid: HalfGrid,
+            verification: PrivyVerification
         }),
         checkboxField({ 
             name: 'hasAuthorityLimitation', 
@@ -89,11 +91,16 @@ export const AuthorizedSignerSchema: FormSchema = {
             validation: {
                 required: RequiredValidation.required
             },
-            visibility: {
-                condition: {
-                    field: 'hasAuthorityLimitation',
-                    operator: ConditionOperator.EQUALS,
-                    value: true
+            display: {
+                visible : {
+                    operator : LogicalOperator.AND,
+                    conditions : [
+                        {
+                            field: 'hasAuthorityLimitation',
+                            operator: ConditionOperator.EQUALS,
+                            value: true
+                        }
+                    ]
                 }
             }
         }),
@@ -104,11 +111,16 @@ export const AuthorizedSignerSchema: FormSchema = {
             props: { 
                 documentType: PersonnelType.AUTHORIZED_SIGNER 
             },
-            visibility: {
-                condition: {
-                    field: 'hasAuthorityLimitation',
-                    operator: ConditionOperator.EQUALS,
-                    value: true
+            display: {
+                visible : {
+                    operator : LogicalOperator.AND,
+                    conditions : [
+                        {
+                            field: 'hasAuthorityLimitation',
+                            operator: ConditionOperator.EQUALS,
+                            value: true
+                        }
+                    ]
                 }
             }
         }),
@@ -116,11 +128,16 @@ export const AuthorizedSignerSchema: FormSchema = {
             name: 'authorityExpiredDate', 
             label: 'Authority Expired Date', 
             grid: HalfGrid,
-            visibility: {
-                condition: {
-                    field: 'hasAuthorityLimitation',
-                    operator: ConditionOperator.EQUALS,
-                    value: true
+            display: {
+                visible : {
+                    operator : LogicalOperator.AND,
+                    conditions : [
+                        {
+                            field: 'hasAuthorityLimitation',
+                            operator: ConditionOperator.EQUALS,
+                            value: true
+                        }
+                    ]
                 }
             }
         }),

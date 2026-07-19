@@ -1,5 +1,3 @@
-'use client';
-
 // Type Imports
 import type { ChildrenType, Direction } from '@core/types'
 
@@ -12,8 +10,6 @@ import ThemeProvider from '@components/theme'
 import { getMode, getSettingsFromCookie, getSystemMode } from '@core/utils/serverHelpers'
 
 import ClientProviders from '@/providers/ClientProviders'
-import { LocalizationProvider } from '@mui/x-date-pickers'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 type Props = ChildrenType & {
   direction: Direction
@@ -32,9 +28,7 @@ const Providers = async (props: Props) => {
     <VerticalNavProvider>
       <SettingsProvider settingsCookie={settingsCookie} mode={mode}>
         <ThemeProvider direction={direction} systemMode={systemMode}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <ClientProviders>{children}</ClientProviders>
-                </LocalizationProvider>
+            <ClientProviders>{children}</ClientProviders>
         </ThemeProvider>
       </SettingsProvider>
     </VerticalNavProvider>

@@ -69,6 +69,7 @@ export const FieldRenderer: React.FC<FieldRendererProps> = React.memo((props) =>
             field={field}
             isReadonly={readonly}
             isDisabled={disabled}
+            context={context}
         />
     );
 });

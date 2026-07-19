@@ -1,5 +1,7 @@
+import type { VerificationAction } from "../enums";
+
 export interface VerificationSchema {
-  action: string;
-  required?: boolean;
-  otp?: boolean;
+    action: VerificationAction;
+    required?: boolean;
+    otp?: boolean;
 }
