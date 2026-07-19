@@ -1,7 +1,8 @@
 import type { TableConfigSchema } from '@/modules/dynamic-form-v2/interfaces';
+import { PersonnelType } from '../../vendor';
 
 export const BoardDirectorTable: TableConfigSchema = {
-  endpoint: '/vendor-personnel-temp/:vendorTempId/directors', // :vendorTempId will be replaced by form context value
+  endpoint: `/vendor-personnel-temps?personnelType=${PersonnelType.BOARD_OF_DIRECTORS}`, // :vendorTempId will be replaced by form context value
   columns: [
     { field: 'title', title: 'Title' },
     { field: 'fullName', title: 'Full Name' },
@@ -18,7 +19,7 @@ export const BoardDirectorTable: TableConfigSchema = {
 };
 
 export const ShareholderTable: TableConfigSchema = {
-  endpoint: '/vendor-personnel-temp/:vendorTempId/shareholders',
+  endpoint: `/vendor-personnel-temps?personnelType=${PersonnelType.SHAREHOLDER}`,
   columns: [
     { field: 'title', title: 'Title' },
     { field: 'fullName', title: 'Full Name' },
@@ -35,7 +36,7 @@ export const ShareholderTable: TableConfigSchema = {
 };
 
 export const AuthorizedSignerTable: TableConfigSchema = {
-  endpoint: '/vendor-personnel-temp/:vendorTempId/signers',
+  endpoint: `/vendor-personnel-temps?personnelType=${PersonnelType.AUTHORIZED_SIGNER}`,
   columns: [
     { field: 'title', title: 'Title' },
     { field: 'fullName', title: 'Full Name' },

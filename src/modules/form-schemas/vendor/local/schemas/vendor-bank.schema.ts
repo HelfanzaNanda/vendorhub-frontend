@@ -8,10 +8,10 @@ import {
   textareaField, 
   fileField
 } from '@/modules/dynamic-form-v2';
-
+import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
+import { FullGrid, HalfGrid } from '@/modules/dynamic-form-v2/grids';
 import { BankConstants } from '@/modules/form-schemas/vendor/common';
-import { BankBranchLookup, BankLookup, CountryLookup, CurrencyLookup } from '@/modules/form-schemas/shared/lookups';
-import { FullGrid, HalfGrid, RequiredValidation } from '@/modules/form-schemas/shared';
+import { BankBranchLookup, BankLookup, CountryLookup, CurrencyLookup } from '@/modules/form-schemas/shared';
 
 const BankAccountSchema: FormSchema = {
   id: BankConstants.SCHEMA_ID,
@@ -109,7 +109,7 @@ export const VendorBankSchema: FormSchema = {
           grid: FullGrid,
           nested: {
             multiple: true,
-            schema: BankAccountSchema.id,
+            schema: BankAccountSchema,
             minItems: 1
           },
           validation: {

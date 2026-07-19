@@ -9,11 +9,10 @@ import {
   ConditionOperator,
   numberField
 } from '@/modules/dynamic-form-v2';
-
-import { FinancialReportConstants, FinancialReportType, AuditStatus, DocumentType } from '@/modules/form-schemas/vendor/common';
-import { CurrencyLookup, YearLookup } from '@/modules/form-schemas/shared/lookups';
-import { FullGrid, HalfGrid, RequiredValidation } from '@/modules/form-schemas/shared';
-import { ReportTypeLookup } from '@/modules/form-schemas/shared/lookups/report-type.lookup';
+import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
+import { FullGrid, HalfGrid } from '@/modules/dynamic-form-v2/grids';
+import { FinancialReportConstants } from '@/modules/form-schemas/vendor/common';
+import { CurrencyLookup, ReportTypeLookup } from '@/modules/form-schemas/shared';
 
 const FinancialReportInlineSchema: FormSchema = {
   id: FinancialReportConstants.SCHEMA_ID,
@@ -126,7 +125,7 @@ export const VendorFinancialReportSchema: FormSchema = {
           grid: FullGrid,
           nested: {
             multiple: true,
-            schema: FinancialReportInlineSchema.id
+            schema: FinancialReportInlineSchema
           }
         })
       ]

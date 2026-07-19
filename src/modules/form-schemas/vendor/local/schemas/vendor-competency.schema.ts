@@ -9,9 +9,10 @@ import {
   fileField
 } from '@/modules/dynamic-form-v2';
 
-import { CompetencyConstants, DocumentType, CustomerReferenceSchema, CustomerConstants } from '@/modules/form-schemas/vendor/common';
+import { CompetencyConstants, DocumentType, CustomerConstants } from '@/modules/form-schemas/vendor/common';
 import { CompetencyLookup, IssuedByLookup } from '@/modules/form-schemas/shared/lookups';
-import { FullGrid } from '@/modules/form-schemas/shared';
+import { FullGrid } from '@/modules/dynamic-form-v2/grids';
+import { CustomerReferenceSchema } from '../nested';
 
 const CompetencyCertificateSchema: FormSchema = {
   id: CompetencyConstants.SECTION_COMPETENCY_ID,
@@ -56,7 +57,7 @@ export const VendorCompetencySchema: FormSchema = {
           grid: FullGrid,
           nested: {
             multiple: true,
-            schema: CompetencyCertificateSchema.id
+            schema: CompetencyCertificateSchema
           }
         })
       ]
@@ -73,7 +74,7 @@ export const VendorCompetencySchema: FormSchema = {
           grid: FullGrid,
           nested: {
             multiple: true,
-            schema: CustomerReferenceSchema.id
+            schema: CustomerReferenceSchema
           }
         })
       ]

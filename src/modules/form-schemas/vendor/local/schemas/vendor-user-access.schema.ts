@@ -13,8 +13,9 @@ import {
 } from '@/modules/dynamic-form-v2';
 
 import { UserAccessConstants, UserAccessStatus } from '@/modules/form-schemas/vendor/common';
-import { RoleLookup, DepartmentLookup, AreaLookup, PositionLookup } from '@/modules/form-schemas/shared/lookups';
-import { HalfGrid, RequiredValidation } from '@/modules/form-schemas/shared';
+import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
+import { HalfGrid } from '@/modules/dynamic-form-v2/grids';
+import { RoleLookup, PositionLookup, AreaLookup } from '@/modules/form-schemas/shared';
 
 export const UserAccessSchema: FormSchema = {
   id: UserAccessConstants.SCHEMA_ID,

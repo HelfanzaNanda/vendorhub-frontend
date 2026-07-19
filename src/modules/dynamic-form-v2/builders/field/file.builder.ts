@@ -1,8 +1,10 @@
 import type { FieldSchema } from '@/modules/dynamic-form-v2/interfaces';
 import { FieldType, type DynamicComponent } from '@/modules/dynamic-form-v2/enums';
-import { FullGrid, OptionalValidation, Component } from '@/modules/form-schemas/shared';
+import { OptionalValidation } from '@/modules/dynamic-form-v2/validation';
 import { createField } from '../base.builder';
 import type { FieldBuilderOptions } from '../interfaces';
+import { FullGrid } from '../../grids';
+import { Component } from '../../constants';
 
 export const fileField = (
   options: Omit<FieldBuilderOptions, 'type'>

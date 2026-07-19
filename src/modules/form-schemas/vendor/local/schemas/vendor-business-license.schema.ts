@@ -12,12 +12,11 @@ import {
 
 import { LicenseStatus, LicenseCategory } from '@/modules/form-schemas/vendor/common';
 import { 
-  KbliLookup, 
-  BusinessCategoryLookup, 
-  BusinessScaleLookup 
-} from '@/modules/form-schemas/shared/lookups';
-import { BusinessLicenseConstants } from '@/modules/form-schemas/vendor/common';
-import { FullGrid, QuarterGrid, RequiredValidation } from '@/modules/form-schemas/shared';
+  BusinessLicenseConstants,
+} from '@/modules/form-schemas/vendor/common';
+import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
+import { FullGrid, QuarterGrid } from '@/modules/dynamic-form-v2/grids';
+import { KbliLookup, BusinessCategoryLookup, BusinessScaleLookup } from '@/modules/form-schemas/shared';
 
 const KbliNestedSchema: FormSchema = {
   id: BusinessLicenseConstants.SECTION_INDUSTRY_CLASSIFICATION_ID,
@@ -94,7 +93,7 @@ export const VendorBusinessLicenseSchema: FormSchema = {
           nested: {
             multiple: true,
             minItems: 1,
-            schema: KbliNestedSchema.id
+            schema: KbliNestedSchema
           },
           validation: {
             required: true

@@ -23,3 +23,4 @@ export { AreaLookup } from './area.lookup';
 export { PositionLookup } from './position.lookup';
 export { BankBranchLookup } from './bank-branch.lookup';
 export { AffiliateTypeLookup } from './affiliate-type.lookup';
+export { ReportTypeLookup } from './report-type.lookup';

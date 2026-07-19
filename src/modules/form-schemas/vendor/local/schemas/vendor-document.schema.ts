@@ -8,7 +8,8 @@ import {
   dateField,
   numberField
 } from '@/modules/dynamic-form-v2';
-import { FullGrid, HalfGrid, QuarterGrid, RequiredValidation } from '@/modules/form-schemas/shared';
+import { FullGrid, HalfGrid, QuarterGrid } from '@/modules/dynamic-form-v2/grids';
+import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
 
 import { DocumentConstants, DocumentType } from '@/modules/form-schemas/vendor/common';
 

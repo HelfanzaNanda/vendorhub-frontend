@@ -1,8 +1,10 @@
 import type { FieldSchema } from '@/modules/dynamic-form-v2/interfaces';
 import { FieldType, type DynamicComponent } from '@/modules/dynamic-form-v2/enums';
-import { HalfGrid, PercentageValidation, Component } from '@/modules/form-schemas/shared';
+import { PercentageValidation } from '@/modules/dynamic-form-v2/validation';
 import { createField } from '../base.builder';
 import type { FieldBuilderOptions } from '../interfaces';
+import { HalfGrid } from '../../grids';
+import { Component } from '../../constants';
 
 export const percentageField = (
   options: Omit<FieldBuilderOptions, 'type'>

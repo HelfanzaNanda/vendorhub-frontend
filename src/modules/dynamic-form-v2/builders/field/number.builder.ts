@@ -1,8 +1,10 @@
 import type { FieldSchema } from '@/modules/dynamic-form-v2/interfaces';
 import { FieldType, type DynamicComponent } from '@/modules/dynamic-form-v2/enums';
-import { HalfGrid, NumberValidation, Component } from '@/modules/form-schemas/shared';
+import { NumberValidation } from '@/modules/dynamic-form-v2/validation';
 import { createField } from '../base.builder';
 import type { FieldBuilderOptions } from '../interfaces';
+import { HalfGrid } from '../../grids';
+import { Component } from '../../constants';
 
 export const numberField = (
   options: Omit<FieldBuilderOptions, 'type'>

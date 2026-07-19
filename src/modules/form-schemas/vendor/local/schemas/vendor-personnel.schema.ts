@@ -1,17 +1,15 @@
 import { FormSchema, FormLayout, tableField } from '@/modules/dynamic-form-v2';
-import {
-    FullGrid,
-    RequiredValidation,
+import { FullGrid } from '@/modules/dynamic-form-v2/grids';
+import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
+import { 
     BoardDirectorTable,
     ShareholderTable,
-    AuthorizedSignerTable
+    AuthorizedSignerTable,
 } from '@/modules/form-schemas/shared';
 import {
-    AuthorizedSignerSchema,
-    BoardOfDirectorSchema,
     PersonnelConstants,
-    ShareholderSchema,
 } from '@/modules/form-schemas/vendor/common';
+import { AuthorizedSignerSchema, BoardOfDirectorSchema, ShareholderSchema } from '../nested';
 
 export const VendorPersonnelSchema: FormSchema = {
     id: PersonnelConstants.SCHEMA_ID,

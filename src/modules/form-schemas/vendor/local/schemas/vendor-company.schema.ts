@@ -7,9 +7,9 @@ import {
   autocompleteField,
   NumberField
 } from '@/modules/dynamic-form-v2';
-import { FullGrid, HalfGrid, MapsUrlValidation, QuarterGrid, RequiredValidation, ThirdGrid, WebsiteValidation } from '@/modules/form-schemas/shared';
-
-import { CountryLookup, ProvinceLookup, CityLookup, BusinessEntityLookup, SiteLookup } from '@/modules/form-schemas/shared/lookups';
+import { FullGrid, HalfGrid, ThirdGrid } from '@/modules/dynamic-form-v2/grids';
+import { MapsUrlValidation, RequiredValidation, WebsiteValidation } from '@/modules/dynamic-form-v2/validation';
+import { CountryLookup, ProvinceLookup, CityLookup, BusinessEntityLookup, SiteLookup } from '@/modules/form-schemas/shared';
 import { CompanyConstants } from '@/modules/form-schemas/vendor/common';
 
 export const VendorCompanySchema: FormSchema = {

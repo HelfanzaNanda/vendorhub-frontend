@@ -1,6 +1,4 @@
-import type { DisplaySchema } from '../../../dynamic-form-v2/interfaces/display.interface';
-import { LogicalOperator } from '../../../dynamic-form-v2/enums/logical-operator.enum';
-import { ConditionOperator } from '../../../dynamic-form-v2/enums/condition-operator.enum';
+import { ConditionOperator, DisplaySchema, LogicalOperator } from "@/modules/dynamic-form-v2";
 
 export const PersonnelDisplay: DisplaySchema = {
   visible: {

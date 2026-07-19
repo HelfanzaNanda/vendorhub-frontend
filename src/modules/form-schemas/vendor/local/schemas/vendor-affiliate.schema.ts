@@ -7,10 +7,11 @@ import {
   dateField, 
   textareaField 
 } from '@/modules/dynamic-form-v2';
+import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
+import { FullGrid, HalfGrid } from '@/modules/dynamic-form-v2/grids';
 
-import { AffiliateTypeLookup, BusinessEntityLookup, CountryLookup, IndustryLookup, RelationshipTypeLookup } from '@/modules/form-schemas/shared/lookups';
 import { AffiliateConstants } from '../../common/constants/affiliate.constant';
-import { FullGrid, HalfGrid, RequiredValidation } from '@/modules/form-schemas/shared';
+import { AffiliateTypeLookup, BusinessEntityLookup } from '@/modules/form-schemas/shared';
 
 const AffiliateCompanyInlineSchema: FormSchema = {
   id: AffiliateConstants.SCHEMA_ID,
@@ -73,7 +74,7 @@ export const VendorAffiliateSchema: FormSchema = {
           grid: FullGrid,
           nested: {
             multiple: true,
-            schema: AffiliateCompanyInlineSchema.id
+            schema: AffiliateCompanyInlineSchema
           }
         })
       ]
