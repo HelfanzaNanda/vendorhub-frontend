@@ -39,7 +39,7 @@ export const VendorDocumentSchema: FormSchema = {
                 validation: { required: RequiredValidation.required }
             }),
             fileField({
-                name: 'fileId',
+                name: 'file',
                 label: 'Attachment',
                 grid: FullGrid,
                 validation: { required: RequiredValidation.required }
@@ -70,7 +70,7 @@ export const VendorDocumentSchema: FormSchema = {
                 validation: { required: RequiredValidation.required }
             }),
             fileField({
-                name: 'fileId',
+                name: 'file',
                 label: 'Attachment',
                 grid: QuarterGrid,
                 validation: { required: RequiredValidation.required }
@@ -97,7 +97,7 @@ export const VendorDocumentSchema: FormSchema = {
                 validation: { required: RequiredValidation.required }
             }),
             fileField({
-                name: 'fileId',
+                name: 'file',
                 label: 'Attachment',
                 grid: QuarterGrid,
                 validation: { required: RequiredValidation.required }
@@ -124,7 +124,7 @@ export const VendorDocumentSchema: FormSchema = {
                 validation: { required: RequiredValidation.required }
             }),
             fileField({
-                name: 'fileId',
+                name: 'file',
                 label: 'Attachment',
                 grid: QuarterGrid,
                 validation: { required: RequiredValidation.required }
@@ -139,7 +139,7 @@ export const VendorDocumentSchema: FormSchema = {
         layout: FormLayout.CARD,
         fields: [
             fileField({
-                name: 'fileId',
+                name: 'file',
                 label: 'Attachment',
                 grid: QuarterGrid,
                 validation: { required: RequiredValidation.required }
