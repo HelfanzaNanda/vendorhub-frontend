@@ -1,11 +1,7 @@
 import { FormSchema, FormLayout, tableField } from '@/modules/dynamic-form-v2';
 import { FullGrid } from '@/modules/dynamic-form-v2/grids';
 import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
-import { 
-    BoardDirectorTable,
-    ShareholderTable,
-    AuthorizedSignerTable,
-} from '@/modules/form-schemas/shared';
+import { VendorAuthorizedSignerTable, VendorBoardDirectorTable, VendorShareholderTable } from '@/modules/form-schemas/shared';
 import {
     PersonnelConstants,
 } from '@/modules/form-schemas/vendor/common';
@@ -28,7 +24,7 @@ export const VendorPersonnelSchema: FormSchema = {
                     label: PersonnelConstants.SECTION_BOARD_OF_DIRECTORS_TITLE,
                     helperText: PersonnelConstants.SECTION_BOARD_OF_DIRECTORS_DESCRIPTION,
                     grid: FullGrid,
-                    table: BoardDirectorTable,
+                    table: VendorBoardDirectorTable,
                     schema: BoardOfDirectorSchema,
                     validation: {
                         required: RequiredValidation.required
@@ -47,7 +43,7 @@ export const VendorPersonnelSchema: FormSchema = {
                     label: PersonnelConstants.SECTION_SHAREHOLDER_TITLE,
                     helperText: PersonnelConstants.SECTION_SHAREHOLDER_DESCRIPTION,
                     grid: FullGrid,
-                    table: ShareholderTable,
+                    table: VendorShareholderTable,
                     schema: ShareholderSchema,
                     validation: {
                         required: RequiredValidation.required
@@ -66,7 +62,7 @@ export const VendorPersonnelSchema: FormSchema = {
                     helperText: PersonnelConstants.SECTION_AUTHORIZED_SIGNER_DESCRIPTION,
                     label: PersonnelConstants.SECTION_AUTHORIZED_SIGNER_TITLE,
                     grid: FullGrid,
-                    table: AuthorizedSignerTable,
+                    table: VendorAuthorizedSignerTable,
                     schema: AuthorizedSignerSchema,
                     validation: {
                         required: RequiredValidation.required

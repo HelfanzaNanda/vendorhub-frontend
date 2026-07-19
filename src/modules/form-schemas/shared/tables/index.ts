@@ -1,1 +1,1 @@
-export * from './personnel.table';
+export * from './vendor-personnel.table';

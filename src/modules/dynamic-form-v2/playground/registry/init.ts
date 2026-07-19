@@ -1,13 +1,13 @@
 import {
     VendorCompanySchema,
     VendorPersonnelSchema,
-    VendorBankSchema,
     VendorBusinessLicenseSchema,
     VendorCompetencySchema,
     VendorDocumentSchema,
     VendorFinancialReportSchema,
     VendorAffiliateSchema,
-    UserAccessTableSchema
+    VendorUserAccessTableSchema,
+    VendorBankTableSchema
 } from '@/modules/form-schemas/vendor/local/schemas';
 import { SchemaCategory } from './schema-category';
 import type { PlaygroundSchema } from './types';
@@ -33,15 +33,15 @@ const playgroundSchemas: readonly PlaygroundSchema[] = [
         title: 'Vendor User Access',
         category: SchemaCategory.VENDOR,
         description: 'Schema for managing vendor portal users and access controls.',
-        schema: UserAccessTableSchema
+        schema: VendorUserAccessTableSchema
     },
-    // {
-    //     id: 'vendor-bank',
-    //     title: 'Vendor Bank Accounts',
-    //     category: SchemaCategory.VENDOR,
-    //     description: 'Schema for managing vendor bank accounts.',
-    //     schema: VendorBankSchema
-    // },
+    {
+        id: 'vendor-bank',
+        title: 'Vendor Bank Accounts',
+        category: SchemaCategory.VENDOR,
+        description: 'Schema for managing vendor bank accounts.',
+        schema: VendorBankTableSchema
+    },
     // {
     //     id: 'vendor-affiliate',
     //     title: 'Vendor Affiliate',

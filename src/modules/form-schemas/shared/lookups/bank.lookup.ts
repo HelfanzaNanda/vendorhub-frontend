@@ -6,4 +6,7 @@ export const BankLookup: LookupSchema = {
   method: HttpMethod.GET,
   valueField: 'value',
   labelField: 'label',
+  params: {
+    countryId: '${country.value}',
+  }
 };

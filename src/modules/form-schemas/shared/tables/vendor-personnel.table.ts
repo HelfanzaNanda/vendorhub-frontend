@@ -1,7 +1,7 @@
 import type { TableConfigSchema } from '@/modules/dynamic-form-v2/interfaces';
 import { PersonnelType } from '../../vendor';
 
-export const BoardDirectorTable: TableConfigSchema = {
+export const VendorBoardDirectorTable: TableConfigSchema = {
   endpoint: `/vendor-personnel-temps?personnelTypeCode=${PersonnelType.BOARD_OF_DIRECTORS}`, // :vendorTempId will be replaced by form context value
   columns: [
     { field: 'name', title: 'Full Name' },
@@ -18,7 +18,7 @@ export const BoardDirectorTable: TableConfigSchema = {
   actions: ['view', 'edit', 'delete']
 };
 
-export const ShareholderTable: TableConfigSchema = {
+export const VendorShareholderTable: TableConfigSchema = {
   endpoint: `/vendor-personnel-temps?personnelTypeCode=${PersonnelType.SHAREHOLDER}`,
   columns: [
     { field: 'title.name', title: 'Title' },
@@ -35,7 +35,7 @@ export const ShareholderTable: TableConfigSchema = {
   actions: ['view', 'edit', 'delete']
 };
 
-export const AuthorizedSignerTable: TableConfigSchema = {
+export const VendorAuthorizedSignerTable: TableConfigSchema = {
   endpoint: `/vendor-personnel-temps?personnelTypeCode=${PersonnelType.AUTHORIZED_SIGNER}`,
   columns: [
     { field: 'name', title: 'Full Name' },

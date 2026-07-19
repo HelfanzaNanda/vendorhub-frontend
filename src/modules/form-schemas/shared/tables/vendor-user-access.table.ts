@@ -1,6 +1,6 @@
 import type { TableConfigSchema } from '@/modules/dynamic-form-v2/interfaces';
 
-export const UserAccessTable: TableConfigSchema = {
+export const VendorUserAccessTable: TableConfigSchema = {
   endpoint: `/vendor-user-temps`, // :vendorTempId will be replaced by form context value
   columns: [
     { field: 'username', title: 'Username' },

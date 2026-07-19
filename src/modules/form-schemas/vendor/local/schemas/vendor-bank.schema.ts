@@ -6,12 +6,14 @@ import {
   autocompleteField, 
   switchField, 
   textareaField, 
-  fileField
+  fileField,
+  tableField
 } from '@/modules/dynamic-form-v2';
 import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
 import { FullGrid, HalfGrid } from '@/modules/dynamic-form-v2/grids';
 import { BankConstants } from '@/modules/form-schemas/vendor/common';
 import { BankBranchLookup, BankLookup, CountryLookup, CurrencyLookup } from '@/modules/form-schemas/shared';
+import { VendorBankTable } from '@/modules/form-schemas/shared/tables/vendor-bank.table';
 
 const BankAccountSchema: FormSchema = {
   id: BankConstants.SCHEMA_ID,
@@ -27,7 +29,7 @@ const BankAccountSchema: FormSchema = {
       layout: FormLayout.CARD,
       fields: [
         autocompleteField({
-            name: 'countryId',
+            name: 'country',
             label: 'Country',
             validation: { required: RequiredValidation.required },
             grid: HalfGrid,
@@ -35,7 +37,7 @@ const BankAccountSchema: FormSchema = {
         }),
 
         autocompleteField({
-            name: 'bankId',
+            name: 'bank',
             label: 'Bank',
             validation: { required: RequiredValidation.required },
             grid: HalfGrid,
@@ -43,7 +45,7 @@ const BankAccountSchema: FormSchema = {
         }),
 
         autocompleteField({
-            name: 'bankBranchId',
+            name: 'bankBranch',
             label: 'Bank Branch',
             validation: { required: RequiredValidation.required },
             grid: HalfGrid,
@@ -51,7 +53,7 @@ const BankAccountSchema: FormSchema = {
         }),
 
         autocompleteField({
-            name: 'currencyId',
+            name: 'currency',
             label: 'Currency',
             validation: { required: RequiredValidation.required },
             grid: HalfGrid,
@@ -78,7 +80,7 @@ const BankAccountSchema: FormSchema = {
         }),
 
         fileField({ 
-            name: 'fileId', 
+            name: 'file', 
             label: 'Bank Statement / Passbook Document', 
             grid: HalfGrid, 
             props: { 
@@ -91,7 +93,7 @@ const BankAccountSchema: FormSchema = {
   ]
 };
 
-export const VendorBankSchema: FormSchema = {
+export const VendorBankTableSchema: FormSchema = {
   id: BankConstants.SCHEMA_ID,
   title: BankConstants.SCHEMA_TITLE,
   code: BankConstants.DOCUMENT_ID,
@@ -101,20 +103,18 @@ export const VendorBankSchema: FormSchema = {
       id: BankConstants.SCHEMA_ID,
       code: BankConstants.DOCUMENT_ID,
       title: BankConstants.SCHEMA_TITLE,
-      layout: FormLayout.CARD,
+      layout: FormLayout.TABLE,
       fields: [
-        formField({
-          name: 'bankAccounts',
-          label: 'Bank Accounts',
-          grid: FullGrid,
-          nested: {
-            multiple: true,
+        tableField({
+            name: BankConstants.SCHEMA_ID,
+            label: BankConstants.SCHEMA_TITLE,
+            helperText: BankConstants.SCHEMA_TITLE,
+            grid: FullGrid,
+            table: VendorBankTable,
             schema: BankAccountSchema,
-            minItems: 1
-          },
-          validation: {
-            required: true
-          }
+            validation: {
+                required: RequiredValidation.required
+            }
         })
       ]
     }

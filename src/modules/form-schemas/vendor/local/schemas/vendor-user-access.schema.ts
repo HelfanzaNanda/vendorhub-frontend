@@ -18,8 +18,8 @@ import { UserAccessConstants, UserAccessStatus } from '@/modules/form-schemas/ve
 import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
 import { FullGrid, HalfGrid, QuarterGrid, ThirdGrid, TwoThirdsGrid } from '@/modules/dynamic-form-v2/grids';
 import { RoleLookup, PositionLookup, AreaLookup, PhoneVerification, EmailVerification } from '@/modules/form-schemas/shared';
-import { UserAccessTable } from '@/modules/form-schemas/shared/tables/user-access.table';
 import { PhoneVerifyVerification } from '@/modules/form-schemas/shared/verification/phone.verification';
+import { VendorUserAccessTable } from '@/modules/form-schemas/shared/tables/vendor-user-access.table';
 
 
 const UserAccessSchema: FormSchema = {
@@ -119,7 +119,7 @@ const UserAccessSchema: FormSchema = {
 };
 
 
-export const UserAccessTableSchema: FormSchema = {
+export const VendorUserAccessTableSchema: FormSchema = {
     id: UserAccessConstants.SCHEMA_ID,
     title: UserAccessConstants.SCHEMA_TITLE,
     code: UserAccessConstants.SCHEMA_ID,
@@ -137,7 +137,7 @@ export const UserAccessTableSchema: FormSchema = {
                     label: UserAccessConstants.SECTION_USER_ACCESS_TITLE,
                     helperText: UserAccessConstants.SECTION_USER_ACCESS_DESCRIPTION,
                     grid: FullGrid,
-                    table: UserAccessTable,
+                    table: VendorUserAccessTable,
                     schema: UserAccessSchema,
                     validation: {
                         required: RequiredValidation.required
