@@ -27,6 +27,11 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
     useEffect(() => {
         let active = true;
 
+        if (field.lookup?.type === 'STATIC') {
+            setOptions(field.lookup?.options as OptionSchema[] || []);
+            return undefined;
+        }
+
         if (!field.lookup) {
             setOptions((field.props?.options as OptionSchema[]) || []);
 
@@ -42,6 +47,11 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
 
             try {
                 const formValues = context.values;
+
+                if (field.lookup?.type === 'STATIC') {
+                    setOptions(field.lookup?.options as OptionSchema[] || []);
+                    return;
+                }
 
                 // Uses Lookup Engine purely for rules/params parsing
                 const requestConfig = LookupEngine.prepareLookupRequest(field, formValues);

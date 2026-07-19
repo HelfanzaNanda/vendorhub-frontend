@@ -42,13 +42,13 @@ const playgroundSchemas: readonly PlaygroundSchema[] = [
         description: 'Schema for managing vendor bank accounts.',
         schema: VendorBankTableSchema
     },
-    // {
-    //     id: 'vendor-affiliate',
-    //     title: 'Vendor Affiliate',
-    //     category: SchemaCategory.VENDOR,
-    //     description: 'Schema for managing vendor affiliated companies.',
-    //     schema: VendorAffiliateSchema
-    // },
+    {
+        id: 'vendor-affiliate',
+        title: 'Vendor Affiliate',
+        category: SchemaCategory.VENDOR,
+        description: 'Schema for managing vendor affiliated companies.',
+        schema: VendorAffiliateSchema
+    },
     // {
     //     id: 'vendor-competency',
     //     title: 'Capability & Portfilio',
@@ -63,13 +63,13 @@ const playgroundSchemas: readonly PlaygroundSchema[] = [
     //     description: 'Schema for managing vendor legal, tax, and company documents.',
     //     schema: VendorDocumentSchema
     // },
-    // {
-    //     id: 'vendor-financial-report',
-    //     title: 'Vendor Financial Report',
-    //     category: SchemaCategory.VENDOR,
-    //     description: 'Schema for managing vendor financial statements.',
-    //     schema: VendorFinancialReportSchema
-    // },
+    {
+        id: 'vendor-financial-report',
+        title: 'Vendor Financial Report',
+        category: SchemaCategory.VENDOR,
+        description: 'Schema for managing vendor financial statements.',
+        schema: VendorFinancialReportSchema
+    },
 ];
 
 // Register all playground schemas to the central registry

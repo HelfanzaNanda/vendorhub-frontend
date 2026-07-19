@@ -41,7 +41,7 @@ export const CurrencyField: React.FC<BaseFieldProps> = ({
       fullWidth
       InputProps={{
         readOnly: isReadonly,
-        startAdornment: <InputAdornment position="start">{(field.props?.currency as string) || 'Rp'}</InputAdornment>,
+        // startAdornment: <InputAdornment position="start">{(field.props?.currency as string) || 'Rp'}</InputAdornment>,
         endAdornment: loading ? (
           <InputAdornment position="end">
             <CircularProgress color="inherit" size={20} />

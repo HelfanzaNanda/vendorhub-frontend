@@ -5,13 +5,15 @@ import {
   textField, 
   autocompleteField, 
   dateField, 
-  textareaField 
+  textareaField, 
+  tableField
 } from '@/modules/dynamic-form-v2';
 import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
 import { FullGrid, HalfGrid } from '@/modules/dynamic-form-v2/grids';
 
 import { AffiliateConstants } from '../../common/constants/affiliate.constant';
 import { AffiliateTypeLookup, BusinessEntityLookup } from '@/modules/form-schemas/shared';
+import { VendorAffiliateTable } from '@/modules/form-schemas/shared/tables/vendor-affiliate.table';
 
 const AffiliateCompanyInlineSchema: FormSchema = {
   id: AffiliateConstants.SCHEMA_ID,
@@ -66,16 +68,18 @@ export const VendorAffiliateSchema: FormSchema = {
       id: AffiliateConstants.SECTION_AFFILIATE_ID,
       code: AffiliateConstants.SECTION_AFFILIATE_CODE,
       title: AffiliateConstants.SECTION_AFFILIATE_TITLE,
-      layout: FormLayout.CARD,
+      layout: FormLayout.TABLE,
       fields: [
-        formField({
-          name: 'affiliatedCompanies',
-          label: 'Affiliated Companies',
-          grid: FullGrid,
-          nested: {
-            multiple: true,
-            schema: AffiliateCompanyInlineSchema
-          }
+        tableField({
+            name: AffiliateConstants.SCHEMA_ID,
+            label: AffiliateConstants.SCHEMA_TITLE,
+            helperText: AffiliateConstants.SCHEMA_TITLE,
+            grid: FullGrid,
+            table: VendorAffiliateTable,
+            schema: AffiliateCompanyInlineSchema,
+            validation: {
+                required: RequiredValidation.required
+            }
         })
       ]
     }

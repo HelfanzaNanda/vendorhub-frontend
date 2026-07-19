@@ -1,11 +1,26 @@
 import type { HttpMethod } from '../enums/http-method.enum';
 
-export interface LookupSchema {
-  endpoint: string;
-  method: HttpMethod;
-  valueField: string;
-  labelField: string;
-  params?: Record<string, unknown>;
-  searchParam?: string;
-  debounce?: number;
+export interface LookupOption {
+    value: string | number | boolean;
+    label: string;
+    disabled?: boolean;
+    children?: LookupOption[];
+    [key: string]: unknown;
 }
+
+export interface LookupSchema {
+    type?: LookupType;
+    endpoint?: string;
+    method?: HttpMethod;
+    valueField: string;
+    labelField: string;
+    params?: Record<string, unknown>;
+    searchParam?: string;
+    debounce?: number;
+    cache?: boolean;
+    preload?: boolean;
+    options?: LookupOption[];
+}
+
+
+export type LookupType = 'API' | 'STATIC';

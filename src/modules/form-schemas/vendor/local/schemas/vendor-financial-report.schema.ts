@@ -7,12 +7,15 @@ import {
   currencyField,
   fileField,
   ConditionOperator,
-  numberField
+  numberField,
+  tableField
 } from '@/modules/dynamic-form-v2';
 import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
 import { FullGrid, HalfGrid } from '@/modules/dynamic-form-v2/grids';
 import { FinancialReportConstants } from '@/modules/form-schemas/vendor/common';
 import { CurrencyLookup, ReportTypeLookup } from '@/modules/form-schemas/shared';
+import { VendorFinancialReportTable } from '@/modules/form-schemas/shared/tables/vendor-financial-report.table';
+import { AuditStatusLookup } from '@/modules/form-schemas/shared/lookups/static/audit-status.lookup';
 
 const FinancialReportInlineSchema: FormSchema = {
   id: FinancialReportConstants.SCHEMA_ID,
@@ -39,7 +42,7 @@ const FinancialReportInlineSchema: FormSchema = {
             label: 'Audit Status',
             validation: { required: RequiredValidation.required },
             grid: HalfGrid,
-            lookup : ReportTypeLookup
+            lookup : AuditStatusLookup
         }),
         autocompleteField({
             name: 'currencyId',
@@ -108,25 +111,27 @@ const FinancialReportInlineSchema: FormSchema = {
 };
 
 export const VendorFinancialReportSchema: FormSchema = {
-  id: 'vendorFinancialReportSchema',
-  title: 'Financial Reports',
-  code: 'VENDOR_FINANCIAL_REPORTS',
+  id: FinancialReportConstants.SCHEMA_ID,
+  title: FinancialReportConstants.SCHEMA_TITLE,
+  code: FinancialReportConstants.DOCUMENT_ID,
   layout: FormLayout.CARD,
   sections: [
     {
-      id: 'financialReportsSection',
-      code: 'FINANCIAL_REPORTS_SECTION',
-      title: 'Financial Reports',
-      layout: FormLayout.CARD,
+      id: FinancialReportConstants.SCHEMA_ID,
+      code: FinancialReportConstants.DOCUMENT_ID,
+      title: FinancialReportConstants.SCHEMA_TITLE,
+      layout: FormLayout.TABLE,
       fields: [
-        formField({
-          name: 'financialReports',
-          label: 'Financial Reports',
-          grid: FullGrid,
-          nested: {
-            multiple: true,
-            schema: FinancialReportInlineSchema
-          }
+        tableField({
+            name: FinancialReportConstants.SCHEMA_ID,
+            label: FinancialReportConstants.SCHEMA_TITLE,
+            helperText: FinancialReportConstants.SCHEMA_TITLE,
+            grid: FullGrid,
+            table: VendorFinancialReportTable,
+            schema: FinancialReportInlineSchema,
+            validation: {
+                required: RequiredValidation.required
+            }
         })
       ]
     }

@@ -6,8 +6,8 @@ export class LookupEngine {
     static prepareLookupRequest(field: FieldSchema, values: Record<string, unknown>): { endpoint: string, method: string, params: Record<string, unknown> } | null {
         if (!field.lookup) return null;
 
-        const endpoint = field.lookup.endpoint;
-        const method = field.lookup.method;
+        const endpoint = field.lookup.endpoint!!;
+        const method = field.lookup.method!!;
         const rawParams = field.lookup.params || {};
 
         const resolvedParams: Record<string, unknown> = {};
@@ -32,9 +32,14 @@ export class LookupEngine {
     private static cache = new Map<string, unknown[]>();
 
     static async load(field: FieldSchema, values: Record<string, unknown>): Promise<unknown[]> {
+        if (field.lookup?.type === 'STATIC') {
+            return field.lookup.options || [];
+        }
+        
         const request = this.prepareLookupRequest(field, values);
 
         if (!request) return [];
+
 
         const cacheKey = JSON.stringify(request);
 

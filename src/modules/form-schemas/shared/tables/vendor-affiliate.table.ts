@@ -1,7 +1,7 @@
 import type { TableConfigSchema } from '@/modules/dynamic-form-v2/interfaces';
 
 export const VendorAffiliateTable: TableConfigSchema = {
-  endpoint: `/vendor-affiliate-temps`, // :vendorTempId will be replaced by form context value
+  endpoint: `/vendor-affiliation-temps`, // :vendorTempId will be replaced by form context value
   columns: [
     { field: 'businessEntityType.name', title: 'Business Entity' },
     { field: 'companyName', title: 'Company Name' },
