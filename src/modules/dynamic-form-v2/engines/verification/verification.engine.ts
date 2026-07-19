@@ -44,7 +44,7 @@ export class VerificationEngine {
         return !!state?.verified;
     }
 
-    static async verify(field: FieldSchema, values: Record<string, unknown>): Promise<VerificationState> {
+    static async verify(field: FieldSchema, values: Record<string, unknown>, verificationState: VerificationState): Promise<VerificationState> {
         if (!field.verification) {
             return this.markVerified();
         };
@@ -59,9 +59,7 @@ export class VerificationEngine {
             );
         }
 
-        console.log('CJENJCCJE');
 
-
-        return service.verify(field, values);
+        return service.verify(field, values, verificationState);
     }
 }

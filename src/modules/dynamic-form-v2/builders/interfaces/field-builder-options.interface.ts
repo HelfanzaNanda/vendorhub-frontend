@@ -34,4 +34,5 @@ export interface FieldBuilderOptions {
     component?: DynamicComponent;
     visibility?: VisibilitySchema;
     payload?: PayloadSchema;
+    multiple?: boolean;
 }

@@ -2,14 +2,14 @@ import type { TableConfigSchema } from '@/modules/dynamic-form-v2/interfaces';
 import { PersonnelType } from '../../vendor';
 
 export const BoardDirectorTable: TableConfigSchema = {
-  endpoint: `/vendor-personnel-temps?personnelType=${PersonnelType.BOARD_OF_DIRECTORS}`, // :vendorTempId will be replaced by form context value
+  endpoint: `/vendor-personnel-temps?personnelTypeCode=${PersonnelType.BOARD_OF_DIRECTORS}`, // :vendorTempId will be replaced by form context value
   columns: [
-    { field: 'title', title: 'Title' },
-    { field: 'fullName', title: 'Full Name' },
+    { field: 'name', title: 'Full Name' },
     { field: 'position', title: 'Position' },
+    { field: 'identityType.name', title: 'Identity Type' },
+    { field: 'identityNumber', title: 'Identity Number' },
     { field: 'email', title: 'Email' },
     { field: 'phone', title: 'Phone' },
-    { field: 'identityNumber', title: 'Identity Number' }
   ],
   sortable: true,
   searchable: true,
@@ -19,14 +19,14 @@ export const BoardDirectorTable: TableConfigSchema = {
 };
 
 export const ShareholderTable: TableConfigSchema = {
-  endpoint: `/vendor-personnel-temps?personnelType=${PersonnelType.SHAREHOLDER}`,
+  endpoint: `/vendor-personnel-temps?personnelTypeCode=${PersonnelType.SHAREHOLDER}`,
   columns: [
-    { field: 'title', title: 'Title' },
-    { field: 'fullName', title: 'Full Name' },
+    { field: 'title.name', title: 'Title' },
+    { field: 'name', title: 'Full Name' },
     { field: 'position', title: 'Position' },
-    { field: 'email', title: 'Email' },
-    { field: 'phone', title: 'Phone' },
-    { field: 'identityNumber', title: 'Identity Number' }
+    { field: 'identityType.name', title: 'Identity Type' },
+    { field: 'identityNumber', title: 'Identity Number' },
+    { field: 'ownershipPercentage', title: 'Ownership (%)' },
   ],
   sortable: true,
   searchable: true,
@@ -36,13 +36,12 @@ export const ShareholderTable: TableConfigSchema = {
 };
 
 export const AuthorizedSignerTable: TableConfigSchema = {
-  endpoint: `/vendor-personnel-temps?personnelType=${PersonnelType.AUTHORIZED_SIGNER}`,
+  endpoint: `/vendor-personnel-temps?personnelTypeCode=${PersonnelType.AUTHORIZED_SIGNER}`,
   columns: [
-    { field: 'title', title: 'Title' },
-    { field: 'fullName', title: 'Full Name' },
+    { field: 'name', title: 'Full Name' },
     { field: 'position', title: 'Position' },
     { field: 'email', title: 'Email' },
-    { field: 'phone', title: 'Phone' },
+    { field: 'identityType.name', title: 'Identity Type' },
     { field: 'identityNumber', title: 'Identity Number' }
   ],
   sortable: true,

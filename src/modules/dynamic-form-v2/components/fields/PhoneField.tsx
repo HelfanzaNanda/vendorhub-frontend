@@ -8,7 +8,7 @@ import { VerificationButton } from '../components';
 export const PhoneField: React.FC<BaseFieldProps> = ({
   name, value, onChange, onBlur, ref, field, error, isReadonly, isDisabled, loading, context
 }) => {
-  return (
+  const input = (
     <MuiTextField
       inputRef={ref}
       name={name}
@@ -27,25 +27,22 @@ export const PhoneField: React.FC<BaseFieldProps> = ({
       fullWidth
       InputProps={{
         readOnly: isReadonly,
-        endAdornment: (
-            <>
-                {loading && (
-                    <InputAdornment position="end">
-                        <CircularProgress color="inherit" size={20} />
-                    </InputAdornment>
-                )}
-                {field.verification && (
-                    <VerificationButton
-                        field={field}
-                        context={context}
-                        disabled={
-                            isDisabled || isReadonly || !value
-                        }
-                    />
-                )}
-            </>
-        ),
+        endAdornment: loading ? (
+            <InputAdornment position="end">
+                <CircularProgress color="inherit" size={20} />
+            </InputAdornment>
+        ) : null,
       }}
     />
   );
+
+  if (field.verification) {
+      return (
+          <VerificationButton field={field} context={context} disabled={isDisabled || isReadonly || !value}>
+              {input}
+          </VerificationButton>
+      );
+  }
+
+  return input;
 };

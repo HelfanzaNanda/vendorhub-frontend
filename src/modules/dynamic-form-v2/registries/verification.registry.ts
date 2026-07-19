@@ -17,6 +17,14 @@ export class VerificationRegistry {
                 VerificationAction.CHECK_PHONE,
                 new PhoneVerificationService()
             ],
+            [
+                VerificationAction.VERIFY_EMAIL,
+                new EmailVerificationService()
+            ],
+            [
+                VerificationAction.VERIFY_PHONE,
+                new PhoneVerificationService()
+            ],
         ]
     );
 

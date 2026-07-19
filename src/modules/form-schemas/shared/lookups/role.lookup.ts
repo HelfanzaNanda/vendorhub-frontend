@@ -6,4 +6,7 @@ export const RoleLookup: LookupSchema = {
   method: HttpMethod.GET,
   valueField: 'value',
   labelField: 'label',
+  params: {
+    type: 'EXTERNAL'
+  }
 };

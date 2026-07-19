@@ -1,5 +1,4 @@
-export * from './VerificationButton';
-export * from './OTPInput';
+export * from '../verification';
 export * from './VerificationStatus';
 export * from './UploadCard';
 export * from './FormToolbar';

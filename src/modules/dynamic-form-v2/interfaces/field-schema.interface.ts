@@ -11,6 +11,7 @@ import type { PayloadSchema } from "./payload-schema.interface";
 import type { TableConfigSchema } from "./table-schema.interface";
 import type { FormSchema } from "./form-schema.interface";
 import { DynamicFormContextValue } from "../context";
+import { FieldProps } from "./field-props.interface";
 
 export interface FieldSchema {
   id: string;
@@ -32,6 +33,7 @@ export interface FieldSchema {
   nested?: NestedFormSchema;
   table?: TableConfigSchema;
   schema?: FormSchema;
-  props?: Record<string, unknown>;
+  props?: FieldProps;
   payload?: PayloadSchema;
+  multiple?: boolean;
 }

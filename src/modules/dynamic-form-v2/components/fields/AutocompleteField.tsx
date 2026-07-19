@@ -11,7 +11,7 @@ import { LookupEngine } from '../../engines';
 import { apiClient } from '@/services/api';
 
 export const AutocompleteField: React.FC<BaseFieldProps> = ({
-    name, value, onChange, onBlur, ref, field, error, isReadonly, isDisabled
+    name, value, onChange, onBlur, ref, field, error, isReadonly, isDisabled 
 }) => {
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState<OptionSchema[]>([]);
@@ -97,14 +97,14 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
     // ]
     );
 
-    const multiple = field.props?.multiple === true;
+    // const multiple = field.props?.multiple === true;
     const valueField = field.lookup?.valueField || 'id';
     const labelField = field.lookup?.labelField || 'name';
 
     return (
         <Autocomplete
             id={name}
-            multiple={multiple}
+            multiple={field.multiple}
             open={open}
             onOpen={() => setOpen(true)}
             onClose={() => setOpen(false)}
@@ -112,7 +112,7 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
             getOptionLabel={(option) => String((option as Record<string, unknown>)[labelField] || '')}
             options={options}
             loading={loading}
-            value={value ?? (multiple ? [] : null)}
+            value={value ?? (field.multiple ? [] : null)}
             onChange={(event, newValue) => {
                 onChange(newValue);
             }}

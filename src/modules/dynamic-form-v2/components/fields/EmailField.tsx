@@ -3,11 +3,12 @@ import React from 'react';
 import { TextField as MuiTextField, CircularProgress, InputAdornment } from '@mui/material';
 
 import type { BaseFieldProps } from './types';
+import { VerificationButton } from '../components';
 
 export const EmailField: React.FC<BaseFieldProps> = ({
-    name, value, onChange, onBlur, ref, field, error, isReadonly, isDisabled, loading
+    name, value, onChange, onBlur, ref, field, error, isReadonly, isDisabled, loading, context
 }) => {
-    return (
+    const input = (
         <MuiTextField
             inputRef={ref}
             name={name}
@@ -30,8 +31,18 @@ export const EmailField: React.FC<BaseFieldProps> = ({
                     <InputAdornment position="end">
                         <CircularProgress color="inherit" size={20} />
                     </InputAdornment>
-                ) : undefined,
+                ) : null,
             }}
         />
     );
+
+    if (field.verification) {
+        return (
+            <VerificationButton field={field} context={context} disabled={isDisabled || isReadonly || !value}>
+                {input}
+            </VerificationButton>
+        );
+    }
+
+    return input;
 };

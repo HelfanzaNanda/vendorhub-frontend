@@ -6,9 +6,7 @@ import type { FieldBuilderOptions } from '../interfaces';
 import { HalfGrid } from '../../grids';
 import { Component } from '../../constants';
 
-export const autocompleteField = (
-  options: Omit<FieldBuilderOptions, 'type' | 'lookup'> & { lookup: LookupSchema }
-): FieldSchema => {
+export const autocompleteField = ( options: Omit<FieldBuilderOptions, 'type' | 'lookup'> & { lookup: LookupSchema } ): FieldSchema => {
   return createField({
     ...options,
     type: FieldType.AUTOCOMPLETE,
@@ -17,5 +15,6 @@ export const autocompleteField = (
     lookup: options.lookup,
     component: options.component ?? (Component.AUTOCOMPLETE as DynamicComponent),
     payload: options.payload,
+    multiple: options.multiple ?? false,
   });
 };

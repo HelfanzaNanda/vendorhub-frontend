@@ -4,7 +4,6 @@ import { TextField as MuiTextField, CircularProgress, InputAdornment } from '@mu
 
 import type { BaseFieldProps } from './types';
 import { VerificationButton } from '../components';
-import { VerificationEngine } from '../../engines';
 
 export const TextField: React.FC<BaseFieldProps> = ({
   name,
@@ -19,7 +18,7 @@ export const TextField: React.FC<BaseFieldProps> = ({
   loading,
   context,
 }) => {
-  return (
+  const input = (
     <MuiTextField
       inputRef={ref}
       name={name}
@@ -37,25 +36,22 @@ export const TextField: React.FC<BaseFieldProps> = ({
       fullWidth
       InputProps={{
         readOnly: isReadonly,
-        endAdornment: (
-            <>
-                {loading && (
-                    <InputAdornment position="end">
-                        <CircularProgress color="inherit" size={20} />
-                    </InputAdornment>
-                )}
-                {field.verification && (
-                    <VerificationButton
-                        field={field}
-                        context={context}
-                        disabled={
-                            isDisabled || isReadonly || !value
-                        }
-                    />
-                )}
-            </>
-        ),
+        endAdornment: loading ? (
+            <InputAdornment position="end">
+                <CircularProgress color="inherit" size={20} />
+            </InputAdornment>
+        ) : null,
       }}
     />
   );
+
+  if (field.verification) {
+      return (
+          <VerificationButton field={field} context={context} disabled={isDisabled || isReadonly || !value}>
+              {input}
+          </VerificationButton>
+      );
+  }
+
+  return input;
 };

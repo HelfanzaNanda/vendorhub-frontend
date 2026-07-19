@@ -8,7 +8,7 @@ import { ObjectUtil } from '../utils';
 
 export class PrivyVerificationService implements VerificationService {
 
-    async verify( field: FieldSchema, values: Record<string, unknown> ): Promise<VerificationState> {
+    async verify( field: FieldSchema, values: Record<string, unknown>, verificationState: VerificationState ): Promise<VerificationState> {
         const privyId = ObjectUtil.get(values, field.name);
         const email = ObjectUtil.get(values, 'email');
 
@@ -21,8 +21,6 @@ export class PrivyVerificationService implements VerificationService {
         }
 
         try {
-            console.log('PAYLOAD ', privyId, email);
-
             await apiClient.post('/identity/privy/check', { privyId, email });
 
             return VerificationEngine.markVerified(
@@ -30,8 +28,6 @@ export class PrivyVerificationService implements VerificationService {
             );
 
         } catch (error: any) {
-            console.log('ERROR ', error);
-            
             return VerificationEngine.markUnverified(
                 error?.response?.data?.message ??
                 'Privy verification failed.'

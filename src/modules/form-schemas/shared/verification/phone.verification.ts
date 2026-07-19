@@ -4,6 +4,12 @@ import type { VerificationSchema } from '@/modules/dynamic-form-v2/interfaces/ve
 export const PhoneVerification: VerificationSchema = {
   action: VerificationAction.CHECK_PHONE,
   required: true,
+  otp: false,
+};
+
+export const PhoneVerifyVerification: VerificationSchema = {
+  action: VerificationAction.VERIFY_PHONE,
+  required: true,
   otp: true,
 };
 

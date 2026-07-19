@@ -8,7 +8,7 @@ import { ObjectUtil } from '../utils';
 
 export class EmailVerificationService implements VerificationService {
 
-    async verify( field: FieldSchema, values: Record<string, unknown> ): Promise<VerificationState> {
+    async verify( field: FieldSchema, values: Record<string, unknown>, verificationState: VerificationState ): Promise<VerificationState> {
 
         const email = values[field.name];
 
