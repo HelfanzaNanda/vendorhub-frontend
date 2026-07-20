@@ -9,7 +9,7 @@ export const BankConstants = {
   SCHEMA_TITLE: 'Bank',
   
   // Document
-  DOCUMENT_ID: 'BANK',
+  DOCUMENT_ID: 'BANK_STATEMENT',
   
   // Sections
   SECTION_ACCOUNT_INFO_ID: 'accountInfo',

@@ -101,8 +101,8 @@ const BankAccountSchema: FormSchema = {
             name: 'file', 
             label: 'Bank Statement / Passbook Document', 
             grid: HalfGrid, 
-            props: { 
-                documentType: BankConstants.DOCUMENT_ID
+            file: {
+                documentTypeCode: BankConstants.DOCUMENT_ID
             },
             payload: {
                 key: 'fileId',
