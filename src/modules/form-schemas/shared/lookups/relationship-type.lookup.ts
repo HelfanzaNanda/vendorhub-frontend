@@ -4,6 +4,6 @@ import { HttpMethod } from '@/modules/dynamic-form-v2/enums/http-method.enum';
 export const RelationshipTypeLookup: LookupSchema = {
   endpoint: '/lookups/relationship-types',
   method: HttpMethod.GET,
-  valueField: 'value',
-  labelField: 'label',
+  valueField: 'id',
+  labelField: 'name',
 };

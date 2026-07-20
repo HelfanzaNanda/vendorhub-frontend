@@ -51,14 +51,25 @@ export const CustomerReferenceSchema: FormSchema = {
             label: 'Year',
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid,
-            lookup: YearLookup
+            lookup: YearLookup,
+            payload: {
+                key: 'year',
+                pick: 'id'
+            }
         }),
         fileField({ 
           name: 'attachment', 
           label: 'Attachment', 
           validation: { required: RequiredValidation.required }, 
           grid: HalfGrid, 
-        //   props: { documentType: DocumentType.CUSTOMER_REFERENCE } 
+          props: { 
+            // documentType: DocumentType.CUSTOMER_REFERENCE 
+            documentType: 'CUSTOMER_REFERENCE'
+          }, 
+          payload: {
+            key: 'fileId',
+            pick: 'id'
+          }
         }),
       ]
     }

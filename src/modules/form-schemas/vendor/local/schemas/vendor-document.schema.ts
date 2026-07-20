@@ -42,7 +42,11 @@ export const VendorDocumentSchema: FormSchema = {
                 name: 'file',
                 label: 'Attachment',
                 grid: FullGrid,
-                validation: { required: RequiredValidation.required }
+                validation: { required: RequiredValidation.required },
+                payload: {
+                    key: 'fileId',
+                    pick: 'id'
+                }
             }),
         ]
     },
@@ -73,7 +77,11 @@ export const VendorDocumentSchema: FormSchema = {
                 name: 'file',
                 label: 'Attachment',
                 grid: QuarterGrid,
-                validation: { required: RequiredValidation.required }
+                validation: { required: RequiredValidation.required },
+                payload: {
+                    key: 'fileId',
+                    pick: 'id'
+                }
             }),
         ]
     },
@@ -100,7 +108,11 @@ export const VendorDocumentSchema: FormSchema = {
                 name: 'file',
                 label: 'Attachment',
                 grid: QuarterGrid,
-                validation: { required: RequiredValidation.required }
+                validation: { required: RequiredValidation.required },
+                payload: {
+                    key: 'fileId',
+                    pick: 'id'
+                }
             }),
         ]
     },
@@ -127,7 +139,11 @@ export const VendorDocumentSchema: FormSchema = {
                 name: 'file',
                 label: 'Attachment',
                 grid: QuarterGrid,
-                validation: { required: RequiredValidation.required }
+                validation: { required: RequiredValidation.required },
+                payload: {
+                    key: 'fileId',
+                    pick: 'id'
+                }
             }),
         ]
     },
@@ -142,7 +158,11 @@ export const VendorDocumentSchema: FormSchema = {
                 name: 'file',
                 label: 'Attachment',
                 grid: QuarterGrid,
-                validation: { required: RequiredValidation.required }
+                validation: { required: RequiredValidation.required },
+                payload: {
+                    key: 'fileId',
+                    pick: 'id'
+                }
             }),
         ]
     },

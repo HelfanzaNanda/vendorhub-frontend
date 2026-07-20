@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { Autocomplete, TextField, CircularProgress } from '@mui/material';
 
@@ -28,7 +28,10 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
         let active = true;
 
         if (field.lookup?.type === 'STATIC') {
-            setOptions(field.lookup?.options as OptionSchema[] || []);
+            setOptions(field.lookup?.options?.map(o => ({
+                value: o.id,
+                label: o.name
+            })) as OptionSchema[] || []);
             return undefined;
         }
 
@@ -49,7 +52,10 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
                 const formValues = context.values;
 
                 if (field.lookup?.type === 'STATIC') {
-                    setOptions(field.lookup?.options as OptionSchema[] || []);
+                    setOptions(field.lookup?.options?.map(o => ({
+                        value: o.id,
+                        label: o.name
+                    })) as OptionSchema[] || []);
                     return;
                 }
 
@@ -107,9 +113,25 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
     // ]
     );
 
+    const firstRender = useRef(true);
+
+    useEffect(() => {
+        if (!field.dependency?.clearOnChange) return;
+
+        if (firstRender.current) {
+            firstRender.current = false;
+            return;
+        }
+
+        onChange(field.multiple ? [] : null);
+
+    }, [parentValue]);
+
     // const multiple = field.props?.multiple === true;
     const valueField = field.lookup?.valueField || 'id';
     const labelField = field.lookup?.labelField || 'name';
+
+    const dependencyDisabled = field.dependency?.disableWhenEmpty && (parentValue == null || parentValue === '');
 
     return (
         <Autocomplete
@@ -131,7 +153,7 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
                 setInputValue(newInputValue);
             }}
             readOnly={isReadonly}
-            disabled={isDisabled}
+            disabled={isDisabled || dependencyDisabled}
             disableClearable={field.props?.clearable === false}
             renderInput={(params) => (
                 <TextField

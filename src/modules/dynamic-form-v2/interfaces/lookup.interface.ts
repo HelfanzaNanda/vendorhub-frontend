@@ -1,8 +1,8 @@
 import type { HttpMethod } from '../enums/http-method.enum';
 
 export interface LookupOption {
-    value: string | number | boolean;
-    label: string;
+    id: string | number | boolean;
+    name: string;
     disabled?: boolean;
     children?: LookupOption[];
     [key: string]: unknown;

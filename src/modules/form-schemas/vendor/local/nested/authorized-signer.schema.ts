@@ -34,7 +34,11 @@ export const AuthorizedSignerSchema: FormSchema = {
             label: 'Title',
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid,
-            lookup: TitleLookup
+            lookup: TitleLookup,
+            payload: {
+                key: 'titleId',
+                pick: 'id'
+            }
         }),
         textField({
             name: 'fullName',
@@ -47,7 +51,11 @@ export const AuthorizedSignerSchema: FormSchema = {
             label: 'Job Type',
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid,
-            lookup: JobTypeLookup
+            lookup: JobTypeLookup,
+            payload: {
+                key: 'jobTypeId',
+                pick: 'id'
+            }
         }),
         textField({
             name: 'position',
@@ -60,7 +68,11 @@ export const AuthorizedSignerSchema: FormSchema = {
             label: 'Identity Type',
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid,
-            lookup: IdentityLookup
+            lookup: IdentityLookup,
+            payload: {
+                key: 'identityTypeId',
+                pick: 'id'
+            }
         }),
         textField({
             name: 'identityNumber',

@@ -5,7 +5,9 @@ import {
   textareaField,  
   numberField,
   autocompleteField,
-  NumberField
+  NumberField,
+  LogicalOperator,
+  ConditionOperator
 } from '@/modules/dynamic-form-v2';
 import { FullGrid, HalfGrid, ThirdGrid } from '@/modules/dynamic-form-v2/grids';
 import { MapsUrlValidation, RequiredValidation, WebsiteValidation } from '@/modules/dynamic-form-v2/validation';
@@ -40,7 +42,7 @@ export const VendorCompanySchema: FormSchema = {
             lookup: SiteLookup,
             payload: {
                 key: 'siteId',
-                pick: 'value'
+                pick: 'id'
             }
         }),
 
@@ -49,7 +51,11 @@ export const VendorCompanySchema: FormSchema = {
             label: 'Business Entity', 
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid,
-            lookup: BusinessEntityLookup
+            lookup: BusinessEntityLookup,
+            payload: {
+                key: 'businessEntityTypeId',
+                pick: 'id'
+            }
         }),
 
         numberField({ 
@@ -72,12 +78,16 @@ export const VendorCompanySchema: FormSchema = {
           validation: { required: RequiredValidation.required }, 
           grid: ThirdGrid,
           lookup: CountryLookup,
+          payload: {
+            key: 'countryId',
+            pick: 'id'
+          },
           display: {
             readonly: true
           },
           defaultValue: {
-            value: 27,
-            label: 'Indonesia'
+            id: 27,
+            name: 'Indonesia'
           }
         }),
         autocompleteField({ 
@@ -86,7 +96,11 @@ export const VendorCompanySchema: FormSchema = {
           validation: { required: RequiredValidation.required }, 
           grid: ThirdGrid,
           lookup: ProvinceLookup,
-          dependency: { parent: 'country.value', clearOnChange: true }
+          payload: {
+            key: 'provinceId',
+            pick: 'id'
+          },
+          dependency: { parent: 'country.id', clearOnChange: true, disableWhenEmpty: true }
         }),
         autocompleteField({ 
           name: 'city', 
@@ -94,7 +108,11 @@ export const VendorCompanySchema: FormSchema = {
           validation: { required: RequiredValidation.required }, 
           grid: ThirdGrid,
           lookup: CityLookup,
-          dependency: { parent: 'province.value', clearOnChange: true }
+          payload: {
+            key: 'cityId',
+            pick: 'id'
+          },
+          dependency: { parent: 'province.id', clearOnChange: true, disableWhenEmpty: true }
         }),
         numberField({ 
           name: 'postalCode', 

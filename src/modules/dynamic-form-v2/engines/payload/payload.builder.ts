@@ -1,4 +1,4 @@
-import type { FormState } from '../../interfaces';
+import type { FieldSchema, FormState } from '../../interfaces';
 import { FormSchema } from '../../interfaces';
 import { SchemaEngine } from '../schema/schema.engine';
 import { VisibilityEngine } from '../visibility/visibility.engine';
@@ -36,16 +36,20 @@ export class PayloadBuilder {
             if (field.type === 'FORM' && field.nested) {
                 if (field.nested.multiple) {
                     if (Array.isArray(val) && val.length > 0) {
-                        payload[field.name] = val; // Nested form values are typically already built/clean if processed bottom-up, but for simple payload just take values
+                        // payload[field.name] = val; // Nested form values are typically already built/clean if processed bottom-up, but for simple payload just take values
+                        this.mapPayload(payload, field, val);
+
                     }
                 } else {
                     // Single nested form
                     if (typeof val === 'object' && Object.keys(val).length > 0) {
-                        payload[field.name] = val;
+                        // payload[field.name] = val;
+                        this.mapPayload(payload, field, val);
                     }
                 }
             } else {
-                payload[field.name] = val;
+                // payload[field.name] = val;
+                this.mapPayload(payload, field, val);
             }
         }
 
@@ -63,7 +67,8 @@ export class PayloadBuilder {
             const val = ObjectUtil.get(formState.values, field.name);
 
             if (val !== undefined) {
-                payload[field.name] = val;
+                // payload[field.name] = val;
+                this.mapPayload(payload, field, val);
             }
         }
 
@@ -93,7 +98,8 @@ export class PayloadBuilder {
             const val = ObjectUtil.get(formState.values, field.name);
 
             if (val !== undefined && val !== null) {
-                payload[field.name] = val;
+                // payload[field.name] = val;
+                this.mapPayload(payload, field, val);
             }
         }
 
@@ -113,5 +119,20 @@ export class PayloadBuilder {
         if (!isVisible || isReadonly) return undefined;
 
         return ObjectUtil.get(formState.values, field.name);
+    }
+
+    private static mapPayload( payload: Record<string, unknown>, field: FieldSchema, value: unknown ) {
+        if (!field.payload) {
+            payload[field.name] = value;
+            return;
+        }
+
+        const pick = field.payload.pick ?? 'id';
+
+        if (Array.isArray(value)) {
+            payload[field.payload.key] = value.map(item => (item as Record<string, any>)[pick]);
+        } else {
+            payload[field.payload.key] = (value as Record<string, any>)[pick];
+        }
     }
 }

@@ -36,7 +36,11 @@ const CompetencyInlineSchema: FormSchema = {
             label: 'Competency',
             validation: { required: true },
             grid: FullGrid,
-            lookup: CompetencyLookup
+            lookup: CompetencyLookup,
+            payload: {
+                key: 'competencyId',
+                pick: 'id'
+            }
         }),
       ]
     },
@@ -78,6 +82,10 @@ export const VendorCompetencySchema: FormSchema = {
             grid: FullGrid, 
             props: { 
                 documentType: BusinessLicenseConstants.DOCUMENT_ID 
+            },
+            payload: {
+                key: 'fileId',
+                pick: 'id'
             }
         }),
         ]

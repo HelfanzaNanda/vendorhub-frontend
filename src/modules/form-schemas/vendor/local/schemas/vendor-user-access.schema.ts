@@ -59,7 +59,11 @@ const UserAccessSchema: FormSchema = {
                     label: 'Position',
                     validation: { required: RequiredValidation.required },
                     grid: HalfGrid,
-                    lookup: PositionLookup
+                    lookup: PositionLookup,
+                    payload: {
+                        key: 'positionId',
+                        pick: 'id'
+                    }
                 }),
 
                 phoneField({
@@ -94,7 +98,11 @@ const UserAccessSchema: FormSchema = {
                     validation: { required: RequiredValidation.required },
                     grid: HalfGrid,
                     multiple: true,
-                    lookup: RoleLookup
+                    lookup: RoleLookup,
+                    payload: {
+                        key: 'roleIds',
+                        pick: 'id'
+                    }
                 }),
 
                 autocompleteField({
@@ -103,7 +111,11 @@ const UserAccessSchema: FormSchema = {
                     validation: { required: RequiredValidation.required },
                     grid: HalfGrid,
                     multiple: true,
-                    lookup: AreaLookup
+                    lookup: AreaLookup,
+                    payload: {
+                        key: 'areaIds',
+                        pick: 'id'
+                    }
                 }),
                 fileField({
                     name: 'fileId',
@@ -111,6 +123,10 @@ const UserAccessSchema: FormSchema = {
                     grid: HalfGrid,
                     props: {
                         documentType: UserAccessConstants.DOCUMENT_ID
+                    },
+                    payload: {
+                        key: 'fileId',
+                        pick: 'id'
                     }
                 }),
             ]

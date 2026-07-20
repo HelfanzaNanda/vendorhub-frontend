@@ -4,9 +4,9 @@ import { HttpMethod } from '@/modules/dynamic-form-v2/enums/http-method.enum';
 export const CityLookup: LookupSchema = {
   endpoint: '/lookups/cities',
   method: HttpMethod.GET,
-  valueField: 'value',
-  labelField: 'label',
+  valueField: 'id',
+  labelField: 'name',
   params: {
-    provinceId: '${province.value}',
+    provinceId: '${province.id}',
   },
 };

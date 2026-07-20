@@ -30,7 +30,11 @@ export const ShareholderSchema: FormSchema = {
             label: 'Title',
             validation: { required: RequiredValidation.required }, 
             grid: QuarterGrid,
-            lookup: TitleLookup
+            lookup: TitleLookup,
+            payload: {
+                key: 'titleId',
+                pick: 'id'
+            }
         }),
         textField({
             name: 'fullName',
@@ -57,6 +61,10 @@ export const ShareholderSchema: FormSchema = {
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid,
             lookup: IdentityLookup,
+            payload: {
+                key: 'identityTypeId',
+                pick: 'id'
+            },
             display: {
                 visible : {
                     operator : LogicalOperator.AND,

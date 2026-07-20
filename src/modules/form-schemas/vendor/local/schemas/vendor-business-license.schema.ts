@@ -32,11 +32,15 @@ export const KbliNestedSchema: FormSchema = {
       layout: FormLayout.CARD,
       fields: [
         autocompleteField({
-            name: 'kbliId',
+            name: 'kbli',
             label: 'KBLI',
             validation: { required: RequiredValidation.required },
             grid: FullGrid,
-            lookup: KbliLookup
+            lookup: KbliLookup,
+            payload: {
+                key: 'kbliId',
+                pick: 'id'
+            }
         }),
         textField({
             name: 'number',

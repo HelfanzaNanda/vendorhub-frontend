@@ -33,7 +33,11 @@ const BankAccountSchema: FormSchema = {
             label: 'Country',
             validation: { required: RequiredValidation.required },
             grid: HalfGrid,
-            lookup: CountryLookup
+            lookup: CountryLookup,
+            payload: {
+                key: 'countryId',
+                pick: 'id'
+            }
         }),
 
         autocompleteField({
@@ -41,7 +45,12 @@ const BankAccountSchema: FormSchema = {
             label: 'Bank',
             validation: { required: RequiredValidation.required },
             grid: HalfGrid,
-            lookup: BankLookup
+            lookup: BankLookup,
+            payload: {
+                key: 'bankId',
+                pick: 'id'
+            },
+            dependency: { parent: 'country.id', clearOnChange: true, disableWhenEmpty: true }
         }),
 
         autocompleteField({
@@ -49,7 +58,12 @@ const BankAccountSchema: FormSchema = {
             label: 'Bank Branch',
             validation: { required: RequiredValidation.required },
             grid: HalfGrid,
-            lookup: BankBranchLookup
+            lookup: BankBranchLookup,
+            payload: {
+                key: 'bankBranchId',
+                pick: 'id'
+            },
+            dependency: { parent: 'bank.id', clearOnChange: true, disableWhenEmpty: true }
         }),
 
         autocompleteField({
@@ -57,7 +71,11 @@ const BankAccountSchema: FormSchema = {
             label: 'Currency',
             validation: { required: RequiredValidation.required },
             grid: HalfGrid,
-            lookup: CurrencyLookup
+            lookup: CurrencyLookup,
+            payload: {
+                key: 'currencyId',
+                pick: 'id'
+            }
         }),
 
         textField({
@@ -85,6 +103,10 @@ const BankAccountSchema: FormSchema = {
             grid: HalfGrid, 
             props: { 
                 documentType: BankConstants.DOCUMENT_ID
+            },
+            payload: {
+                key: 'fileId',
+                pick: 'id'
             }
         }),
        

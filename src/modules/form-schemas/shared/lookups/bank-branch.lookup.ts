@@ -4,9 +4,9 @@ import { HttpMethod } from '@/modules/dynamic-form-v2/enums/http-method.enum';
 export const BankBranchLookup: LookupSchema = {
   endpoint: '/lookups/bank-branchs',
   method: HttpMethod.GET,
-  valueField: 'value',
-  labelField: 'label',
+  valueField: 'id',
+  labelField: 'name',
   params: {
-    bankId: '${bank.value}',
+    bankId: '${bank.id}',
   }
 };

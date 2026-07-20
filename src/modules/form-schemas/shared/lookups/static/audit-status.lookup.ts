@@ -4,14 +4,14 @@ export const AuditStatusLookup: LookupSchema = {
     type: 'STATIC',
     options: [
         {
-            value: 'AUDIT',
-            label: 'AUDIT'
+            id: 'AUDIT',
+            name: 'AUDIT'
         },
         {
-            value: 'UNAUDIT',
-            label: 'UNAUDIT'
+            id: 'UNAUDIT',
+            name: 'UNAUDIT'
         },
     ],
-    labelField: 'label',
-    valueField: 'value'
+    labelField: 'name',
+    valueField: 'id'
 };

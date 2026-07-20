@@ -4,14 +4,14 @@ export const ReportTypeLookup: LookupSchema = {
     type: 'STATIC',
     options: [
         {
-            value: 'ANNUAL',
-            label: 'ANNUAL'
+            id: 'ANNUAL',
+            name: 'ANNUAL'
         },
         {
-            value: 'INTERIM',
-            label: 'INTERIM'
+            id: 'INTERIM',
+            name: 'INTERIM'
         }
     ],
-    labelField: 'label',
+    labelField: 'name',
     valueField: 'value'
 };
