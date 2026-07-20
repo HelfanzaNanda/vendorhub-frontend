@@ -4,10 +4,10 @@ export const VendorFinancialReportTable: TableConfigSchema = {
   endpoint: `/vendor-financial-report-temps`, // :vendorTempId will be replaced by form context value
   columns: [
     { field: 'year', title: 'Year' },
-    { field: 'periode', title: 'Periode' },
-    { field: 'auditType', title: 'Audit Type' },
+    { field: 'reportType', title: 'reportType' },
+    { field: 'auditStatus', title: 'Audit Status' },
     { field: 'currency.name', title: 'Currency' },
-    { field: 'file.fileName', title: 'Filename' },
+    { field: 'file.filename', title: 'File' },
   ],
   sortable: true,
   searchable: true,

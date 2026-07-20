@@ -10,7 +10,7 @@ import {
   fileField
 } from '@/modules/dynamic-form-v2';
 
-import { LicenseStatus, LicenseCategory } from '@/modules/form-schemas/vendor/common';
+import { LicenseStatus, LicenseCategory, DocumentType } from '@/modules/form-schemas/vendor/common';
 import { 
   BusinessLicenseConstants,
 } from '@/modules/form-schemas/vendor/common';
@@ -78,8 +78,12 @@ export const VendorBusinessLicenseSchema: FormSchema = {
             name: 'fileId', 
             label: 'NIB Document', 
             grid: FullGrid, 
-            props: { 
-                documentType: BusinessLicenseConstants.DOCUMENT_ID 
+            file: { 
+                documentTypeCode: DocumentType.BUSINESS_LICENSE 
+            },
+            payload: {
+                key: 'fileId',
+                pick: 'id'
             }
         }),
       ]

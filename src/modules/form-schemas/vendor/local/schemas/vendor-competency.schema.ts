@@ -80,8 +80,8 @@ export const VendorCompetencySchema: FormSchema = {
             name: 'fileId', 
             label: 'NIB Document', 
             grid: FullGrid, 
-            props: { 
-                documentType: BusinessLicenseConstants.DOCUMENT_ID 
+            file: { 
+                documentTypeCode: DocumentType.BUSINESS_LICENSE 
             },
             payload: {
                 key: 'fileId',

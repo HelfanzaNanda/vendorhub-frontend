@@ -14,7 +14,7 @@ import {
 } from '@/modules/dynamic-form-v2';
 import {  RequiredValidation } from '@/modules/dynamic-form-v2/validation';
 import { FullGrid, HalfGrid } from '@/modules/dynamic-form-v2/grids';
-import { PersonnelConstants, PersonnelType } from '../../common';
+import { DocumentType, PersonnelConstants, PersonnelType } from '../../common';
 import { IdentityLookup, JobTypeLookup, PrivyVerification, TitleLookup } from '@/modules/form-schemas/shared';
 
 export const AuthorizedSignerSchema: FormSchema = {
@@ -122,8 +122,8 @@ export const AuthorizedSignerSchema: FormSchema = {
             name: 'authorityDocument', 
             label: 'Authority Document', 
             grid: HalfGrid, 
-            props: { 
-                documentType: PersonnelType.AUTHORIZED_SIGNER 
+            file: { 
+                documentTypeCode: DocumentType.OTHER 
             },
             display: {
                 visible : {
@@ -136,6 +136,10 @@ export const AuthorizedSignerSchema: FormSchema = {
                         }
                     ]
                 }
+            },
+            payload: {
+                key: 'fileId',
+                pick: 'id'
             }
         }),
         dateField({ 

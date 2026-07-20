@@ -11,7 +11,7 @@ import {
 } from '@/modules/dynamic-form-v2';
 import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
 import { FullGrid, HalfGrid } from '@/modules/dynamic-form-v2/grids';
-import { BankConstants } from '@/modules/form-schemas/vendor/common';
+import { BankConstants, DocumentType } from '@/modules/form-schemas/vendor/common';
 import { BankBranchLookup, BankLookup, CountryLookup, CurrencyLookup } from '@/modules/form-schemas/shared';
 import { VendorBankTable } from '@/modules/form-schemas/shared/tables/vendor-bank.table';
 
@@ -102,7 +102,7 @@ const BankAccountSchema: FormSchema = {
             label: 'Bank Statement / Passbook Document', 
             grid: HalfGrid, 
             file: {
-                documentTypeCode: BankConstants.DOCUMENT_ID
+                documentTypeCode: DocumentType.BANK_STATEMENT
             },
             payload: {
                 key: 'fileId',

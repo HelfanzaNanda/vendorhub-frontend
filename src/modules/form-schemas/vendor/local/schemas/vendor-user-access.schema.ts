@@ -14,7 +14,7 @@ import {
     DateUtil
 } from '@/modules/dynamic-form-v2';
 
-import { UserAccessConstants, UserAccessStatus } from '@/modules/form-schemas/vendor/common';
+import { DocumentType, UserAccessConstants, UserAccessStatus } from '@/modules/form-schemas/vendor/common';
 import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
 import { FullGrid, HalfGrid, QuarterGrid, ThirdGrid, TwoThirdsGrid } from '@/modules/dynamic-form-v2/grids';
 import { RoleLookup, PositionLookup, AreaLookup, PhoneVerification, EmailVerification } from '@/modules/form-schemas/shared';
@@ -122,7 +122,7 @@ const UserAccessSchema: FormSchema = {
                     label: 'Uploaded File',
                     grid: HalfGrid,
                     props: {
-                        documentType: UserAccessConstants.DOCUMENT_ID
+                        documentType: DocumentType.UMAN
                     },
                     payload: {
                         key: 'fileId',

@@ -8,7 +8,7 @@ import {
   dateField,
   numberField
 } from '@/modules/dynamic-form-v2';
-import { FullGrid, HalfGrid, QuarterGrid } from '@/modules/dynamic-form-v2/grids';
+import { FullGrid, HalfGrid, QuarterGrid, ThirdGrid, TwoThirdsGrid } from '@/modules/dynamic-form-v2/grids';
 import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
 
 import { DocumentConstants, DocumentType } from '@/modules/form-schemas/vendor/common';
@@ -27,24 +27,27 @@ export const VendorDocumentSchema: FormSchema = {
         layout: FormLayout.CARD,
         fields: [
             textField({
-                name: 'number',
+                name: 'npwp.number',
                 label: 'NPWP',
                 grid: HalfGrid,
                 validation: { required: RequiredValidation.required }
             }),
             textareaField({
-                name: 'address',
+                name: 'npwp.address',
                 label: 'Address',
                 grid: FullGrid,
                 validation: { required: RequiredValidation.required }
             }),
             fileField({
-                name: 'file',
+                name: 'npwp.file',
                 label: 'Attachment',
                 grid: FullGrid,
+                file: {
+                    documentTypeCode: DocumentType.NPWP
+                },
                 validation: { required: RequiredValidation.required },
                 payload: {
-                    key: 'fileId',
+                    key: 'npwp.fileId',
                     pick: 'id'
                 }
             }),
@@ -58,9 +61,9 @@ export const VendorDocumentSchema: FormSchema = {
         layout: FormLayout.CARD,
         fields: [
             switchField({
-                name: 'taxpayerStatus',
+                name: 'taxpayer.taxpayerStatus',
                 label: 'Taxpayer Status',
-                grid: QuarterGrid,
+                grid: ThirdGrid,
                 validation: { required: RequiredValidation.required },
                 options: [
                     { label: 'PKP', value: 'PKP' },
@@ -68,18 +71,21 @@ export const VendorDocumentSchema: FormSchema = {
                 ]
             }),
             dateField({
-                name: 'publishedDate',
+                name: 'taxpayer.publishedDate',
                 label: 'Date',
-                grid: QuarterGrid,
+                grid: ThirdGrid,
                 validation: { required: RequiredValidation.required }
             }),
             fileField({
-                name: 'file',
+                name: 'taxpayer.file',
                 label: 'Attachment',
-                grid: QuarterGrid,
+                grid: FullGrid,
+                file: {
+                    documentTypeCode: DocumentType.TAXPAYER_STATUS
+                },
                 validation: { required: RequiredValidation.required },
                 payload: {
-                    key: 'fileId',
+                    key: 'taxpayer.fileId',
                     pick: 'id'
                 }
             }),
@@ -93,24 +99,27 @@ export const VendorDocumentSchema: FormSchema = {
         layout: FormLayout.CARD,
         fields: [
             numberField({
-                name: 'number',
+                name: 'deedOfEstablishment.number',
                 label: 'No',
-                grid: QuarterGrid,
+                grid: ThirdGrid,
                 validation: { required: RequiredValidation.required },
             }),
             dateField({
-                name: 'publishedDate',
+                name: 'deedOfEstablishment.publishedDate',
                 label: 'Date',
-                grid: QuarterGrid,
+                grid: ThirdGrid,
                 validation: { required: RequiredValidation.required }
             }),
             fileField({
-                name: 'file',
+                name: 'deedOfEstablishment.file',
                 label: 'Attachment',
-                grid: QuarterGrid,
+                grid: FullGrid,
+                file: {
+                    documentTypeCode: DocumentType.DEED_OF_ESTABLISHMENT
+                },
                 validation: { required: RequiredValidation.required },
                 payload: {
-                    key: 'fileId',
+                    key: 'deedOfEstablishment.fileId',
                     pick: 'id'
                 }
             }),
@@ -124,24 +133,27 @@ export const VendorDocumentSchema: FormSchema = {
         layout: FormLayout.CARD,
         fields: [
             numberField({
-                name: 'number',
+                name: 'deedOfAmendment.number',
                 label: 'No',
-                grid: QuarterGrid,
+                grid: ThirdGrid,
                 validation: { required: RequiredValidation.required },
             }),
             dateField({
-                name: 'publishedDate',
+                name: 'deedOfAmendment.publishedDate',
                 label: 'Date',
-                grid: QuarterGrid,
+                grid: ThirdGrid,
                 validation: { required: RequiredValidation.required }
             }),
             fileField({
-                name: 'file',
+                name: 'deedOfAmendment.file',
                 label: 'Attachment',
-                grid: QuarterGrid,
+                grid: FullGrid,
+                file: {
+                    documentTypeCode: DocumentType.DEED_OF_AMENDMENT
+                },
                 validation: { required: RequiredValidation.required },
                 payload: {
-                    key: 'fileId',
+                    key: 'deedOfAmendment.fileId',
                     pick: 'id'
                 }
             }),
@@ -155,12 +167,15 @@ export const VendorDocumentSchema: FormSchema = {
         layout: FormLayout.CARD,
         fields: [
             fileField({
-                name: 'file',
+                name: 'organizationStructure.file',
                 label: 'Attachment',
-                grid: QuarterGrid,
+                grid: FullGrid,
+                file: {
+                    documentTypeCode: DocumentType.ORGANIZATIONAL_STRUCTURE
+                },
                 validation: { required: RequiredValidation.required },
                 payload: {
-                    key: 'fileId',
+                    key: 'organizationStructure.fileId',
                     pick: 'id'
                 }
             }),

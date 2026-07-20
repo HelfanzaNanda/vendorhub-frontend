@@ -12,7 +12,7 @@ import {
 } from '@/modules/dynamic-form-v2';
 import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
 import { FullGrid, HalfGrid } from '@/modules/dynamic-form-v2/grids';
-import { FinancialReportConstants } from '@/modules/form-schemas/vendor/common';
+import { DocumentType, FinancialReportConstants } from '@/modules/form-schemas/vendor/common';
 import { CurrencyLookup, ReportTypeLookup } from '@/modules/form-schemas/shared';
 import { VendorFinancialReportTable } from '@/modules/form-schemas/shared/tables/vendor-financial-report.table';
 import { AuditStatusLookup } from '@/modules/form-schemas/shared/lookups/static/audit-status.lookup';
@@ -56,8 +56,12 @@ const FinancialReportInlineSchema: FormSchema = {
             name: 'fileId', 
             label: 'Financial Report Document', 
             grid: HalfGrid, 
-            props: { 
-                documentType: FinancialReportConstants.DOCUMENT_ID 
+            file: { 
+                documentTypeCode: DocumentType.FINANCIAL_STATEMENT 
+            },
+            payload: {
+                key: 'fileId',
+                pick: 'id'
             }
         }),
       ]

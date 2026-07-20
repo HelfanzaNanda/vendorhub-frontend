@@ -11,7 +11,7 @@ import {
 } from '@/modules/dynamic-form-v2';
 import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
 import { FullGrid, HalfGrid } from '@/modules/dynamic-form-v2/grids';
-import { CustomerConstants } from '../../common';
+import { CustomerConstants, DocumentType } from '../../common';
 import { YearLookup } from '@/modules/form-schemas/shared';
 
 export const CustomerReferenceSchema: FormSchema = {
@@ -62,9 +62,8 @@ export const CustomerReferenceSchema: FormSchema = {
           label: 'Attachment', 
           validation: { required: RequiredValidation.required }, 
           grid: HalfGrid, 
-          props: { 
-            // documentType: DocumentType.CUSTOMER_REFERENCE 
-            documentType: 'CUSTOMER_REFERENCE'
+          file: {
+            documentTypeCode: DocumentType.CUSTOMER_REFERENCE
           }, 
           payload: {
             key: 'fileId',

@@ -93,7 +93,7 @@ export const FileField: React.FC<BaseFieldProps> = ({
             formData.append('file', file);
 
             // Generic upload endpoint, vendor agnostic
-            const response = await apiClient.post('/upload', formData, {
+            const response = await api.post('/files/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -123,11 +123,74 @@ export const FileField: React.FC<BaseFieldProps> = ({
         onChange(null);
     };
 
-    const handleDownload = () => {
-        const fileValue = value as { url?: string } | undefined | null;
+    const handleDownload = async () => {
+        console.log('value : ', value);
+        const file = value as {
+            uuid?: string;
+            originalFileName?: string;
+        } | null;
 
-        if (fileValue?.url) {
-            window.open(fileValue.url, '_blank');
+        
+
+        if (!file?.uuid) return;
+
+        try {
+            const response = await apiClient.get(
+                `/files/${file.uuid}/download`,
+                {
+                    responseType: 'blob',
+                }
+            );
+
+            const blob = new Blob([response.data], {
+                type: response.headers['content-type'],
+            });
+
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+
+            link.href = url;
+            link.download = file.originalFileName ?? 'download';
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            link.remove();
+
+            URL.revokeObjectURL(url);
+
+        } catch (err) {
+            console.error('Download failed', err);
+        }
+    };
+
+    const handlePreview = async () => {
+        const file = value as {
+            uuid?: string;
+        } | null;
+
+        if (!file?.uuid) return;
+
+        try {
+            const response = await apiClient.get(
+                `/files/${file.uuid}/view`,
+                {
+                    responseType: 'blob',
+                }
+            );
+
+            const blob = new Blob([response.data], {
+                type: response.headers['content-type'],
+            });
+
+            const url = URL.createObjectURL(blob);
+
+            window.open(url, '_blank');
+
+        } catch (err) {
+            console.error(err);
         }
     };
 
