@@ -10,13 +10,13 @@ import {
   tableField,
   multiLookupField,
   treeAutocompleteField
-} from '@/modules/dynamic-form-v2';
+} from '@/modules/form-engine';
 
 import { CompetencyConstants, DocumentType, CustomerConstants, BusinessLicenseConstants } from '@/modules/form-schemas/vendor/common';
 import { CompetencyLookup, IssuedByLookup, KbliLookup } from '@/modules/form-schemas/shared/lookups';
-import { FullGrid, HalfGrid, ThirdGrid } from '@/modules/dynamic-form-v2/grids';
+import { FullGrid, HalfGrid, ThirdGrid } from '@/modules/form-engine/grids';
 import { CustomerReferenceSchema } from '../nested';
-import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
+import { RequiredValidation } from '@/modules/form-engine/validation';
 import { VendorCompetencyTable } from '@/modules/form-schemas/shared/tables/vendor-competency.table';
 
 

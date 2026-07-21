@@ -1,4 +1,4 @@
-import type { LookupSchema } from '@/modules/dynamic-form-v2';
+import type { LookupSchema } from '@/modules/form-engine';
 
 export const ReportTypeLookup: LookupSchema = {
     type: 'STATIC',

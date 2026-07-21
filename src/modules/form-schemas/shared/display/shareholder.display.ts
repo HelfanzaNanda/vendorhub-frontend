@@ -1,4 +1,4 @@
-import { ConditionOperator, DisplaySchema, LogicalOperator } from "@/modules/dynamic-form-v2";
+import { ConditionOperator, DisplaySchema, LogicalOperator } from "@/modules/form-engine";
 
 export const ShareholderDisplay: DisplaySchema = {
   visible: {

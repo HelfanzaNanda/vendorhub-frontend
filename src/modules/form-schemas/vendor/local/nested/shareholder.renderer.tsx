@@ -2,7 +2,7 @@
 
 import React, { useMemo, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
-import { TableField } from '@/modules/dynamic-form-v2/components/fields';
+import { TableField } from '@/modules/form-engine/components/fields';
 import { useQueryClient, useIsFetching } from '@tanstack/react-query';
 import { PersonnelType } from '@/modules/form-schemas/vendor/common';
 

@@ -8,9 +8,9 @@ import {
   NumberField,
   LogicalOperator,
   ConditionOperator
-} from '@/modules/dynamic-form-v2';
-import { FullGrid, HalfGrid, ThirdGrid } from '@/modules/dynamic-form-v2/grids';
-import { MapsUrlValidation, RequiredValidation, WebsiteValidation } from '@/modules/dynamic-form-v2/validation';
+} from '@/modules/form-engine';
+import { FullGrid, HalfGrid, ThirdGrid } from '@/modules/form-engine/grids';
+import { MapsUrlValidation, RequiredValidation, WebsiteValidation } from '@/modules/form-engine/validation';
 import { CountryLookup, ProvinceLookup, CityLookup, BusinessEntityLookup, SiteLookup } from '@/modules/form-schemas/shared';
 import { CompanyConstants } from '@/modules/form-schemas/vendor/common';
 

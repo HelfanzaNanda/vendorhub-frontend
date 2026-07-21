@@ -1,4 +1,4 @@
-import type { TableConfigSchema } from '@/modules/dynamic-form-v2/interfaces';
+import type { TableConfigSchema } from '@/modules/form-engine/interfaces';
 
 export const VendorFinancialReportTable: TableConfigSchema = {
   endpoint: `/vendor-financial-report-temps`, // :vendorTempId will be replaced by form context value

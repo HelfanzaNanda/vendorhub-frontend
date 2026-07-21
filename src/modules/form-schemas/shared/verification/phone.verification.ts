@@ -1,5 +1,5 @@
-import { VerificationAction } from '@/modules/dynamic-form-v2';
-import type { VerificationSchema } from '@/modules/dynamic-form-v2/interfaces/verification.interface';
+import { VerificationAction } from '@/modules/form-engine';
+import type { VerificationSchema } from '@/modules/form-engine/interfaces/verification.interface';
 
 export const PhoneVerification: VerificationSchema = {
   action: VerificationAction.CHECK_PHONE,

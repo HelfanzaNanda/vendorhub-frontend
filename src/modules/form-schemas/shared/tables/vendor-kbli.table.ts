@@ -1,4 +1,4 @@
-import type { TableConfigSchema } from '@/modules/dynamic-form-v2/interfaces';
+import type { TableConfigSchema } from '@/modules/form-engine/interfaces';
 
 export const VendorKbliTable: TableConfigSchema = {
   endpoint: `/vendor-industry-classification-temps`,

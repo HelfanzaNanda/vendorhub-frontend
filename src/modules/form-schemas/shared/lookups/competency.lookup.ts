@@ -1,6 +1,6 @@
-import type { LookupSchema } from '@/modules/dynamic-form-v2/interfaces/lookup.interface';
-import { HttpMethod } from '@/modules/dynamic-form-v2/enums/http-method.enum';
-import { TreeLookupSchema } from '@/modules/dynamic-form-v2';
+import type { LookupSchema } from '@/modules/form-engine/interfaces/lookup.interface';
+import { HttpMethod } from '@/modules/form-engine/enums/http-method.enum';
+import { TreeLookupSchema } from '@/modules/form-engine';
 
 export const CompetencyLookup: LookupSchema = {
   endpoint: '/lookups/competency-tree',

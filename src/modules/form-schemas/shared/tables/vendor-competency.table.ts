@@ -1,4 +1,4 @@
-import type { TableConfigSchema } from '@/modules/dynamic-form-v2/interfaces';
+import type { TableConfigSchema } from '@/modules/form-engine/interfaces';
 import { PersonnelType } from '../../vendor';
 
 export const VendorCompetencyTable: TableConfigSchema = {

@@ -8,9 +8,9 @@ import {
   textareaField, 
   fileField,
   tableField
-} from '@/modules/dynamic-form-v2';
-import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
-import { FullGrid, HalfGrid } from '@/modules/dynamic-form-v2/grids';
+} from '@/modules/form-engine';
+import { RequiredValidation } from '@/modules/form-engine/validation';
+import { FullGrid, HalfGrid } from '@/modules/form-engine/grids';
 import { BankConstants, DocumentType } from '@/modules/form-schemas/vendor/common';
 import { BankBranchLookup, BankLookup, CountryLookup, CurrencyLookup } from '@/modules/form-schemas/shared';
 import { VendorBankTable } from '@/modules/form-schemas/shared/tables/vendor-bank.table';

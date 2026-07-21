@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlaygroundLayout } from '@/modules/dynamic-form-v2/playground';
+import { PlaygroundLayout } from '@/modules/form-engine/playground';
 
 export default function DynamicFormPlaygroundPage() {
   return <PlaygroundLayout />;

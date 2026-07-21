@@ -1,5 +1,5 @@
-import type { LookupSchema } from '@/modules/dynamic-form-v2';
-import { AuthorizedSignerDocumentEnum } from '@/modules/dynamic-form-v2/enums/authorized-signer-document.enum';
+import type { LookupSchema } from '@/modules/form-engine';
+import { AuthorizedSignerDocumentEnum } from '@/modules/form-engine/enums/authorized-signer-document.enum';
 
 export const AuthorizedSignerDocumentTypeLookup: LookupSchema = {
     type: 'STATIC',

@@ -7,9 +7,9 @@ import {
   switchField,
   dateField,
   numberField
-} from '@/modules/dynamic-form-v2';
-import { FullGrid, HalfGrid, QuarterGrid, ThirdGrid, TwoThirdsGrid } from '@/modules/dynamic-form-v2/grids';
-import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
+} from '@/modules/form-engine';
+import { FullGrid, HalfGrid, QuarterGrid, ThirdGrid, TwoThirdsGrid } from '@/modules/form-engine/grids';
+import { RequiredValidation } from '@/modules/form-engine/validation';
 
 import { DocumentConstants, DocumentType } from '@/modules/form-schemas/vendor/common';
 

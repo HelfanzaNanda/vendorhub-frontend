@@ -12,11 +12,11 @@ import {
     fileField,
     tableField,
     DateUtil
-} from '@/modules/dynamic-form-v2';
+} from '@/modules/form-engine';
 
 import { DocumentType, UserAccessConstants, UserAccessStatus } from '@/modules/form-schemas/vendor/common';
-import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
-import { FullGrid, HalfGrid, QuarterGrid, ThirdGrid, TwoThirdsGrid } from '@/modules/dynamic-form-v2/grids';
+import { RequiredValidation } from '@/modules/form-engine/validation';
+import { FullGrid, HalfGrid, QuarterGrid, ThirdGrid, TwoThirdsGrid } from '@/modules/form-engine/grids';
 import { RoleLookup, PositionLookup, AreaLookup, PhoneVerification, EmailVerification } from '@/modules/form-schemas/shared';
 import { PhoneVerifyVerification } from '@/modules/form-schemas/shared/verification/phone.verification';
 import { VendorUserAccessTable } from '@/modules/form-schemas/shared/tables/vendor-user-access.table';

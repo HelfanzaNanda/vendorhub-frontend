@@ -3,9 +3,9 @@ import {
   FormLayout, 
   textField, 
   fileField
-} from '@/modules/dynamic-form-v2';
-import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
-import { HalfGrid } from '@/modules/dynamic-form-v2/grids';
+} from '@/modules/form-engine';
+import { RequiredValidation } from '@/modules/form-engine/validation';
+import { HalfGrid } from '@/modules/form-engine/grids';
 
 export const VendorTermsSchema: FormSchema = {
   id: 'vendor_terms',

@@ -7,9 +7,9 @@ import {
   ConditionOperator,
   numberField,
   LogicalOperator
-} from '@/modules/dynamic-form-v2';
-import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
-import { AutoGrid, FullGrid, HalfGrid, QuarterGrid, ThirdGrid } from '@/modules/dynamic-form-v2/grids';
+} from '@/modules/form-engine';
+import { RequiredValidation } from '@/modules/form-engine/validation';
+import { AutoGrid, FullGrid, HalfGrid, QuarterGrid, ThirdGrid } from '@/modules/form-engine/grids';
 import { PersonnelConstants } from '../../common';
 import { IdentityLookup, TitleLookup } from '@/modules/form-schemas/shared';
 

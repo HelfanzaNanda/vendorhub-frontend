@@ -1,12 +1,12 @@
-import { FormSchema, FormLayout, tableField, FieldType } from '@/modules/dynamic-form-v2';
-import { FullGrid } from '@/modules/dynamic-form-v2/grids';
-import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
+import { FormSchema, FormLayout, tableField, FieldType } from '@/modules/form-engine';
+import { FullGrid } from '@/modules/form-engine/grids';
+import { RequiredValidation } from '@/modules/form-engine/validation';
 import { VendorAuthorizedSignerTable, VendorBoardDirectorTable, VendorShareholderTable } from '@/modules/form-schemas/shared';
 import {
     PersonnelConstants,
 } from '@/modules/form-schemas/vendor/common';
 import { AuthorizedSignerSchema, BoardOfDirectorSchema, ShareholderSchema } from '../nested';
-import { fieldRendererRegistry } from '@/modules/dynamic-form-v2/renderers/registry/field-renderer.registry';
+import { fieldRendererRegistry } from '@/modules/form-engine/renderers/registry/field-renderer.registry';
 import { ShareholderTableRenderer } from '../nested/shareholder.renderer';
 
 // Dynamically inject custom renderer for Shareholder table validation and ownership summary

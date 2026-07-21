@@ -3,10 +3,10 @@
 import React, { useEffect } from 'react';
 import { Accordion, AccordionSummary, AccordionDetails, Box, Typography, IconButton } from '@mui/material';
 import { Add, Delete, ExpandMore } from '@mui/icons-material';
-import { FormRenderer } from '@/modules/dynamic-form-v2/renderers/form';
-import { useNestedForm } from '@/modules/dynamic-form-v2/hooks';
-import { NestedDynamicFormProvider } from '@/modules/dynamic-form-v2/context';
-import { AuthorizedSignerDocumentEnum } from '@/modules/dynamic-form-v2/enums/authorized-signer-document.enum';
+import { FormRenderer } from '@/modules/form-engine/renderers/form';
+import { useNestedForm } from '@/modules/form-engine/hooks';
+import { NestedDynamicFormProvider } from '@/modules/form-engine/context';
+import { AuthorizedSignerDocumentEnum } from '@/modules/form-engine/enums/authorized-signer-document.enum';
 
 export const AuthorizedSignerDocumentRenderer: React.FC<any> = React.memo((props) => {
     const { field } = props;
