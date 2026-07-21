@@ -12,8 +12,6 @@ import { api } from '@/services/api'
 
 
 import PageHeader from '@/components/shared/PageHeader'
-import VendorProfile from '@/modules/vendors/components/VendorProfile'
-import { localVendorSchema } from '@/modules/vendors/schemas/local'
 import { useAuthStore } from '@/features/auth/store'
 
 function UpdateVendorPageContent() {
@@ -56,9 +54,7 @@ function UpdateVendorPageContent() {
       />
       
       <Box className="flex-grow">
-        <VendorProfile 
-          schemaConfig={localVendorSchema} 
-        />
+        {/* VendorProfile was here */}
       </Box>
     </Box>
   )
