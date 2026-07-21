@@ -6,6 +6,7 @@ import {
   TabsLayout,
   TableLayout,
   TermsLayout,
+  DefaultLayout
 } from '../layout/layouts';
 import type { LayoutRegistry } from './layout-registry.interface';
 
@@ -16,4 +17,5 @@ export const layoutRegistry = {
   [FormLayout.TABS]: TabsLayout,
   [FormLayout.TABLE]: TableLayout,
   [FormLayout.TERMS]: TermsLayout,
+  [FormLayout.DEFAULT]: DefaultLayout,
 } as unknown as LayoutRegistry;

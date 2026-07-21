@@ -10,18 +10,32 @@ import {
   textareaField,
   ConditionOperator,
   dateField,
-  LogicalOperator
+  LogicalOperator,
+  formField,
+  FieldType
 } from '@/modules/dynamic-form-v2';
 import {  RequiredValidation } from '@/modules/dynamic-form-v2/validation';
 import { FullGrid, HalfGrid } from '@/modules/dynamic-form-v2/grids';
 import { DocumentType, PersonnelConstants, PersonnelType } from '../../common';
 import { IdentityLookup, JobTypeLookup, PrivyVerification, TitleLookup } from '@/modules/form-schemas/shared';
+import { AuthorizedSignerDocumentSchema } from './authorized-signer-document.schema';
+
+const authorizedSignerDocumentsField = formField({
+  name: 'authorizedSignerDocuments',
+  label: 'Authorized Signer Documents',
+  grid: FullGrid,
+  nested: {
+    multiple: true,
+    schema: AuthorizedSignerDocumentSchema
+  }
+});
+authorizedSignerDocumentsField.type = FieldType.AUTHORIZED_SIGNER_DOCUMENT_NESTED;
 
 export const AuthorizedSignerSchema: FormSchema = {
   id: PersonnelConstants.SECTION_AUTHORIZED_SIGNER_ID,
   title: PersonnelConstants.SECTION_AUTHORIZED_SIGNER_TITLE,
   code: PersonnelConstants.SECTION_AUTHORIZED_SIGNER_CODE,
-  layout: FormLayout.CARD,
+  layout: FormLayout.DEFAULT,
   sections: [
     {
       id: PersonnelConstants.SECTION_AUTHORIZED_SIGNER_ID,
@@ -160,6 +174,14 @@ export const AuthorizedSignerSchema: FormSchema = {
             }
         }),
       ]
-    }
+    },
+    {
+          id: PersonnelConstants.SECTION_AUTHORIZED_SIGNER_DOCUMENT_ID,
+          code: PersonnelConstants.SECTION_AUTHORIZED_SIGNER_DOCUMENT_CODE,
+          layout: FormLayout.CARD,
+          fields: [
+            authorizedSignerDocumentsField
+          ]
+        }
   ]
 };

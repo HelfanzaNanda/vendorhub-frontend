@@ -6,4 +6,6 @@ export enum FormLayout {
   STEPPER = 'STEPPER',
   GRID = 'GRID',
   TERMS = 'TERMS',
+  NESTED = 'NESTED',
+  DEFAULT = 'DEFAULT'
 }

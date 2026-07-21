@@ -1,4 +1,4 @@
-import { FormSchema, FormLayout, tableField } from '@/modules/dynamic-form-v2';
+import { FormSchema, FormLayout, tableField, FieldType } from '@/modules/dynamic-form-v2';
 import { FullGrid } from '@/modules/dynamic-form-v2/grids';
 import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
 import { VendorAuthorizedSignerTable, VendorBoardDirectorTable, VendorShareholderTable } from '@/modules/form-schemas/shared';
@@ -6,12 +6,30 @@ import {
     PersonnelConstants,
 } from '@/modules/form-schemas/vendor/common';
 import { AuthorizedSignerSchema, BoardOfDirectorSchema, ShareholderSchema } from '../nested';
+import { fieldRendererRegistry } from '@/modules/dynamic-form-v2/renderers/registry/field-renderer.registry';
+import { ShareholderTableRenderer } from '../nested/shareholder.renderer';
+
+// Dynamically inject custom renderer for Shareholder table validation and ownership summary
+(fieldRendererRegistry as any)['SHAREHOLDER_TABLE'] = ShareholderTableRenderer;
+
+const shareholderField = tableField({
+    name: PersonnelConstants.FIELD_SHAREHOLDERS,
+    label: PersonnelConstants.SECTION_SHAREHOLDER_TITLE,
+    helperText: PersonnelConstants.SECTION_SHAREHOLDER_DESCRIPTION,
+    grid: FullGrid,
+    table: VendorShareholderTable,
+    schema: ShareholderSchema,
+    validation: {
+        required: RequiredValidation.required
+    }
+});
+shareholderField.type = 'SHAREHOLDER_TABLE' as FieldType;
 
 export const VendorPersonnelSchema: FormSchema = {
     id: PersonnelConstants.SCHEMA_ID,
     title: PersonnelConstants.SCHEMA_TITLE,
     code: PersonnelConstants.SCHEMA_ID,
-    layout: FormLayout.CARD,
+    layout: FormLayout.DEFAULT,
     sections: [
         {
             id: PersonnelConstants.SECTION_BOARD_OF_DIRECTORS_ID,
@@ -38,17 +56,7 @@ export const VendorPersonnelSchema: FormSchema = {
             title: PersonnelConstants.SECTION_SHAREHOLDER_TITLE,
             layout: FormLayout.TABLE,
             fields: [
-                tableField({
-                    name: PersonnelConstants.FIELD_SHAREHOLDERS,
-                    label: PersonnelConstants.SECTION_SHAREHOLDER_TITLE,
-                    helperText: PersonnelConstants.SECTION_SHAREHOLDER_DESCRIPTION,
-                    grid: FullGrid,
-                    table: VendorShareholderTable,
-                    schema: ShareholderSchema,
-                    validation: {
-                        required: RequiredValidation.required
-                    }
-                })
+                shareholderField
             ]
         },
         {

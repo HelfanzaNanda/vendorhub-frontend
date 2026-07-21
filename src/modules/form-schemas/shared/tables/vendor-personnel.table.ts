@@ -13,6 +13,7 @@ export const VendorBoardDirectorTable: TableConfigSchema = {
   ],
   sortable: true,
   searchable: true,
+  pageSize: 5,
   pagination: true,
   selectable: true,
   actions: ['view', 'edit', 'delete']
@@ -32,6 +33,7 @@ export const VendorShareholderTable: TableConfigSchema = {
   searchable: true,
   pagination: true,
   selectable: true,
+  pageSize: 5,
   actions: ['view', 'edit', 'delete']
 };
 
@@ -48,5 +50,6 @@ export const VendorAuthorizedSignerTable: TableConfigSchema = {
   searchable: true,
   pagination: true,
   selectable: true,
+  pageSize: 5,
   actions: ['view', 'edit', 'delete']
 };

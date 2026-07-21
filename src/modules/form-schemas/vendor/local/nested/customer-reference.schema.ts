@@ -18,14 +18,14 @@ export const CustomerReferenceSchema: FormSchema = {
   id: CustomerConstants.SCHEMA_ID,
   title: CustomerConstants.SCHEMA_TITLE,
   code: CustomerConstants.SECTION_CODE,
-  layout: FormLayout.CARD,
+  layout: FormLayout.DEFAULT,
   sections: [
     {
       id: CustomerConstants.SECTION_ID,
       code: CustomerConstants.SECTION_CODE,
       title: CustomerConstants.SECTION_TITLE,
       description: CustomerConstants.SECTION_DESCRIPTION,
-      layout: FormLayout.CARD,
+      layout: FormLayout.DEFAULT,
       fields: [
         textField({
             name: 'name',

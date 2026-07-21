@@ -42,5 +42,11 @@ export const PersonnelConstants = {
   SECTION_AUTHORIZED_SIGNER_TITLE: 'Authorized Signer',
   SECTION_AUTHORIZED_SIGNER_DESCRIPTION: 'Manage personnel authorized to sign legal documents.',
 
+
+  SECTION_AUTHORIZED_SIGNER_DOCUMENT_ID: 'authorizedSignerDocument',
+  SECTION_AUTHORIZED_SIGNER_DOCUMENT_CODE: 'AUTHORIZED_SIGNER_DOCUMENT',
+  SECTION_AUTHORIZED_SIGNER_DOCUMENT_TITLE: 'Authorized Signer Document',
+  SECTION_AUTHORIZED_SIGNER_DOCUMENT_DESCRIPTION: 'Manage authorized signer documents.',
+
 } as const;
 

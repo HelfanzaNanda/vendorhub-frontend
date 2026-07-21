@@ -13,5 +13,6 @@ export interface TableConfigSchema {
     pagination?: boolean;
     exportable?: boolean;
     selectable?: boolean;
+    pageSize?: number;
     actions?: ('view' | 'edit' | 'delete')[];
 }

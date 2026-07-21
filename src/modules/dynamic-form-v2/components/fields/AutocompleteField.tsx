@@ -24,20 +24,26 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
     ? context.getValue(field.dependency.parent)
     : undefined;
 
+    const valueField = field.lookup?.valueField || 'id';
+    const labelField = field.lookup?.labelField || 'name';
+    
+
     useEffect(() => {
         let active = true;
 
-        if (field.lookup?.type === 'STATIC') {
-            setOptions(field.lookup?.options?.map(o => ({
-                value: o.id,
-                label: o.name
-            })) as OptionSchema[] || []);
+        
+        if (!field.lookup) {
+            setOptions((field.props?.options as OptionSchema[]) || []);
+            
             return undefined;
         }
 
-        if (!field.lookup) {
-            setOptions((field.props?.options as OptionSchema[]) || []);
-
+        if (field.lookup?.type === 'STATIC') {
+            const options = (field.lookup?.options ?? []).map((o) => ({
+                    id: o.id as string | number,
+                    name : o.name as string
+            }));
+            setOptions(options as OptionSchema[]);
             return undefined;
         }
 
@@ -50,12 +56,12 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
 
             try {
                 const formValues = context.values;
-
                 if (field.lookup?.type === 'STATIC') {
-                    setOptions(field.lookup?.options?.map(o => ({
-                        value: o.id,
-                        label: o.name
-                    })) as OptionSchema[] || []);
+                    const options = (field.lookup?.options ?? []).map((o) => ({
+                        id: o.id as string | number,
+                        name : o.name as string
+                    }));
+                    setOptions(options as OptionSchema[]);
                     return;
                 }
 
@@ -128,8 +134,7 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
     }, [parentValue]);
 
     // const multiple = field.props?.multiple === true;
-    const valueField = field.lookup?.valueField || 'id';
-    const labelField = field.lookup?.labelField || 'name';
+    
 
     const dependencyDisabled = field.dependency?.disableWhenEmpty && (parentValue == null || parentValue === '');
 

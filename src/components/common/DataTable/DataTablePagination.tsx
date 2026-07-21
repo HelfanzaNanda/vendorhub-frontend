@@ -69,17 +69,20 @@ export function DataTablePagination<TData>({
             onChange={(e: SelectChangeEvent<number>) => onPageSizeChange(Number(e.target.value))}
             sx={{
               height: 32,
-              '& .MuiSelect-select': {
+              '& .  ': {
                 py: 0,
-                pl: 1,
-                pr: 3,
+                pl: 4,
+                pr: 5,
                 display: 'flex',
                 alignItems: 'center',
-                fontSize: '0.875rem'
-              }
+                fontSize: '0.875rem',
+              },
+              '& .MuiSelect-icon': {
+                    ml: 10
+                }
             }}
           >
-            {[10, 25, 50, 100].map((size) => (
+            {[5, 10, 25, 50, 100].map((size) => (
               <MenuItem key={size} value={size} sx={{ fontSize: '0.875rem' }}>
                 {size}
               </MenuItem>

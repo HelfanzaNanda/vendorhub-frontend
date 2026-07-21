@@ -24,7 +24,7 @@ const CompetencyInlineSchema: FormSchema = {
   id: CompetencyConstants.SECTION_COMPETENCY_ID,
   title: CompetencyConstants.SECTION_COMPETENCY_TITLE,
   code: CompetencyConstants.SECTION_COMPETENCY_CODE,
-  layout: FormLayout.CARD,
+  layout: FormLayout.DEFAULT,
   sections: [
     {
       id: CompetencyConstants.SECTION_COMPETENCY_ID,
@@ -90,7 +90,6 @@ const CompetencyInlineSchema: FormSchema = {
     {
       id: CustomerConstants.SECTION_ID,
       code: CustomerConstants.SECTION_CODE,
-      title: CustomerConstants.SECTION_TITLE,
       layout: FormLayout.CARD,
       fields: [
         formField({
@@ -111,7 +110,7 @@ export const VendorCompetencySchema: FormSchema = {
   id: CompetencyConstants.SCHEMA_ID,
   title: CompetencyConstants.SCHEMA_TITLE,
   code: CompetencyConstants.SECTION_COMPETENCY_CODE,
-  layout: FormLayout.CARD,
+  layout: FormLayout.DEFAULT,
   sections: [
     {
         id: BusinessLicenseConstants.SECTION_LICENSE_INFO_ID,

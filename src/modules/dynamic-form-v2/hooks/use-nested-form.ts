@@ -7,117 +7,117 @@ import { useDynamicFormContext } from '../context';
 import { SchemaEngine } from '../engines';
 
 export const useNestedForm = (options: UseNestedFormOptions): UseNestedFormResult => {
-  const context = useDynamicFormContext();
-  const { field: propsField, fieldPath } = options;
+    const context = useDynamicFormContext();
+    const { field: propsField, fieldPath } = options;
 
-  const field = useMemo(() => {
-    if (propsField) return propsField;
+    const field = useMemo(() => {
+        if (propsField) return propsField;
 
-    if (fieldPath && context.schema) {
-      const found = SchemaEngine.findField(context.schema, fieldPath);
+        if (fieldPath && context.schema) {
+            const found = SchemaEngine.findField(context.schema, fieldPath);
 
-      if (found) return found;
-    }
+            if (found) return found;
+        }
 
-    throw new Error('useNestedForm requires either field or a valid fieldPath');
-  }, [propsField, fieldPath, context.schema]);
+        throw new Error('useNestedForm requires either field or a valid fieldPath');
+    }, [propsField, fieldPath, context.schema]);
 
-  const path = field.name || field.code || field.id;
-  const rawValue = context.getValue(path);
-  
-  const nestedConfig = field.nested || {};
-  const isMultiple = !!nestedConfig.multiple;
-  
-  const schema = useMemo(() => {
-    if (typeof nestedConfig.schema === 'object') return nestedConfig.schema;
-    const schemaId = nestedConfig.schema || nestedConfig.schemaId;
-    if (!schemaId) return undefined;
-    return SchemaEngine.resolveNestedSchema(schemaId);
-  }, [nestedConfig.schema, nestedConfig.schemaId]);
+    const path = field.name || field.code || field.id;
+    const rawValue = context.getValue(path);
 
-  // Normalize items based on multiple flag
-  const items = useMemo(() => {
-    if (isMultiple) {
-      return (Array.isArray(rawValue) ? rawValue : []) as Array<Record<string, unknown>>;
-    }
+    const nestedConfig = field.nested || {};
+    const isMultiple = !!nestedConfig.multiple;
 
-    return (rawValue && typeof rawValue === 'object' ? rawValue : {}) as Record<string, unknown>;
-  }, [isMultiple, rawValue]);
+    const schema = useMemo(() => {
+        if (typeof nestedConfig.schema === 'object') return nestedConfig.schema;
+        const schemaId = nestedConfig.schema || nestedConfig.schemaId;
+        if (!schemaId) return undefined;
+        return SchemaEngine.resolveNestedSchema(schemaId);
+    }, [nestedConfig.schema, nestedConfig.schemaId]);
 
-  const count = isMultiple ? (items as unknown[]).length : (Object.keys(items).length > 0 ? 1 : 0);
-  const isEmpty = count === 0;
+    // Normalize items based on multiple flag
+    const items = useMemo(() => {
+        if (isMultiple) {
+            return (Array.isArray(rawValue) ? rawValue : []) as Array<Record<string, unknown>>;
+        }
 
-  const add = useCallback((item: Record<string, unknown> = {}) => {
-    if (!isMultiple) {
-      context.setValue(path, item);
-      
-return;
-    }
+        return (rawValue && typeof rawValue === 'object' ? rawValue : {}) as Record<string, unknown>;
+    }, [isMultiple, rawValue]);
 
-    const current = Array.isArray(rawValue) ? rawValue : [];
+    const count = isMultiple ? (items as unknown[]).length : (Object.keys(items).length > 0 ? 1 : 0);
+    const isEmpty = count === 0;
 
-    context.setValue(path, [...current, item]);
-  }, [isMultiple, context, path, rawValue]);
+    const add = useCallback((item: Record<string, unknown> = {}) => {
+        if (!isMultiple) {
+            context.setValue(path, item);
 
-  const remove = useCallback((index: number) => {
-    if (!isMultiple) {
-      context.setValue(path, undefined);
-      
-return;
-    }
+            return;
+        }
 
-    const current = Array.isArray(rawValue) ? rawValue : [];
+        const current = Array.isArray(rawValue) ? rawValue : [];
 
-    context.setValue(path, current.filter((_, i) => i !== index));
-  }, [isMultiple, context, path, rawValue]);
+        context.setValue(path, [...current, item]);
+    }, [isMultiple, context, path, rawValue]);
 
-  const update = useCallback((index: number, value: Record<string, unknown>) => {
-    if (!isMultiple) {
-      context.setValue(path, value);
-      
-return;
-    }
+    const remove = useCallback((index: number) => {
+        if (!isMultiple) {
+            context.setValue(path, undefined);
 
-    const current = Array.isArray(rawValue) ? rawValue : [];
-    const next = [...current];
+            return;
+        }
 
-    next[index] = value;
-    context.setValue(path, next);
-  }, [isMultiple, context, path, rawValue]);
+        const current = Array.isArray(rawValue) ? rawValue : [];
 
-  const replace = useCallback((newItems: Array<Record<string, unknown>> | Record<string, unknown>) => {
-    context.setValue(path, newItems);
-  }, [context, path]);
+        context.setValue(path, current.filter((_, i) => i !== index));
+    }, [isMultiple, context, path, rawValue]);
 
-  const move = useCallback((from: number, to: number) => {
-    if (!isMultiple) return;
-    const current = Array.isArray(rawValue) ? rawValue : [];
+    const update = useCallback((index: number, value: Record<string, unknown>) => {
+        if (!isMultiple) {
+            context.setValue(path, value);
 
-    if (from < 0 || from >= current.length || to < 0 || to >= current.length) return;
-    
-    const next = [...current];
-    const [moved] = next.splice(from, 1);
+            return;
+        }
 
-    next.splice(to, 0, moved);
-    
-    context.setValue(path, next);
-  }, [isMultiple, context, path, rawValue]);
+        const current = Array.isArray(rawValue) ? rawValue : [];
+        const next = [...current];
 
-  const clear = useCallback(() => {
-    context.setValue(path, isMultiple ? [] : undefined);
-  }, [context, path, isMultiple]);
+        next[index] = value;
+        context.setValue(path, next);
+    }, [isMultiple, context, path, rawValue]);
 
-  return {
-    items,
-    schema,
-    multiple: isMultiple,
-    count,
-    isEmpty,
-    add,
-    remove,
-    update,
-    replace,
-    move,
-    clear
-  };
+    const replace = useCallback((newItems: Array<Record<string, unknown>> | Record<string, unknown>) => {
+        context.setValue(path, newItems);
+    }, [context, path]);
+
+    const move = useCallback((from: number, to: number) => {
+        if (!isMultiple) return;
+        const current = Array.isArray(rawValue) ? rawValue : [];
+
+        if (from < 0 || from >= current.length || to < 0 || to >= current.length) return;
+
+        const next = [...current];
+        const [moved] = next.splice(from, 1);
+
+        next.splice(to, 0, moved);
+
+        context.setValue(path, next);
+    }, [isMultiple, context, path, rawValue]);
+
+    const clear = useCallback(() => {
+        context.setValue(path, isMultiple ? [] : undefined);
+    }, [context, path, isMultiple]);
+
+    return {
+        items,
+        schema,
+        multiple: isMultiple,
+        count,
+        isEmpty,
+        add,
+        remove,
+        update,
+        replace,
+        move,
+        clear
+    };
 };

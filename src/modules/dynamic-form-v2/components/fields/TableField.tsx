@@ -70,7 +70,7 @@ export const TableField: React.FC<BaseFieldProps> = ({ field }) => {
 
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(field.table?.pageSize || 10);
     const [sorting, setSorting] = useState<SortingState>([]);
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
