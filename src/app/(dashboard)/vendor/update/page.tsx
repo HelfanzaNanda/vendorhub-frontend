@@ -13,6 +13,8 @@ import { api } from '@/services/api'
 
 import PageHeader from '@/components/shared/PageHeader'
 import { useAuthStore } from '@/features/auth/store'
+import { DynamicForm } from '@/modules/form-engine'
+import { LocalVendorSchema } from '@/modules/vendors/vendor/local/schemas/vendor-local.schema'
 
 function UpdateVendorPageContent() {
   const searchParams = useSearchParams()
@@ -22,17 +24,34 @@ function UpdateVendorPageContent() {
   const isPreReg = user?.type === 'EXTERNAL' && user?.vendor?.vendorStatus?.code === 'PRE_REGISTRATION'
   const activeTab = isPreReg ? 'terms_conditions' : (searchParams.get('tab') || 'terms_conditions')
   
+  // MOCK: Default Vendor Type to LOCAL until API is integrated
+  const vendorType = 'LOCAL'
+  
+  const getSchemaByVendorType = (type: string) => {
+    switch (type) {
+    //   case 'FOREIGN':
+    //     return ForeignVendorSchema
+    //   case 'INDIVIDUAL':
+    //     return IndividualVendorSchema
+      case 'LOCAL':
+      default:
+        return LocalVendorSchema
+    }
+  }
+
+  const activeSchema = getSchemaByVendorType(vendorType)
+  
   const submitRegistrationMutation = useMutation({
     mutationFn: async () => {
-      return await api.post('/vendor-registration/submit')
+      return await api.post('/vendor-update/submit')
     },
     onSuccess: (res: any) => {
-      toast.success(res?.message || 'Vendor Registration submitted successfully')
+      toast.success(res?.message || 'Vendor Update submitted successfully')
       queryClient.invalidateQueries()
       router.push('/dashboard')
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || error?.message || 'Failed to submit registration'
+      const message = error?.response?.data?.message || error?.message || 'Failed to submit update'
 
       toast.error(message)
     }
@@ -54,7 +73,12 @@ function UpdateVendorPageContent() {
       />
       
       <Box className="flex-grow">
-        {/* VendorProfile was here */}
+        <DynamicForm 
+            schema={activeSchema}
+            initialValues={{}}
+            mode="UPDATE"
+            readonly={false}
+        />
       </Box>
     </Box>
   )
