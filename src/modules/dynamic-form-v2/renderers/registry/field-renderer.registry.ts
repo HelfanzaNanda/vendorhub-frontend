@@ -24,6 +24,7 @@ import {
 } from '../../components/fields';
 import type { RendererRegistry } from './renderer-registry.interface';
 import { MultiLookupField } from '../../components/fields/MultiLookupField';
+import { TreeAutocompleteField } from '../../components/fields/tree/TreeAutocompleteField';
 
 export const fieldRendererRegistry: RendererRegistry = {
   [FieldType.TEXT]: TextField,
@@ -47,5 +48,6 @@ export const fieldRendererRegistry: RendererRegistry = {
   [FieldType.FILE]: FileField,
   [FieldType.HIDDEN]: HiddenField,
   [FieldType.TABLE]: TableField,
-  [FieldType.MULTI_LOOKUP]: MultiLookupField
+  [FieldType.MULTI_LOOKUP]: MultiLookupField,
+  [FieldType.TREE_AUTOCOMPLETE]: TreeAutocompleteField,
 };

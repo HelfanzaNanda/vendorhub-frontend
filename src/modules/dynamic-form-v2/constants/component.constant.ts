@@ -19,4 +19,5 @@ export const Component = {
   FORM: 'FORM',
   TABLE: 'TABLE',
   MULTI_LOOKUP: 'MULTI_LOOKUP',
+  TREE_AUTOCOMPLETE: 'TREE_AUTOCOMPLETE',
 } as const;

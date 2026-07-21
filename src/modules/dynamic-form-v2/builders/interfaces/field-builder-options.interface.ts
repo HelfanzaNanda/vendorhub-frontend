@@ -14,6 +14,7 @@ import type { OptionSchema } from '../../interfaces/options.interface';
 import { PayloadSchema } from '../../interfaces/payload-schema.interface';
 import { FieldMapping } from '../../interfaces/field-mapping.interface';
 import { MultiLookupSchema } from '../../interfaces/multi-lookup.interface';
+import { TreeLookupSchema } from '../../interfaces/tree-lookup.interface';
 
 export interface FieldBuilderOptions {
     name: string;
@@ -39,4 +40,8 @@ export interface FieldBuilderOptions {
     multiple?: boolean;
     mapping?: FieldMapping[];
     multiLookup?: MultiLookupSchema;
+
+    tree?: boolean;
+    childrenField?: string;
+    selectableField?: string;
 }

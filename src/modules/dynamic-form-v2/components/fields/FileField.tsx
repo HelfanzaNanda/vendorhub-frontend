@@ -124,7 +124,6 @@ export const FileField: React.FC<BaseFieldProps> = ({
     };
 
     const handleDownload = async () => {
-        console.log('value : ', value);
         const file = value as {
             uuid?: string;
             originalFileName?: string;

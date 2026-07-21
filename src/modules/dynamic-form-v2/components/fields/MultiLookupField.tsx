@@ -33,10 +33,7 @@ export const MultiLookupField: React.FC<BaseFieldProps> = (props) => {
 
     const context = useDynamicFormContext();
 
-    const rows = Array.isArray(value) ? value : [];
-
-    console.log('rows', rows);
-    
+    const rows = Array.isArray(value) ? value : [];    
 
     const handleSelect = (selected: any) => {
         if (!selected) return;

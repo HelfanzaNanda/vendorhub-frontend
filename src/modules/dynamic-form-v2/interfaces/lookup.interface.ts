@@ -20,7 +20,12 @@ export interface LookupSchema {
     cache?: boolean;
     preload?: boolean;
     options?: LookupOption[];
+
+    tree?: boolean;
+    childrenField?: string;
+    selectableField?: string;
+
 }
 
 
-export type LookupType = 'API' | 'STATIC';
+export type LookupType = 'API' | 'STATIC' | 'TREE';

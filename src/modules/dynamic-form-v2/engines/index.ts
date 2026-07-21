@@ -6,3 +6,4 @@ export * from './lookup';
 export * from './verification';
 export * from './schema';
 export * from './payload';
+export * from './tree';

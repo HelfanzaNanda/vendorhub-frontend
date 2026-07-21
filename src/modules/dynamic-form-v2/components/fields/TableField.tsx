@@ -170,7 +170,6 @@ export const TableField: React.FC<BaseFieldProps> = ({ field }) => {
     const handleOpenModal = async (row: any, mode: 'VIEW' | 'EDIT') => {
         try {
             setIsDetailLoading(true);
-            console.log('row : ', row);
             
             const res = await getDetail(row.id, {
                 source : row.source
