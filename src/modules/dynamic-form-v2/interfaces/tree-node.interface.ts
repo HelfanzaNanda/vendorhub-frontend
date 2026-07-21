@@ -3,6 +3,7 @@ export interface TreeNode {
     label: string;
     selectable: boolean;
     children?: TreeNode[];
+    parent?: TreeNode;
 
     [key: string]: any;
 }

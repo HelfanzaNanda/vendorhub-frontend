@@ -14,7 +14,7 @@ import {
 
 import { CompetencyConstants, DocumentType, CustomerConstants, BusinessLicenseConstants } from '@/modules/form-schemas/vendor/common';
 import { CompetencyLookup, IssuedByLookup, KbliLookup } from '@/modules/form-schemas/shared/lookups';
-import { FullGrid, HalfGrid } from '@/modules/dynamic-form-v2/grids';
+import { FullGrid, HalfGrid, ThirdGrid } from '@/modules/dynamic-form-v2/grids';
 import { CustomerReferenceSchema } from '../nested';
 import { RequiredValidation } from '@/modules/dynamic-form-v2/validation';
 import { VendorCompetencyTable } from '@/modules/form-schemas/shared/tables/vendor-competency.table';
@@ -33,28 +33,58 @@ const CompetencyInlineSchema: FormSchema = {
       description: CompetencyConstants.SECTION_COMPETENCY_DESCRIPTION,
       layout: FormLayout.CARD,
       fields: [
-        // autocompleteField({
-        //     name: 'competency',
-        //     label: 'Competency',
-        //     validation: { required: true },
-        //     grid: FullGrid,
-        //     lookup: CompetencyLookup,
-        //     payload: {
-        //         key: 'competencyId',
-        //         pick: 'id'
-        //     }
-        // }),
-
         treeAutocompleteField({
             name:'competencyIds',
-            label:'Competency',
+            label:'Search Competency',
             lookup: CompetencyLookup,
+            grid: FullGrid,
             multiple:true,
             payload:    {
-                key:'competencyIds',
+                key:'subCompetencyItemId',
                 pick:'id'
-            }
-        })
+            },
+            mapping: [
+                {
+                    from: 'parent.label',
+                    to: 'category'
+                },
+
+                {
+                    from: 'parent.parent.label',
+                    to: 'subCategory'
+                },
+
+                {
+                    from: 'label',
+                    to: 'item'
+                }
+
+            ]
+        }),
+        textField({
+            name: 'category',
+            label: 'Category',
+            display : {
+                readonly : true
+            },
+            grid: ThirdGrid 
+        }),
+        textField({
+            name: 'subCategory',
+            label: 'Sub Category',
+            display : {
+                readonly : true
+            },
+            grid: ThirdGrid 
+        }),
+        textField({
+            name: 'item',
+            label: 'Item',
+            display : {
+                readonly : true
+            },
+            grid: ThirdGrid 
+        }),
       ]
     },
     {

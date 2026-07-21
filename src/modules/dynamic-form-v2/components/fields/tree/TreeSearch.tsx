@@ -18,19 +18,12 @@ export const TreeSearch: React.FC<TreeSearchProps> = ({
 }) => {
 
     return (
-
         <TextField
-
             fullWidth
-
             size="small"
-
             placeholder="Search..."
-
             value={value}
-
             onChange={(e) => onChange(e.target.value)}
-
             InputProps={{
                 startAdornment: (
                     <InputAdornment position="start">
@@ -38,9 +31,6 @@ export const TreeSearch: React.FC<TreeSearchProps> = ({
                     </InputAdornment>
                 )
             }}
-
         />
-
     );
-
 };

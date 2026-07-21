@@ -1,5 +1,10 @@
 import { LookupOption, LookupType } from "./lookup.interface";
 
+export interface TreeMappingSchema {
+    from: string;
+    to: string;
+}
+
 export interface TreeLookupSchema {
     type?: LookupType;
     endpoint: string;
@@ -13,4 +18,7 @@ export interface TreeLookupSchema {
     preload?: boolean;
     options?: LookupOption[];
     params?: Record<string, unknown>;
+    mapping?: TreeMappingSchema[];
+    searchable?: boolean;
+    duplicate?: boolean;
 }
