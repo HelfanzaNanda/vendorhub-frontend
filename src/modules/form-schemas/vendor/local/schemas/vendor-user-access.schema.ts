@@ -26,7 +26,7 @@ const UserAccessSchema: FormSchema = {
     id: UserAccessConstants.SCHEMA_ID,
     title: UserAccessConstants.SCHEMA_TITLE,
     code: UserAccessConstants.SCHEMA_ID,
-    layout: FormLayout.CARD,
+    layout: FormLayout.DEFAULT,
     sections: [
         {
             id: UserAccessConstants.SECTION_USER_ACCESS_ID,
@@ -139,7 +139,7 @@ export const VendorUserAccessTableSchema: FormSchema = {
     id: UserAccessConstants.SCHEMA_ID,
     title: UserAccessConstants.SCHEMA_TITLE,
     code: UserAccessConstants.SCHEMA_ID,
-    layout: FormLayout.CARD,
+    layout: FormLayout.DEFAULT,
     sections: [
         {
             id: UserAccessConstants.SECTION_USER_ACCESS_ID,

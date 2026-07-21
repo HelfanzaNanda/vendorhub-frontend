@@ -19,7 +19,7 @@ const BankAccountSchema: FormSchema = {
   id: BankConstants.SCHEMA_ID,
   title: BankConstants.SCHEMA_TITLE,
   code: BankConstants.DOCUMENT_ID,
-  layout: FormLayout.CARD,
+  layout: FormLayout.DEFAULT,
   sections: [
     {
       id: BankConstants.SECTION_ACCOUNT_INFO_ID,
@@ -119,7 +119,7 @@ export const VendorBankTableSchema: FormSchema = {
   id: BankConstants.SCHEMA_ID,
   title: BankConstants.SCHEMA_TITLE,
   code: BankConstants.DOCUMENT_ID,
-  layout: FormLayout.CARD,
+  layout: FormLayout.DEFAULT,
   sections: [
     {
       id: BankConstants.SCHEMA_ID,

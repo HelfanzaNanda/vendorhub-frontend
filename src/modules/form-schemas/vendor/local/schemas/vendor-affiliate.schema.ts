@@ -19,7 +19,7 @@ const AffiliateCompanyInlineSchema: FormSchema = {
   id: AffiliateConstants.SCHEMA_ID,
   title: AffiliateConstants.SECTION_AFFILIATE_TITLE,
   code: AffiliateConstants.SECTION_AFFILIATE_CODE,
-  layout: FormLayout.CARD,
+  layout: FormLayout.DEFAULT,
   sections: [
     {
       id: AffiliateConstants.SECTION_AFFILIATE_ID,
@@ -70,7 +70,7 @@ export const VendorAffiliateSchema: FormSchema = {
   id: AffiliateConstants.SCHEMA_ID,
   title: AffiliateConstants.SECTION_AFFILIATE_TITLE,
   code: AffiliateConstants.SECTION_AFFILIATE_CODE,
-  layout: FormLayout.CARD,
+  layout: FormLayout.DEFAULT,
   sections: [
     {
       id: AffiliateConstants.SECTION_AFFILIATE_ID,

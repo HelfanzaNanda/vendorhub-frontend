@@ -18,7 +18,7 @@ export const VendorCompanySchema: FormSchema = {
   id: CompanyConstants.SCHEMA_ID,
   title: CompanyConstants.SCHEMA_TITLE,
   code: CompanyConstants.SCHEMA_ID,
-  layout: FormLayout.CARD,
+  layout: FormLayout.DEFAULT,
   sections: [
     {
       id: CompanyConstants.SECTION_COMPANY_INFO_ID,

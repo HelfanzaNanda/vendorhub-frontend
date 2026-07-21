@@ -17,7 +17,7 @@ export const VendorDocumentSchema: FormSchema = {
   id: DocumentConstants.SCHEMA_ID,
   title: DocumentConstants.SCHEMA_TITLE,
   code: DocumentConstants.SCHEMA_CODE,
-  layout: FormLayout.CARD,
+  layout: FormLayout.DEFAULT,
   sections: [
     {
         id: DocumentConstants.SECTION_DOCUMENT_NPWP_ID,

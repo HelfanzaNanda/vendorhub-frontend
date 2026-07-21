@@ -7,6 +7,8 @@ import {
     VendorCompetencySchema,
     VendorDocumentSchema,
     VendorFinancialReportSchema,
+    VendorUserAccessTableSchema,
+    VendorAffiliateSchema,
 } from '@/modules/form-schemas/vendor/local/schemas';
 import { SchemaCategory } from './schema-category';
 import type { PlaygroundSchema } from './types';
@@ -35,19 +37,26 @@ const playgroundSchemas: readonly PlaygroundSchema[] = [
         schema: VendorPersonnelSchema
     },
     {
+        id: 'vendor-user-access',
+        title: 'User Access',
+        category: SchemaCategory.VENDOR,
+        description: 'Schema for managing vendor user access.',
+        schema: VendorUserAccessTableSchema
+    },
+    {
         id: 'vendor-bank',
         title: 'Bank',
         category: SchemaCategory.VENDOR,
         description: 'Schema for managing vendor bank accounts.',
         schema: VendorBankTableSchema
     },
-    // {
-    //     id: 'vendor-business-license',
-    //     title: 'Business License',
-    //     category: SchemaCategory.VENDOR,
-    //     description: 'Schema for managing vendor business license.',
-    //     schema: VendorBusinessLicenseSchema
-    // },
+    {
+        id: 'vendor-affiliation',
+        title: 'Affiliation',
+        category: SchemaCategory.VENDOR,
+        description: 'Schema for managing vendor affiliations.',
+        schema: VendorAffiliateSchema
+    },
     {
         id: 'vendor-competency',
         title: 'Competency',

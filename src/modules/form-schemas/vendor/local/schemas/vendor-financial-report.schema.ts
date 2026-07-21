@@ -21,7 +21,7 @@ const FinancialReportInlineSchema: FormSchema = {
   id: FinancialReportConstants.SCHEMA_ID,
   title: FinancialReportConstants.SCHEMA_TITLE,
   code: FinancialReportConstants.DOCUMENT_ID,
-  layout: FormLayout.CARD,
+  layout: FormLayout.DEFAULT,
   sections: [
     {
       id: FinancialReportConstants.SECTION_FINANCIAL_REPORT_DETAIL_ID,
@@ -118,7 +118,7 @@ export const VendorFinancialReportSchema: FormSchema = {
   id: FinancialReportConstants.SCHEMA_ID,
   title: FinancialReportConstants.SCHEMA_TITLE,
   code: FinancialReportConstants.DOCUMENT_ID,
-  layout: FormLayout.CARD,
+  layout: FormLayout.DEFAULT,
   sections: [
     {
       id: FinancialReportConstants.SCHEMA_ID,
