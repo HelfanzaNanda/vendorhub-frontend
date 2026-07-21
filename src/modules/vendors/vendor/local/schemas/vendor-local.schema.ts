@@ -14,11 +14,12 @@ import { SchemaCategory } from '../../common/constants/schema-category.constant'
 import { MainSchema } from '../../common';
 
 
-export const LocalVendorSchema: readonly MainSchema[] = [
+export const LocalVendorSchema: MainSchema[] = [
     {
         id: 'vendor-terms',
         title: 'Terms & Conditions',
         category: SchemaCategory.VENDOR,
+        icon: 'ri-file-list-3-line',
         description: 'Terms & Conditions for vendor registration.',
         schema: VendorTermsSchema
     },
@@ -26,6 +27,7 @@ export const LocalVendorSchema: readonly MainSchema[] = [
         id: 'vendor-company',
         title: 'Company',
         category: SchemaCategory.VENDOR,
+        icon: 'ri-building-4-line',
         description: 'Schema for managing vendor company information.',
         schema: VendorCompanySchema
     },
@@ -33,6 +35,7 @@ export const LocalVendorSchema: readonly MainSchema[] = [
         id: 'vendor-personnel',
         title: 'Person Responsible',
         category: SchemaCategory.VENDOR,
+        icon: 'ri-group-line',
         description: 'Schema for managing vendor board of directors, shareholders, and signers.',
         schema: VendorPersonnelSchema
     },
@@ -40,6 +43,7 @@ export const LocalVendorSchema: readonly MainSchema[] = [
         id: 'vendor-user-access',
         title: 'User Access',
         category: SchemaCategory.VENDOR,
+        icon: 'ri-shield-user-line',
         description: 'Schema for managing vendor user access.',
         schema: VendorUserAccessTableSchema
     },
@@ -47,6 +51,7 @@ export const LocalVendorSchema: readonly MainSchema[] = [
         id: 'vendor-bank',
         title: 'Bank',
         category: SchemaCategory.VENDOR,
+        icon: 'ri-bank-card-line',
         description: 'Schema for managing vendor bank accounts.',
         schema: VendorBankTableSchema
     },
@@ -54,27 +59,31 @@ export const LocalVendorSchema: readonly MainSchema[] = [
         id: 'vendor-affiliation',
         title: 'Affiliation',
         category: SchemaCategory.VENDOR,
+        icon: 'ri-organization-chart',
         description: 'Schema for managing vendor affiliations.',
         schema: VendorAffiliateSchema
     },
     {
-        id: 'vendor-competency',
-        title: 'Competency',
+        id: 'vendor-capability',
+        title: 'Capability & Portfolio',
         category: SchemaCategory.VENDOR,
-        description: 'Schema for managing vendor competencies and customer references.',
+        icon: 'ri-award-line',
+        description: 'Schema for managing vendor capabilities.',
         schema: VendorCompetencySchema
     },
     {
         id: 'vendor-document',
         title: 'Documents',
         category: SchemaCategory.VENDOR,
+        icon: 'ri-file-text-line',
         description: 'Schema for managing vendor legal, tax, and company documents.',
         schema: VendorDocumentSchema
     },
     {
-        id: 'vendor-financial-report',
-        title: 'Financial Report',
+        id: 'vendor-financial',
+        title: 'Financial',
         category: SchemaCategory.VENDOR,
+        icon: 'ri-line-chart-line',
         description: 'Schema for managing vendor financial statements.',
         schema: VendorFinancialReportSchema
     },

@@ -1,5 +1,5 @@
 import type { TableConfigSchema } from '@/modules/form-engine/interfaces';
-import { PersonnelType } from '../../vendor';
+
 
 export const VendorCompetencyTable: TableConfigSchema = {
   endpoint: `/vendor-competency-temps`,

@@ -1,5 +1,5 @@
 import type { TableConfigSchema } from '@/modules/form-engine/interfaces';
-import { PersonnelType } from '../../vendor';
+import { PersonnelType } from '../../vendor/common/constants/personnel.constant';
 
 export const VendorBoardDirectorTable: TableConfigSchema = {
   endpoint: `/vendor-personnel-temps?personnelTypeCode=${PersonnelType.BOARD_OF_DIRECTORS}`, // :vendorTempId will be replaced by form context value
