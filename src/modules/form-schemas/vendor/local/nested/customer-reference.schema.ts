@@ -44,8 +44,8 @@ export const CustomerReferenceSchema: FormSchema = {
                 pick: 'id'
             }
         }),
-        numberField({
-            name: 'rprojectValue',
+        currencyField({
+            name: 'projectValue',
             label: 'Project Value',
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid
@@ -59,7 +59,7 @@ export const CustomerReferenceSchema: FormSchema = {
         
         
         fileField({ 
-          name: 'attachment', 
+          name: 'file', 
           label: 'Attachment', 
           validation: { required: RequiredValidation.required }, 
           grid: FullGrid, 
@@ -67,7 +67,7 @@ export const CustomerReferenceSchema: FormSchema = {
             documentTypeCode: DocumentType.CUSTOMER_REFERENCE
           }, 
           payload: {
-            key: 'fileId',
+            key: 'fileid',
             pick: 'id'
           }
         }),

@@ -83,6 +83,7 @@ export const PlaygroundContent: React.FC<PlaygroundContentProps> = ({ selectedSc
               
               <SchemaErrorBoundary schemaId={selectedSchema.id}>
                 <DynamicForm
+                    key={selectedSchema.id}
                   schema={selectedSchema.schema}
                   mode={formMode as 'CREATE' | 'EDIT' | 'VIEW'}
                   initialValues={formData}

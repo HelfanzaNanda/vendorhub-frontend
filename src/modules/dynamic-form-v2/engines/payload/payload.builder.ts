@@ -33,21 +33,61 @@ export class PayloadBuilder {
             if (val === undefined || val === null) continue;
             
 
-            if (field.type === 'FORM' && field.nested) {
+            // if (field.type === 'FORM' && field.nested) {
+            //     if (field.nested.multiple) {
+            //         if (Array.isArray(val) && val.length > 0) {
+            //             payload = this.mapPayload(payload, field, val);
+            //         }
+            //     } else {
+            //         // Single nested form
+            //         if (typeof val === 'object' && Object.keys(val).length > 0) {
+            //             payload = this.mapPayload(payload, field, val);
+            //         }
+            //     }
+            // } else {
+            //     payload = this.mapPayload(payload, field, val);
+            // }
+
+            if (field.type === 'FORM' && field.nested?.schema) {
+
                 if (field.nested.multiple) {
+
                     if (Array.isArray(val) && val.length > 0) {
-                        // Nested form values are typically already built/clean if processed bottom-up, but for simple payload just take values
-                        payload = this.mapPayload(payload, field, val);
+
+                        payload = this.mapPayload(
+                            payload,
+                            field,
+                            val.map(item =>
+                                this.buildNested(
+                                    item as Record<string, unknown>,
+                                    field.nested!.schema as FormSchema
+                                )
+                            )
+                        );
 
                     }
+
                 } else {
-                    // Single nested form
+
                     if (typeof val === 'object' && Object.keys(val).length > 0) {
-                        payload = this.mapPayload(payload, field, val);
+
+                        payload = this.mapPayload(
+                            payload,
+                            field,
+                            this.buildNested(
+                                val as Record<string, unknown>,
+                                field.nested.schema as FormSchema
+                            )
+                        );
+
                     }
+
                 }
+
             } else {
+
                 payload = this.mapPayload(payload, field, val);
+
             }
         }
 
@@ -125,11 +165,6 @@ export class PayloadBuilder {
         const pick = field.payload.pick ?? 'id';
 
         if (Array.isArray(value)) {
-            // return ObjectUtil.set(
-            //     payload,
-            //     field.payload.key,
-            //     value.map(v => (v as any)[pick])
-            // );
             const mapped = value.map(item => {
                 if ( item && typeof item === 'object' ) {
                     return (item as Record<string, any>)[pick];
@@ -151,5 +186,48 @@ export class PayloadBuilder {
             field.payload.key,
             (value as any)[pick]
         );
+    }
+
+    private static buildNested(
+        values: Record<string, unknown>,
+        schema: FormSchema
+    ): Record<string, unknown> {
+
+        let payload: Record<string, unknown> = {};
+
+        const fields = SchemaEngine.flattenFields(schema);
+
+        for (const field of fields) {
+
+            const value = ObjectUtil.get(values, field.name);
+
+            if (value === undefined || value === null) {
+                continue;
+            }
+
+            if (field.type === 'FORM' && field.nested?.schema) {
+                if (field.nested.multiple) {
+                    payload = this.mapPayload(
+                        payload,
+                        field,
+                        (value as Record<string, unknown>[]).map(item =>
+                            this.buildNested(item, field.nested!.schema as FormSchema)
+                        )
+                    );
+                } else {
+                    payload = this.mapPayload(
+                        payload,
+                        field,
+                        this.buildNested(
+                            value as Record<string, unknown>,
+                            field.nested.schema as FormSchema
+                        )
+                    );
+                }
+                continue;
+            }
+            payload = this.mapPayload(payload, field, value);
+        }
+        return payload;
     }
 }

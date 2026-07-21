@@ -28,7 +28,10 @@ export class ObjectUtil {
         for (let i = 0; i < pathArray.length - 1; i++) {
             const key = pathArray[i];
 
-            if (current[key] == null) {
+            const next = current[key];
+            const invalid = next === null || next === undefined || typeof next !== 'object';
+
+            if (invalid) {
                 current[key] = typeof pathArray[i + 1] === 'number' || !isNaN(Number(pathArray[i + 1])) ? [] : {};
             }
 
