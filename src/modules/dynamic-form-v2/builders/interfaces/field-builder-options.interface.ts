@@ -12,6 +12,8 @@ import type {
 import type { VisibilitySchema } from '../../interfaces/visibility.interface';
 import type { OptionSchema } from '../../interfaces/options.interface';
 import { PayloadSchema } from '../../interfaces/payload-schema.interface';
+import { FieldMapping } from '../../interfaces/field-mapping.interface';
+import { MultiLookupSchema } from '../../interfaces/multi-lookup.interface';
 
 export interface FieldBuilderOptions {
     name: string;
@@ -35,4 +37,6 @@ export interface FieldBuilderOptions {
     visibility?: VisibilitySchema;
     payload?: PayloadSchema;
     multiple?: boolean;
+    mapping?: FieldMapping[];
+    multiLookup?: MultiLookupSchema;
 }

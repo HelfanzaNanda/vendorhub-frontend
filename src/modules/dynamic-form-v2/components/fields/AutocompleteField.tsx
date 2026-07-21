@@ -147,6 +147,12 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
             value={value ?? (field.multiple ? [] : null)}
             onChange={(event, newValue) => {
                 onChange(newValue);
+                field.mapping?.forEach(item => {
+                    context.setValue(
+                        item.to,
+                        (newValue as Record<string, any>)?.[item.from] ?? null
+                    );
+                });
             }}
             onBlur={onBlur}
             onInputChange={(event, newInputValue) => {

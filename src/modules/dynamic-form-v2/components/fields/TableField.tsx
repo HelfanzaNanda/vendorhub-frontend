@@ -8,13 +8,12 @@ import { toast } from 'sonner';
 import { DataTable, DataTableColumnHeader, DataTableActions } from '@/components/common/DataTable';
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import { FormRenderer } from '../../renderers/form';
-import { useDynamicForm } from '../../hooks';
+import { useCrudTable, useDynamicForm } from '../../hooks';
 import { DynamicFormProvider, useDynamicFormContext } from '../../context';
 import { SchemaEngine } from '../../engines';
 import type { BaseFieldProps } from './types';
 
 // Import generic CRUD hook
-import { useCrudTable } from '@/modules/vendors/hooks/useCrudTable';
 import { FormSchema } from '../../interfaces';
 
 const ModalFormInner: React.FC<{
@@ -171,7 +170,11 @@ export const TableField: React.FC<BaseFieldProps> = ({ field }) => {
     const handleOpenModal = async (row: any, mode: 'VIEW' | 'EDIT') => {
         try {
             setIsDetailLoading(true);
-            const res = await getDetail(row.id);
+            console.log('row : ', row);
+            
+            const res = await getDetail(row.id, {
+                source : row.source
+            });
             if (res.data) {
                 setSelectedItem(res.data);
                 setModalMode(mode);
@@ -187,6 +190,7 @@ export const TableField: React.FC<BaseFieldProps> = ({ field }) => {
     };
 
     const handleSave = (data: any) => {
+        
         if (modalMode === 'CREATE') {
             createMutation.mutate(data, {
                 onSuccess: () => {
@@ -195,6 +199,7 @@ export const TableField: React.FC<BaseFieldProps> = ({ field }) => {
                 }
             });
         } else if (modalMode === 'EDIT' && selectedItem) {
+            data.source = selectedItem.source;
             updateMutation.mutate({ id: selectedItem.id, data }, {
                 onSuccess: () => {
                     setModalOpen(false);

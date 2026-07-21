@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, InputAdornment } from '@mui/material';
 import { VerificationEngine } from '../../engines';
 import type { FieldSchema } from '../../interfaces';
-import { DynamicFormContextValue } from '../../context';
+import { DynamicFormContextValue, useDynamicFormContext } from '../../context';
 import { VerifyButton } from './VerifyButton';
 import { OTPSection } from './OTPSection';
 import { VerificationMessage } from './VerificationMessage';

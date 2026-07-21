@@ -18,4 +18,5 @@ export const Component = {
   RADIO: 'RADIO',
   FORM: 'FORM',
   TABLE: 'TABLE',
+  MULTI_LOOKUP: 'MULTI_LOOKUP',
 } as const;

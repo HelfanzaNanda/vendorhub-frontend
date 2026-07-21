@@ -5,7 +5,6 @@ import { createField } from '../base.builder';
 import type { FieldBuilderOptions } from '../interfaces';
 import { HalfGrid } from '../../grids';
 import { Component } from '../../constants';
-// import { PhoneVerification } from '@/modules/form-schemas';
 
 export const phoneField = (
   options: Omit<FieldBuilderOptions, 'type'>

@@ -1,13 +1,12 @@
 import {
+    VendorTermsSchema,
     VendorCompanySchema,
     VendorPersonnelSchema,
     VendorBusinessLicenseSchema,
+    VendorBankTableSchema,
     VendorCompetencySchema,
     VendorDocumentSchema,
     VendorFinancialReportSchema,
-    VendorAffiliateSchema,
-    VendorUserAccessTableSchema,
-    VendorBankTableSchema
 } from '@/modules/form-schemas/vendor/local/schemas';
 import { SchemaCategory } from './schema-category';
 import type { PlaygroundSchema } from './types';
@@ -15,50 +14,50 @@ import { SchemaRegistry } from '../../registries/schema.registry';
 
 const playgroundSchemas: readonly PlaygroundSchema[] = [
     {
+        id: 'vendor-terms',
+        title: 'Terms & Conditions',
+        category: SchemaCategory.VENDOR,
+        description: 'Terms & Conditions for vendor registration.',
+        schema: VendorTermsSchema
+    },
+    {
         id: 'vendor-company',
-        title: 'Company Information',
+        title: 'Company',
         category: SchemaCategory.VENDOR,
         description: 'Schema for managing vendor company information.',
         schema: VendorCompanySchema
     },
     {
         id: 'vendor-personnel',
-        title: 'Personnel',
+        title: 'Person Responsible',
         category: SchemaCategory.VENDOR,
         description: 'Schema for managing vendor board of directors, shareholders, and signers.',
         schema: VendorPersonnelSchema
     },
     {
-        id: 'vendor-user-access',
-        title: 'User Access',
-        category: SchemaCategory.VENDOR,
-        description: 'Schema for managing vendor portal users and access controls.',
-        schema: VendorUserAccessTableSchema
-    },
-    {
         id: 'vendor-bank',
-        title: 'Bank Accounts',
+        title: 'Bank',
         category: SchemaCategory.VENDOR,
         description: 'Schema for managing vendor bank accounts.',
         schema: VendorBankTableSchema
     },
-    {
-        id: 'vendor-affiliate',
-        title: 'Affiliate',
-        category: SchemaCategory.VENDOR,
-        description: 'Schema for managing vendor affiliated companies.',
-        schema: VendorAffiliateSchema
-    },
+    // {
+    //     id: 'vendor-business-license',
+    //     title: 'Business License',
+    //     category: SchemaCategory.VENDOR,
+    //     description: 'Schema for managing vendor business license.',
+    //     schema: VendorBusinessLicenseSchema
+    // },
     {
         id: 'vendor-competency',
-        title: 'Capability & Portfilio',
+        title: 'Competency',
         category: SchemaCategory.VENDOR,
         description: 'Schema for managing vendor competencies and customer references.',
         schema: VendorCompetencySchema
     },
     {
         id: 'vendor-document',
-        title: 'Document',
+        title: 'Documents',
         category: SchemaCategory.VENDOR,
         description: 'Schema for managing vendor legal, tax, and company documents.',
         schema: VendorDocumentSchema

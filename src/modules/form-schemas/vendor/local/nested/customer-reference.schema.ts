@@ -31,7 +31,18 @@ export const CustomerReferenceSchema: FormSchema = {
             name: 'name',
             label: 'Project Name',
             validation: { required: RequiredValidation.required }, 
-            grid: HalfGrid 
+            grid: FullGrid 
+        }),
+        autocompleteField({
+            name: 'year',
+            label: 'Year',
+            validation: { required: RequiredValidation.required }, 
+            grid: HalfGrid,
+            lookup: YearLookup,
+            payload: {
+                key: 'year',
+                pick: 'id'
+            }
         }),
         numberField({
             name: 'rprojectValue',
@@ -46,22 +57,12 @@ export const CustomerReferenceSchema: FormSchema = {
             grid: FullGrid
         }),
         
-        autocompleteField({
-            name: 'year',
-            label: 'Year',
-            validation: { required: RequiredValidation.required }, 
-            grid: HalfGrid,
-            lookup: YearLookup,
-            payload: {
-                key: 'year',
-                pick: 'id'
-            }
-        }),
+        
         fileField({ 
           name: 'attachment', 
           label: 'Attachment', 
           validation: { required: RequiredValidation.required }, 
-          grid: HalfGrid, 
+          grid: FullGrid, 
           file: {
             documentTypeCode: DocumentType.CUSTOMER_REFERENCE
           }, 

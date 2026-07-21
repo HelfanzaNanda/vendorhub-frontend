@@ -20,3 +20,4 @@ export * from './radio.builder';
 export * from './file.builder';
 export * from './form.builder';
 export * from './table.builder';
+export * from './multilookup.builder';

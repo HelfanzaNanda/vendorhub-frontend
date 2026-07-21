@@ -1,8 +1,7 @@
 import { apiClient } from '@/services/api';
-import { VerificationService } from '../interfaces/verification-service.interface';
-import { FieldSchema, FormState, VerificationState } from '../interfaces';
-import { VerificationEngine } from '../engines';
+import { FieldSchema, VerificationState, VerificationService } from '../interfaces';
 import { ObjectUtil } from '../utils';
+import { VerificationStateFactory } from '../factory/verification-state.factory';
 
 
 
@@ -13,18 +12,18 @@ export class EmailVerificationService implements VerificationService {
         const email = values[field.name];
 
         if (!email) {
-            return VerificationEngine.markUnverified('Email is required');
+            return VerificationStateFactory.unverified('Email is required');
         }
 
         try {
 
             await apiClient.post('/identity/email/check', { email });
 
-            return VerificationEngine.markVerified('Email verified successfully.');
+            return VerificationStateFactory.verified('Email verified successfully.');
 
         } catch (error: any) {
 
-            return VerificationEngine.markUnverified(
+            return VerificationStateFactory.unverified(
                 error?.response?.data?.message ?? 'Email verification failed.'
             );
         }

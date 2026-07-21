@@ -20,5 +20,6 @@ export enum FieldType {
   FILE = 'FILE',
   FORM = 'FORM',
   HIDDEN = 'HIDDEN',
-  TABLE = 'TABLE'
+  TABLE = 'TABLE',
+  MULTI_LOOKUP = 'MULTI_LOOKUP',
 }

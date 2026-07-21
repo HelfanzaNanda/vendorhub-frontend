@@ -37,7 +37,7 @@ export const BoardOfDirectorSchema: FormSchema = {
             }
         }),
         textField({
-            name: 'fullName',
+            name: 'name',
             label: 'Full Name',
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid

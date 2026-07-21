@@ -325,7 +325,7 @@ return field
                 setModalMode('create')
                 setModalOpen(true)
               }}
-              disabled={config.disableAdd}
+            //   disabled={config.disableAdd}
             >
               {getAddLabel(config.id, config.title)}
             </Button>

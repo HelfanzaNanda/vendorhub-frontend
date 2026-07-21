@@ -23,6 +23,7 @@ import {
   TableField,
 } from '../../components/fields';
 import type { RendererRegistry } from './renderer-registry.interface';
+import { MultiLookupField } from '../../components/fields/MultiLookupField';
 
 export const fieldRendererRegistry: RendererRegistry = {
   [FieldType.TEXT]: TextField,
@@ -46,4 +47,5 @@ export const fieldRendererRegistry: RendererRegistry = {
   [FieldType.FILE]: FileField,
   [FieldType.HIDDEN]: HiddenField,
   [FieldType.TABLE]: TableField,
+  [FieldType.MULTI_LOOKUP]: MultiLookupField
 };

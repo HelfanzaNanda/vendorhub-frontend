@@ -36,19 +36,17 @@ export class PayloadBuilder {
             if (field.type === 'FORM' && field.nested) {
                 if (field.nested.multiple) {
                     if (Array.isArray(val) && val.length > 0) {
-                        // payload[field.name] = val; // Nested form values are typically already built/clean if processed bottom-up, but for simple payload just take values
+                        // Nested form values are typically already built/clean if processed bottom-up, but for simple payload just take values
                         payload = this.mapPayload(payload, field, val);
 
                     }
                 } else {
                     // Single nested form
                     if (typeof val === 'object' && Object.keys(val).length > 0) {
-                        // payload[field.name] = val;
                         payload = this.mapPayload(payload, field, val);
                     }
                 }
             } else {
-                // payload[field.name] = val;
                 payload = this.mapPayload(payload, field, val);
             }
         }
@@ -67,7 +65,6 @@ export class PayloadBuilder {
             const val = ObjectUtil.get(formState.values, field.name);
 
             if (val !== undefined) {
-                // payload[field.name] = val;
                 payload = this.mapPayload(payload, field, val);
             }
         }
@@ -98,7 +95,6 @@ export class PayloadBuilder {
             const val = ObjectUtil.get(formState.values, field.name);
 
             if (val !== undefined && val !== null) {
-                // payload[field.name] = val;
                 payload = this.mapPayload(payload, field, val);
             }
         }
@@ -124,26 +120,36 @@ export class PayloadBuilder {
     private static mapPayload( payload: Record<string, unknown>, field: FieldSchema, value: unknown ) {
         if (!field.payload) {
             return ObjectUtil.set(payload, field.name, value);
-            // payload[field.name] = value;
-            // return;
         }
 
         const pick = field.payload.pick ?? 'id';
 
         if (Array.isArray(value)) {
-            // payload[field.payload.key] = value.map(item => (item as Record<string, any>)[pick]);
+            // return ObjectUtil.set(
+            //     payload,
+            //     field.payload.key,
+            //     value.map(v => (v as any)[pick])
+            // );
+            const mapped = value.map(item => {
+                if ( item && typeof item === 'object' ) {
+                    return (item as Record<string, any>)[pick];
+                }
+                return item;
+            });
+            return ObjectUtil.set( payload, field.payload.key, mapped );
+        } 
+
+        if ( value && typeof value === 'object' ) {
             return ObjectUtil.set(
                 payload,
                 field.payload.key,
-                value.map(v => (v as any)[pick])
-            );
-        } else {
-            // payload[field.payload.key] = (value as Record<string, any>)[pick];
-            return ObjectUtil.set(
-                payload,
-                field.payload.key,
-                (value as any)[pick]
+                (value as Record<string, unknown>)[pick]
             );
         }
+        return ObjectUtil.set(
+            payload,
+            field.payload.key,
+            (value as any)[pick]
+        );
     }
 }

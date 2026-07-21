@@ -40,19 +40,6 @@ export const FormRenderer: React.FC<FormRendererProps> = React.memo(({ schema: p
             props={layoutProps}
         />
     );
-
-    // return (
-    //     <LayoutRenderer
-    //         layout={schema.layout}
-    //         title={schema.title}
-    //         description={schema.description}
-    //         props={layoutProps}
-    //     >
-    //         {sections.map(section => (
-    //             <DynamicSection key={section.id} section={section} />
-    //         ))}
-    //     </LayoutRenderer>
-    // );
 });
 
 FormRenderer.displayName = 'FormRenderer';

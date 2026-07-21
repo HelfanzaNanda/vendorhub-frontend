@@ -12,6 +12,9 @@ import type { TableConfigSchema } from "./table-schema.interface";
 import type { FormSchema } from "./form-schema.interface";
 import { DynamicFormContextValue } from "../context";
 import { FieldProps } from "./field-props.interface";
+import { FieldMapping } from "./field-mapping.interface";
+import { MultiLookupSchema } from "./multi-lookup.interface";
+
 
 export interface FieldSchema {
   id: string;
@@ -36,4 +39,6 @@ export interface FieldSchema {
   props?: FieldProps;
   payload?: PayloadSchema;
   multiple?: boolean;
+  mapping?: FieldMapping[]
+  multiLookup?: MultiLookupSchema;
 }

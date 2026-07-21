@@ -2,8 +2,8 @@ import type { LookupSchema } from '@/modules/dynamic-form-v2/interfaces/lookup.i
 import { HttpMethod } from '@/modules/dynamic-form-v2/enums/http-method.enum';
 
 export const KbliLookup: LookupSchema = {
-  endpoint: '/lookups/kbli',
+  endpoint: '/lookups/industry-classifications',
   method: HttpMethod.GET,
   valueField: 'id',
-  labelField: 'name',
+  labelField: 'number',
 };

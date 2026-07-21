@@ -16,8 +16,8 @@ export const FieldRenderer: React.FC<FieldRendererProps> = React.memo((props) =>
     const value = context.getValue(name);
     const error = context.getError(name);
 
-    const readonly = useMemo(() => VisibilityEngine.isReadonly(field, context), [field, context]);
-    const disabled = useMemo(() => VisibilityEngine.isDisabled(field, context), [field, context]);
+    const readonly = useMemo(() => context.readonly || VisibilityEngine.isReadonly(field, context), [field, context]);
+    const disabled = useMemo(() => context.readonly || VisibilityEngine.isDisabled(field, context), [field, context]);
 
     const loading = context.loading;
 

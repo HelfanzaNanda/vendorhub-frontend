@@ -1,8 +1,7 @@
 import { apiClient } from '@/services/api';
-import { VerificationService } from '../interfaces/verification-service.interface';
-import { FieldSchema, FormState, VerificationState } from '../interfaces';
-import { VerificationEngine } from '../engines';
+import { FieldSchema, VerificationState, VerificationService } from '../interfaces';
 import { ObjectUtil } from '../utils';
+import { VerificationStateFactory } from '../factory/verification-state.factory';
 
 
 
@@ -13,22 +12,22 @@ export class PrivyVerificationService implements VerificationService {
         const email = ObjectUtil.get(values, 'email');
 
         if (!privyId) {
-            return VerificationEngine.markUnverified('Privy ID is required');
+            return VerificationStateFactory.unverified('Privy ID is required');
         }
 
         if (!email) {
-            return VerificationEngine.markUnverified('Email is required');
+            return VerificationStateFactory.unverified('Email is required');
         }
 
         try {
             await apiClient.post('/identity/privy/check', { privyId, email });
 
-            return VerificationEngine.markVerified(
+            return VerificationStateFactory.verified(
                 'Privy ID verified successfully.'
             );
 
         } catch (error: any) {
-            return VerificationEngine.markUnverified(
+            return VerificationStateFactory.unverified(
                 error?.response?.data?.message ??
                 'Privy verification failed.'
             );

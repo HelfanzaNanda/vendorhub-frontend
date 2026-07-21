@@ -1,3 +1,4 @@
+export * from './vendor-terms.schema';
 export * from './vendor-company.schema';
 export * from './vendor-affiliate.schema';
 export * from './vendor-bank.schema';
@@ -6,4 +7,3 @@ export * from './vendor-document.schema';
 export * from './vendor-financial-report.schema';
 export * from './vendor-personnel.schema';
 export * from './vendor-user-access.schema';
-export * from './vendor-business-license.schema';
