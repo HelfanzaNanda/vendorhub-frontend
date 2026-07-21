@@ -23,23 +23,28 @@ export const FormRenderer: React.FC<FormRendererProps> = React.memo(({ schema: p
         tabs: sections.map(section => ({
             id: section.id,
             label: section.title || section.code
-        }))
+        })),
+        ...(schema.props || {})
     };
-    if (sections.length > 0) {
-        return sections.map(section => (
-            <DynamicSection key={section.id} section={section} />
-        ));
+
+    const renderedSections = sections.length > 0 
+        ? sections.map(section => <DynamicSection key={section.id} section={section} />)
+        : null;
+
+    if (schema.layout) {
+        return (
+            <LayoutRenderer
+                layout={schema.layout}
+                title={schema.title}
+                description={schema.description}
+                props={layoutProps}
+            >
+                {renderedSections}
+            </LayoutRenderer>
+        );
     }
 
-    
-    return (
-        <LayoutRenderer
-            layout={schema.layout}
-            title={schema.title}
-            description={schema.description}
-            props={layoutProps}
-        />
-    );
+    return <>{renderedSections}</>;
 });
 
 FormRenderer.displayName = 'FormRenderer';

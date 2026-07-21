@@ -5,4 +5,5 @@ export enum FormLayout {
   TABS = 'TABS',
   STEPPER = 'STEPPER',
   GRID = 'GRID',
+  TERMS = 'TERMS',
 }

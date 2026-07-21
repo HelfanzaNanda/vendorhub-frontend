@@ -5,6 +5,7 @@ import {
   AccordionLayout,
   TabsLayout,
   TableLayout,
+  TermsLayout,
 } from '../layout/layouts';
 import type { LayoutRegistry } from './layout-registry.interface';
 
@@ -14,4 +15,5 @@ export const layoutRegistry = {
   [FormLayout.ACCORDION]: AccordionLayout,
   [FormLayout.TABS]: TabsLayout,
   [FormLayout.TABLE]: TableLayout,
+  [FormLayout.TERMS]: TermsLayout,
 } as unknown as LayoutRegistry;
