@@ -2,6 +2,7 @@ import React from 'react';
 
 import { FormSchema, useDynamicForm, DynamicFormProvider } from '@/modules/form-engine';
 import { DynamicController } from './DynamicController';
+import { DynamicFormResourceAndActions } from './DynamicFormResourceAndActions';
 
 import type { DynamicFormProps } from './dynamic-form.interface';
 
@@ -32,6 +33,7 @@ export const DynamicForm = React.memo(({
         noValidate
       >
         <DynamicController />
+        {(schema.resource || schema.actions) && <DynamicFormResourceAndActions schema={schema} />}
         {children}
       </form>
     </DynamicFormProvider>

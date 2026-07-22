@@ -19,9 +19,7 @@ import LayoutVendorHeader from '@/modules/vendors/shared/components/LayoutVendor
 import { MainSchema } from '@/modules'
 import { LayoutVendorNavbar } from '@/modules/vendors/shared/components'
 
-import { SaveCompanyButton } from '@/modules/vendors/vendor/local/schemas/vendor-company.schema'
-import { SaveBusinessLicenseButton } from '@/modules/vendors/vendor/local/schemas/vendor-competency.schema'
-import { SaveDocumentButton } from '@/modules/vendors/vendor/local/schemas/vendor-document.schema'
+// Removed conditional button imports
 
 function UpdateVendorPageContent() {
     const searchParams = useSearchParams()
@@ -119,11 +117,7 @@ function UpdateVendorPageContent() {
                         <DynamicForm
                             key={selectedSchema.id}
                             schema={selectedSchema.schema}
-                        >
-                            {selectedSchema.id === 'vendor-company' && <SaveCompanyButton />}
-                            {selectedSchema.id === 'vendor-capability' && <SaveBusinessLicenseButton />}
-                            {selectedSchema.id === 'vendor-document' && <SaveDocumentButton />}
-                        </DynamicForm>
+                        />
                     </Box>
                 </Box>
             </Box>

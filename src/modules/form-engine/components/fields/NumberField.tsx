@@ -21,7 +21,7 @@ export const NumberField: React.FC<BaseFieldProps> = ({
       }}
       onChange={(event : React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value.replace(/\D/g, '');
-        onChange(value);
+        onChange(Number(value));
       }}
       onBlur={onBlur}
       label={field.label}

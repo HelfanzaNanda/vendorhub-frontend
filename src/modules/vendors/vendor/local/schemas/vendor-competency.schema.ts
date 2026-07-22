@@ -18,12 +18,9 @@ import { FullGrid, HalfGrid, ThirdGrid } from '@/modules/form-engine/grids';
 import { CustomerReferenceSchema } from '../nested';
 import { RequiredValidation } from '@/modules/form-engine/validation';
 import { VendorCompetencyTable } from '@/modules/vendors/shared/tables/vendor-competency.table';
-import React, { useState } from 'react';
-import { Box, Button, CircularProgress } from '@mui/material';
-import { useDynamicFormContext } from '@/modules/form-engine/context';
-import { createCrudService } from '@/modules/form-engine/services/vendor-crud.service';
 import { toast } from 'sonner';
-
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { api } from '@/services/api';
 
 const CompetencyInlineSchema: FormSchema = {
   id: CompetencyConstants.SECTION_COMPETENCY_ID,
@@ -116,12 +113,24 @@ export const VendorCompetencySchema: FormSchema = {
   title: CompetencyConstants.SCHEMA_TITLE,
   code: CompetencyConstants.SECTION_COMPETENCY_CODE,
   layout: FormLayout.DEFAULT,
+  resource: {
+    get: '/vendor-business-license-temps',
+    save: '/vendor-business-license-temps'
+  },
   sections: [
     {
         id: BusinessLicenseConstants.SECTION_LICENSE_INFO_ID,
         code: BusinessLicenseConstants.SECTION_LICENSE_INFO_CODE,
         title: BusinessLicenseConstants.SECTION_LICENSE_INFO_TITLE,
         layout: FormLayout.CARD,
+        actions: [
+            {
+                id: 'save',
+                label: 'Save',
+                type: 'primary',
+                validateFields: ['fileId', 'industryClassifications']
+            }
+        ],
         fields: [
             fileField({ 
                 name: 'fileId', 
@@ -133,6 +142,9 @@ export const VendorCompetencySchema: FormSchema = {
                 payload: {
                     key: 'fileId',
                     pick: 'id'
+                },
+                validation : {
+                    required : RequiredValidation.required
                 }
             }),
             multiLookupField({
@@ -162,6 +174,9 @@ export const VendorCompetencySchema: FormSchema = {
                 payload: {
                     key: 'industryClassificationIds',
                     pick: 'id'
+                },
+                validation : {
+                    required : RequiredValidation.required
                 }
             })
         ]
@@ -186,36 +201,4 @@ export const VendorCompetencySchema: FormSchema = {
       ]
     },
   ]
-};
-
-export const SaveBusinessLicenseButton = () => {
-    const context = useDynamicFormContext();
-    const [isLoading, setIsLoading] = useState(false);
-
-    const handleSave = async () => {
-        if (!context?.validate()) {
-            return;
-        }
-
-        setIsLoading(true);
-        try {
-            const payload = context.buildPayload();
-            const service = createCrudService('/vendor-competency');
-            await service.save(payload);
-            toast.success('Business License saved successfully');
-        } catch (error: any) {
-            toast.error(error?.response?.data?.message || error?.message || 'Failed to save Business License');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    return React.createElement(Box, { sx: { display: 'flex', justifyContent: 'flex-end', mt: 3 } }, 
-        React.createElement(Button, { 
-            variant: 'contained', 
-            onClick: handleSave, 
-            disabled: isLoading,
-            startIcon: isLoading ? React.createElement(CircularProgress, { size: 20, color: 'inherit' }) : undefined
-        }, isLoading ? 'Saving...' : 'Save')
-    );
 };

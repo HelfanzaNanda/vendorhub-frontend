@@ -8,4 +8,10 @@ export interface SectionSchema {
   description?: string;
   layout: FormLayout;
   fields: FieldSchema[];
+  actions?: Array<{
+    id: string;
+    label: string;
+    type: string;
+    validateFields?: string[];
+  }>;
 }

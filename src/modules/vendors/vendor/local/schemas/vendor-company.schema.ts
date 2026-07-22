@@ -15,15 +15,26 @@ import { CountryLookup, ProvinceLookup, CityLookup, BusinessEntityLookup, SiteLo
 import { CompanyConstants } from '@/modules/vendors/vendor/common';
 import React, { useState } from 'react';
 import { Box, Button, CircularProgress } from '@mui/material';
-import { useDynamicFormContext } from '@/modules/form-engine/context';
-import { createCrudService } from '@/modules/form-engine/services/vendor-crud.service';
 import { toast } from 'sonner';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { api } from '@/services/api';
 
 export const VendorCompanySchema: FormSchema = {
   id: CompanyConstants.SCHEMA_ID,
   title: CompanyConstants.SCHEMA_TITLE,
-  code: CompanyConstants.SCHEMA_ID,
+  code: CompanyConstants.SCHEMA_CODE,
   layout: FormLayout.DEFAULT,
+  resource: {
+    get: '/vendor-company-temps',
+    save: '/vendor-company-temps'
+  },
+  actions: [
+    {
+        id: 'save',
+        label: 'Save',
+        type: 'primary'
+    }
+  ],
   sections: [
     {
       id: CompanyConstants.SECTION_COMPANY_INFO_ID,
@@ -33,7 +44,7 @@ export const VendorCompanySchema: FormSchema = {
       layout: FormLayout.CARD,
       fields: [
         textField({ 
-            name: 'name', 
+            name: 'companyName', 
             label: 'Company Name', 
             validation: { required: RequiredValidation.required, maxLength: CompanyConstants.MAX_COMPANY_NAME_LENGTH }, 
             grid: HalfGrid 
@@ -52,13 +63,13 @@ export const VendorCompanySchema: FormSchema = {
         }),
 
         autocompleteField({ 
-            name: 'businessEntity', 
+            name: 'businessType', 
             label: 'Business Entity', 
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid,
             lookup: BusinessEntityLookup,
             payload: {
-                key: 'businessEntityTypeId',
+                key: 'businessTypeId',
                 pick: 'id'
             }
         }),
@@ -68,6 +79,7 @@ export const VendorCompanySchema: FormSchema = {
             label: 'Staff Count', 
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid,
+
         })
       ]
     },
@@ -119,7 +131,7 @@ export const VendorCompanySchema: FormSchema = {
           },
           dependency: { parent: 'province.id', clearOnChange: true, disableWhenEmpty: true }
         }),
-        numberField({ 
+        textField({ 
           name: 'postalCode', 
           label: 'Postal Code', 
           validation: { required: RequiredValidation.required, maxLength: 6 }, 
@@ -138,7 +150,7 @@ export const VendorCompanySchema: FormSchema = {
           grid: FullGrid
         }),
         textField({ 
-          name: 'mapsUrl', 
+          name: 'mapUrl', 
           label: 'Maps URL', 
           validation: { required: RequiredValidation.required, mapsUrl: MapsUrlValidation.mapsUrl }, 
           grid: FullGrid 
@@ -146,36 +158,4 @@ export const VendorCompanySchema: FormSchema = {
       ]
     },
   ]
-};
-
-export const SaveCompanyButton = () => {
-    const context = useDynamicFormContext();
-    const [isLoading, setIsLoading] = useState(false);
-
-    const handleSave = async () => {
-        if (!context?.validate()) {
-            return;
-        }
-
-        setIsLoading(true);
-        try {
-            const payload = context.buildPayload();
-            const service = createCrudService('/vendor-company');
-            await service.save(payload);
-            toast.success('Company saved successfully');
-        } catch (error: any) {
-            toast.error(error?.response?.data?.message || error?.message || 'Failed to save Company');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    return React.createElement(Box, { sx: { display: 'flex', justifyContent: 'flex-end', mt: 3 } }, 
-        React.createElement(Button, { 
-            variant: 'contained', 
-            onClick: handleSave, 
-            disabled: isLoading,
-            startIcon: isLoading ? React.createElement(CircularProgress, { size: 20, color: 'inherit' }) : undefined
-        }, isLoading ? 'Saving...' : 'Save')
-    );
 };

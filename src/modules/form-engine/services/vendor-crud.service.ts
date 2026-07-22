@@ -68,8 +68,12 @@ export function createCrudService<T = any>(baseEndpoint: string) {
          * For form-type tabs that have a single save endpoint.
          */
         save: async (data: any): Promise<ApiResponse<T>> => {
-            return api.post<T>(`${baseEndpoint}/save`, data)
+            return api.put<T>(baseEndpoint, data)
         },
+
+        // create: async (data: Partial<T>): Promise<ApiResponse<T>> => {
+        //     return api.post<T>(baseEndpoint, data)
+        // },
     }
 }
 

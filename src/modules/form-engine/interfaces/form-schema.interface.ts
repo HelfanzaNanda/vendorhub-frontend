@@ -8,4 +8,14 @@ export interface FormSchema {
   description?: string;
   layout: FormLayout;
   sections: SectionSchema[];
+  resource?: {
+    get: string;
+    save: string;
+  };
+  actions?: Array<{
+    id: string;
+    label: string;
+    type: string;
+    validateFields?: string[];
+  }>;
 }
