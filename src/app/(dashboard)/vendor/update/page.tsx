@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Suspense, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 
 import { useRouter, useSearchParams } from 'next/navigation'
 
@@ -19,8 +19,12 @@ import LayoutVendorHeader from '@/modules/vendors/shared/components/LayoutVendor
 import { MainSchema } from '@/modules'
 import { LayoutVendorNavbar } from '@/modules/vendors/shared/components'
 
+import { SaveCompanyButton } from '@/modules/vendors/vendor/local/schemas/vendor-company.schema'
+import { SaveBusinessLicenseButton } from '@/modules/vendors/vendor/local/schemas/vendor-competency.schema'
+import { SaveDocumentButton } from '@/modules/vendors/vendor/local/schemas/vendor-document.schema'
+
 function UpdateVendorPageContent() {
-    // const searchParams = useSearchParams()
+    const searchParams = useSearchParams()
     const router = useRouter()
     const queryClient = useQueryClient()
     const user = useAuthStore((state) => state.user)
@@ -44,12 +48,35 @@ function UpdateVendorPageContent() {
         }
     }
 
+    const [formData, setFormData] = React.useState<Record<string, unknown>>({});
+
+
     const schemas = getSchemaByVendorType(vendorType)
 
     const [selectedSchema, setSelectedSchema] = useState<MainSchema>(schemas[0]);
 
-    const [formData, setFormData] = React.useState<Record<string, unknown>>({});
+    const tab = searchParams.get('tab');
 
+    useEffect(() => {
+        if (!tab) {
+            router.replace(`/vendor/update?tab=${schemas[0].id}`, {
+            scroll: false,
+            });
+            return;
+        }
+
+        const schema = schemas.find(s => s.id === tab);
+
+        if (schema) {
+            setSelectedSchema(schema);
+        }
+    }, [tab, schemas, router]);
+
+
+    const handleSelectSchema = (schema: MainSchema) => {
+        setSelectedSchema(schema)
+        router.push(`/vendor/update?tab=${schema.id}`, { scroll: false })
+    }
 
     const submitRegistrationMutation = useMutation({
         mutationFn: async () => {
@@ -86,13 +113,17 @@ function UpdateVendorPageContent() {
                     <LayoutVendorNavbar
                         schemas={schemas}
                         selectedSchema={selectedSchema}
-                        onSelectSchema={setSelectedSchema}
+                        onSelectSchema={handleSelectSchema}
                     />
                     <Box className="min-h-[500px] flex flex-col gap-6">
                         <DynamicForm
                             key={selectedSchema.id}
                             schema={selectedSchema.schema}
-                        />
+                        >
+                            {selectedSchema.id === 'vendor-company' && <SaveCompanyButton />}
+                            {selectedSchema.id === 'vendor-capability' && <SaveBusinessLicenseButton />}
+                            {selectedSchema.id === 'vendor-document' && <SaveDocumentButton />}
+                        </DynamicForm>
                     </Box>
                 </Box>
             </Box>

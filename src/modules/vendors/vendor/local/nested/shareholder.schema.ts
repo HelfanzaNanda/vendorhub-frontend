@@ -49,7 +49,7 @@ export const ShareholderSchema: FormSchema = {
             grid: ThirdGrid,
             visibility: {
                 condition : {
-                    field: 'title.label',
+                    field: 'title.name',
                     operator: ConditionOperator.NOT_EQUALS,
                     value: 'Perusahaan'
                 }
@@ -70,7 +70,7 @@ export const ShareholderSchema: FormSchema = {
                     operator : LogicalOperator.AND,
                     conditions : [
                         {
-                            field: 'title.label',
+                            field: 'title.name',
                             operator: ConditionOperator.NOT_EQUALS,
                             value: 'Perusahaan'
                         }
@@ -88,7 +88,7 @@ export const ShareholderSchema: FormSchema = {
                     operator : LogicalOperator.AND,
                     conditions : [
                         {
-                            field: 'title.label',
+                            field: 'title.name',
                             operator: ConditionOperator.NOT_EQUALS,
                             value: 'Perusahaan'
                         }
@@ -106,7 +106,7 @@ export const ShareholderSchema: FormSchema = {
                     operator : LogicalOperator.AND,
                     conditions : [
                         {
-                            field: 'title.label',
+                            field: 'title.name',
                             operator: ConditionOperator.EQUALS,
                             value: 'Perusahaan'
                         }

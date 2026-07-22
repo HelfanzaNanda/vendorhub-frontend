@@ -12,6 +12,11 @@ import { FullGrid, HalfGrid, QuarterGrid, ThirdGrid, TwoThirdsGrid } from '@/mod
 import { RequiredValidation } from '@/modules/form-engine/validation';
 
 import { DocumentConstants, DocumentType } from '@/modules/vendors/vendor/common';
+import React, { useState } from 'react';
+import { Box, Button, CircularProgress } from '@mui/material';
+import { useDynamicFormContext } from '@/modules/form-engine/context';
+import { createCrudService } from '@/modules/form-engine/services/vendor-crud.service';
+import { toast } from 'sonner';
 
 export const VendorDocumentSchema: FormSchema = {
   id: DocumentConstants.SCHEMA_ID,
@@ -183,4 +188,36 @@ export const VendorDocumentSchema: FormSchema = {
     },
     
   ]
+};
+
+export const SaveDocumentButton = () => {
+    const context = useDynamicFormContext();
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleSave = async () => {
+        if (!context?.validate()) {
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            const payload = context.buildPayload();
+            const service = createCrudService('/vendor-document');
+            await service.save(payload);
+            toast.success('Document saved successfully');
+        } catch (error: any) {
+            toast.error(error?.response?.data?.message || error?.message || 'Failed to save Document');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    return React.createElement(Box, { sx: { display: 'flex', justifyContent: 'flex-end', mt: 3 } }, 
+        React.createElement(Button, { 
+            variant: 'contained', 
+            onClick: handleSave, 
+            disabled: isLoading,
+            startIcon: isLoading ? React.createElement(CircularProgress, { size: 20, color: 'inherit' }) : undefined
+        }, isLoading ? 'Saving...' : 'Save')
+    );
 };

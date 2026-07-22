@@ -18,6 +18,11 @@ import { FullGrid, HalfGrid, ThirdGrid } from '@/modules/form-engine/grids';
 import { CustomerReferenceSchema } from '../nested';
 import { RequiredValidation } from '@/modules/form-engine/validation';
 import { VendorCompetencyTable } from '@/modules/vendors/shared/tables/vendor-competency.table';
+import React, { useState } from 'react';
+import { Box, Button, CircularProgress } from '@mui/material';
+import { useDynamicFormContext } from '@/modules/form-engine/context';
+import { createCrudService } from '@/modules/form-engine/services/vendor-crud.service';
+import { toast } from 'sonner';
 
 
 const CompetencyInlineSchema: FormSchema = {
@@ -181,4 +186,36 @@ export const VendorCompetencySchema: FormSchema = {
       ]
     },
   ]
+};
+
+export const SaveBusinessLicenseButton = () => {
+    const context = useDynamicFormContext();
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleSave = async () => {
+        if (!context?.validate()) {
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            const payload = context.buildPayload();
+            const service = createCrudService('/vendor-competency');
+            await service.save(payload);
+            toast.success('Business License saved successfully');
+        } catch (error: any) {
+            toast.error(error?.response?.data?.message || error?.message || 'Failed to save Business License');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    return React.createElement(Box, { sx: { display: 'flex', justifyContent: 'flex-end', mt: 3 } }, 
+        React.createElement(Button, { 
+            variant: 'contained', 
+            onClick: handleSave, 
+            disabled: isLoading,
+            startIcon: isLoading ? React.createElement(CircularProgress, { size: 20, color: 'inherit' }) : undefined
+        }, isLoading ? 'Saving...' : 'Save')
+    );
 };
