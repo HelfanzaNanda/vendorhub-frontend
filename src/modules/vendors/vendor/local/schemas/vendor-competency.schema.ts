@@ -128,12 +128,12 @@ export const VendorCompetencySchema: FormSchema = {
                 id: 'save',
                 label: 'Save',
                 type: 'primary',
-                validateFields: ['fileId', 'industryClassifications']
+                validateFields: ['file', 'industryClassifications']
             }
         ],
         fields: [
             fileField({ 
-                name: 'fileId', 
+                name: 'file', 
                 label: 'NIB Document', 
                 grid: FullGrid, 
                 file: { 
@@ -160,7 +160,7 @@ export const VendorCompetencySchema: FormSchema = {
                         },
                         {
                             field: 'name',
-                            header: 'Title'
+                            header: 'Name'
                         },
                         {
                             field: 'description',

@@ -31,10 +31,10 @@ export const VendorDocumentSchema: FormSchema = {
         label: 'Save',
         type: 'primary',
         validateFields: [
-            'npwp.number', 'npwp.address', 'npwp.file',
+            'npwp.documentNumber', 'npwp.address', 'npwp.file',
             'taxpayer.taxpayerStatus', 'taxpayer.publishedDate', 'taxpayer.file',
-            'deedOfEstablishment.number', 'deedOfEstablishment.publishedDate', 'deedOfEstablishment.file',
-            'deedOfAmendment.number', 'deedOfAmendment.publishedDate', 'deedOfAmendment.file',
+            'deedOfEstablishment.documentNumber', 'deedOfEstablishment.publishedDate', 'deedOfEstablishment.file',
+            'deedOfAmendment.documentNumber', 'deedOfAmendment.publishedDate', 'deedOfAmendment.file',
             'organizationStructure.file'
         ]
     }
@@ -48,7 +48,7 @@ export const VendorDocumentSchema: FormSchema = {
         layout: FormLayout.CARD,
         fields: [
             textField({
-                name: 'npwp.number',
+                name: 'npwp.documentNumber',
                 label: 'NPWP',
                 grid: HalfGrid,
                 validation: { required: RequiredValidation.required }
@@ -120,7 +120,7 @@ export const VendorDocumentSchema: FormSchema = {
         layout: FormLayout.CARD,
         fields: [
             numberField({
-                name: 'deedOfEstablishment.number',
+                name: 'deedOfEstablishment.documentNumber',
                 label: 'No',
                 grid: ThirdGrid,
                 validation: { required: RequiredValidation.required },
@@ -154,7 +154,7 @@ export const VendorDocumentSchema: FormSchema = {
         layout: FormLayout.CARD,
         fields: [
             numberField({
-                name: 'deedOfAmendment.number',
+                name: 'deedOfAmendment.documentNumber',
                 label: 'No',
                 grid: ThirdGrid,
                 validation: { required: RequiredValidation.required },

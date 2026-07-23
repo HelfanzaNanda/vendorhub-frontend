@@ -40,7 +40,7 @@ export const AuthorizedSignerDocumentSchema: FormSchema = {
             }
         }),
         dateField({
-            name: 'effectiveEndDate',
+            name: 'validTo',
             label: 'Effective End Date',
             grid: HalfGrid,
             validation: { required: RequiredValidation.required },

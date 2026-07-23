@@ -98,7 +98,7 @@ export const UploadCard: React.FC<UploadCardProps> = ({
             cursor: isReadonly || isDisabled || loading ? 'default' : 'pointer',
             backgroundColor: isDragOver ? 'action.hover' : 'background.paper',
             borderColor: error ? 'error.main' : (isDragOver ? 'primary.main' : 'divider'),
-            borderStyle: 'dashed',
+            borderStyle: 'double',
             opacity: isDisabled ? 0.6 : 1,
             transition: 'all 0.2s ease-in-out'
           }}
@@ -130,7 +130,7 @@ export const UploadCard: React.FC<UploadCardProps> = ({
         </Paper>
       )}
       {(helperText || error) && (
-        <Typography variant="caption" color={error ? 'error' : 'textSecondary'} sx={{ mt: 0.5, display: 'block' }}>
+        <Typography variant="caption" color={error ? 'error.main' : 'textSecondary'} sx={{ mt: 0.5, display: 'block' }}>
           {error || helperText}
         </Typography>
       )}

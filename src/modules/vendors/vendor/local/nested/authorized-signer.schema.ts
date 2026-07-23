@@ -21,7 +21,7 @@ import { IdentityLookup, JobTypeLookup, PrivyVerification, TitleLookup } from '@
 import { AuthorizedSignerDocumentSchema } from './authorized-signer-document.schema';
 
 const authorizedSignerDocumentsField = formField({
-  name: 'authorizedSignerDocuments',
+  name: 'documents',
   label: 'Authorized Signer Documents',
   grid: FullGrid,
   nested: {
@@ -55,7 +55,7 @@ export const AuthorizedSignerSchema: FormSchema = {
             }
         }),
         textField({
-            name: 'fullName',
+            name: 'name',
             label: 'Full Name',
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid

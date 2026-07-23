@@ -23,10 +23,10 @@ export class ValidationEngine {
             return { valid: true, messages };
         }
 
-        const isEmpty = value === null || value === undefined || value === '';
+        const isEmpty = value === null || value === undefined || value === '' || (Array.isArray(value) && value.length === 0);
 
         if (validation.required && isEmpty) {
-            messages.push(validation.message || `${field.label || field.name} is required`);
+            messages.push(validation.message || `${field.label || field.name} cannot be empty`);
 
             return { valid: false, messages };
         }

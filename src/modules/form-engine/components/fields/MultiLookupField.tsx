@@ -33,6 +33,7 @@ export const MultiLookupField: React.FC<BaseFieldProps> = (props) => {
 
     const context = useDynamicFormContext();
 
+    
     const rows = Array.isArray(value) ? value : [];    
 
     const handleSelect = (selected: any) => {
@@ -50,6 +51,7 @@ export const MultiLookupField: React.FC<BaseFieldProps> = (props) => {
     const handleDelete = (id: number) => {
         onChange( rows.filter(x => x.id !== id) );
     };
+    
 
     return (
         <Box>
@@ -89,13 +91,6 @@ export const MultiLookupField: React.FC<BaseFieldProps> = (props) => {
                     </TableBody>
                 </Table>
             </Paper>
-            {
-                error && (
-                    <Typography mt={1} variant="caption" color="error" >
-                        {error}
-                    </Typography>
-                )
-            }
         </Box>
     );
 };

@@ -10,6 +10,7 @@ import type { VerificationState } from './verification-state.interface';
 export interface FormState {
     schema: FormSchema;
     values: Record<string, unknown>;
+    initialValues?: Record<string, unknown>;
     errors: Record<string, string | string[]>;
     touched: Record<string, boolean>;
     dirty: Record<string, boolean>;

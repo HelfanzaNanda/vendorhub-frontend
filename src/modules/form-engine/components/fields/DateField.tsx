@@ -17,7 +17,7 @@ export const DateField: React.FC<BaseFieldProps> = ({
             value={DateUtil.toDayjs(value as Date | string | Dayjs | null)}
             onChange={(date) => {
                 if (date?.isValid()) {
-                    onChange(date.toDate());
+                    onChange(date.format('YYYY-MM-DD'));
                 } else {
                     onChange(null);
                 }

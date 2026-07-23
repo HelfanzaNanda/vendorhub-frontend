@@ -211,7 +211,7 @@ export const TableField: React.FC<BaseFieldProps> = ({ field }) => {
 
     const handleDeleteConfirm = () => {
         if (itemToDelete) {
-            deleteMutation.mutate(itemToDelete.id, {
+            deleteMutation.mutate({id : itemToDelete.id, data : {source : itemToDelete.source}} as any, {
                 onSuccess: () => {
                     setDeleteConfirmOpen(false);
                     setItemToDelete(null);

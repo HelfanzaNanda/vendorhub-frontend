@@ -43,12 +43,17 @@ export function createCrudService<T = any>(baseEndpoint: string) {
         },
 
         create: async (data: Partial<T>): Promise<ApiResponse<T>> => {
-            return api.post<T>(baseEndpoint, data)
+            const [path, query] = baseEndpoint.split('?');
+            const search = new URLSearchParams(query);
+            return api.post<T>(path, {
+                ...Object.fromEntries(search.entries()),
+                ...data
+            })
         },
 
         update: async (id: string | number, data: Partial<T>): Promise<ApiResponse<T>> => {
             const [path, query] = baseEndpoint.split('?');
-        const search = new URLSearchParams(query);
+            const search = new URLSearchParams(query);
             return api.put<T>(`${path}/${id}`, {
                 ...Object.fromEntries(search.entries()),
                 ...data

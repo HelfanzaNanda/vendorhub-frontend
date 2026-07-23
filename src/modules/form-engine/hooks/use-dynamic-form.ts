@@ -46,6 +46,7 @@ export const useDynamicForm = (options: UseDynamicFormOptions): DynamicFormConte
     const getFormState = useCallback((): FormState => ({
         schema,
         values,
+        initialValues,
         errors,
         touched,
         dirty,
@@ -54,7 +55,7 @@ export const useDynamicForm = (options: UseDynamicFormOptions): DynamicFormConte
         submitting,
         readonly,
         mode
-    }), [schema, values, errors, touched, dirty, mode, readonly, verification, loading, submitting]);
+    }), [schema, values, initialValues, errors, touched, dirty, mode, readonly, verification, loading, submitting]);
 
     const getValue = useCallback((path: string) => {
         return ObjectUtil.get(values, path);

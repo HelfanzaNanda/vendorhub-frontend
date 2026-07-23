@@ -37,7 +37,7 @@ export const ShareholderSchema: FormSchema = {
             }
         }),
         textField({
-            name: 'fullName',
+            name: 'name',
             label: 'Full Name',
             validation: { required: RequiredValidation.required }, 
             grid: AutoGrid
@@ -82,37 +82,7 @@ export const ShareholderSchema: FormSchema = {
             name: 'identityNumber',
             label: 'Identity Number',
             validation: { required: RequiredValidation.required }, 
-            grid: HalfGrid,
-            display: {
-                visible : {
-                    operator : LogicalOperator.AND,
-                    conditions : [
-                        {
-                            field: 'title.name',
-                            operator: ConditionOperator.NOT_EQUALS,
-                            value: 'Perusahaan'
-                        }
-                    ]
-                }
-            }
-        }),
-        numberField({
-            name: 'npwp',
-            label: 'NPWP',
-            validation: { required: RequiredValidation.required }, 
-            grid: HalfGrid,
-            display: {
-                visible : {
-                    operator : LogicalOperator.AND,
-                    conditions : [
-                        {
-                            field: 'title.name',
-                            operator: ConditionOperator.EQUALS,
-                            value: 'Perusahaan'
-                        }
-                    ]
-                }
-            }
+            grid: FullGrid,
         }),
         percentageField({ 
             name: 'ownershipPercentage', 

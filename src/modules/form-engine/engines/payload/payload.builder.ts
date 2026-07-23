@@ -51,20 +51,59 @@ export class PayloadBuilder {
             if (field.type === 'FORM' && field.nested?.schema) {
 
                 if (field.nested.multiple) {
+                    const initialVal = formState.initialValues ? ObjectUtil.get(formState.initialValues, field.name) : [];
+                    const initialArray = Array.isArray(initialVal) ? initialVal : [];
+                    const currentArray = Array.isArray(val) ? val : [];
 
-                    if (Array.isArray(val) && val.length > 0) {
+                    const payloadArray: any[] = [];
+                    const presentIds = new Set();
 
-                        payload = this.mapPayload(
-                            payload,
-                            field,
-                            val.map(item =>
-                                this.buildNested(
-                                    item as Record<string, unknown>,
-                                    field.nested!.schema as FormSchema
-                                )
-                            )
+                    for (const item of currentArray) {
+                        const builtItem = this.buildNested(
+                            item as Record<string, unknown>,
+                            field.nested!.schema as FormSchema
                         );
+                        
+                        const id = (item as any).id;
+                        let action: string | null = null;
+                        
+                        if (!id) {
+                            action = 'CREATE';
+                        } else {
+                            presentIds.add(id);
+                            const initialItem = initialArray.find(i => i.id === id);
+                            if (initialItem) {
+                                const builtInitialItem = this.buildNested(initialItem as Record<string, unknown>, field.nested!.schema as FormSchema);
+                                if (JSON.stringify(builtItem) !== JSON.stringify(builtInitialItem)) {
+                                    action = 'UPDATE';
+                                } else {
+                                    action = null; // NO_ACTION
+                                }
+                            } else {
+                                action = 'UPDATE';
+                            }
+                        }
+                        
+                        builtItem.id = id || null;
+                        builtItem.action = action;
+                        delete builtItem.source;
+                        delete builtItem.masterId;
+                        delete builtItem.tempId;
+                        
+                        payloadArray.push(builtItem);
+                    }
 
+                    for (const initialItem of initialArray) {
+                        if (initialItem.id && !presentIds.has(initialItem.id)) {
+                            payloadArray.push({
+                                id: initialItem.id,
+                                action: 'DELETE'
+                            });
+                        }
+                    }
+
+                    if (payloadArray.length > 0) {
+                        payload = this.mapPayload(payload, field, payloadArray);
                     }
 
                 } else {
@@ -181,10 +220,16 @@ export class PayloadBuilder {
                 (value as Record<string, unknown>)[pick]
             );
         }
-        return ObjectUtil.set(
+        // return ObjectUtil.set(
+        //     payload,
+        //     field.payload.key,
+        //     (value as any)[pick]
+        // );
+
+         return ObjectUtil.set(
             payload,
             field.payload.key,
-            (value as any)[pick]
+            value,
         );
     }
 
@@ -192,15 +237,12 @@ export class PayloadBuilder {
         values: Record<string, unknown>,
         schema: FormSchema
     ): Record<string, unknown> {
-
         let payload: Record<string, unknown> = {};
 
         const fields = SchemaEngine.flattenFields(schema);
 
         for (const field of fields) {
-
             const value = ObjectUtil.get(values, field.name);
-
             if (value === undefined || value === null) {
                 continue;
             }
@@ -226,6 +268,7 @@ export class PayloadBuilder {
                 }
                 continue;
             }
+            
             payload = this.mapPayload(payload, field, value);
         }
         return payload;
