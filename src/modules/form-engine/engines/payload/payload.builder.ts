@@ -48,7 +48,7 @@ export class PayloadBuilder {
             //     payload = this.mapPayload(payload, field, val);
             // }
 
-            if (field.type === 'FORM' && field.nested?.schema) {
+            if (field.nested?.schema) {
 
                 if (field.nested.multiple) {
                     const initialVal = formState.initialValues ? ObjectUtil.get(formState.initialValues, field.name) : [];
@@ -247,7 +247,7 @@ export class PayloadBuilder {
                 continue;
             }
 
-            if (field.type === 'FORM' && field.nested?.schema) {
+            if (field.nested?.schema) {
                 if (field.nested.multiple) {
                     payload = this.mapPayload(
                         payload,

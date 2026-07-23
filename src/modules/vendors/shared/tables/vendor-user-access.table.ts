@@ -9,9 +9,21 @@ export const VendorUserAccessTable: TableConfigSchema = {
     { field: 'email', title: 'Email' },
     { field: 'phone', title: 'Phone' },
     { field: 'jobTitle', title: 'job Title' },
-    { field: 'roles', title: 'roles' },
+    { field: 'roles', title: 'roles', render: (render: any) => {
+        const values = render.getValue();
+        if (values) {
+            return values.join(', ');
+        }
+        return '-';
+    } },
     { field: 'effectiveEndDate', title: 'Effective End Date' },
-    { field: 'areas', title: 'Areas' },
+    { field: 'areas', title: 'Area', render: (render: any) => {
+        const values = render.getValue();
+        if (values) {
+            return values.join(', ');
+        }
+        return '-';
+    } },
   ],
   sortable: true,
   searchable: true,

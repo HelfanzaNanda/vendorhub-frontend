@@ -36,13 +36,13 @@ const UserAccessSchema: FormSchema = {
             layout: FormLayout.CARD,
             fields: [
                 textField({
-                    name: 'firstName',
+                    name: 'firstname',
                     label: 'First Name',
                     validation: { required: RequiredValidation.required },
                     grid: HalfGrid
                 }),
                 textField({
-                    name: 'lastName',
+                    name: 'lastname',
                     label: 'Last Name',
                     validation: { required: RequiredValidation.required },
                     grid: HalfGrid
@@ -93,7 +93,7 @@ const UserAccessSchema: FormSchema = {
                 }),
 
                 autocompleteField({
-                    name: 'roleIds',
+                    name: 'roles',
                     label: 'Role',
                     validation: { required: RequiredValidation.required },
                     grid: HalfGrid,
@@ -106,7 +106,7 @@ const UserAccessSchema: FormSchema = {
                 }),
 
                 autocompleteField({
-                    name: 'areaIds',
+                    name: 'areas',
                     label: 'Working Area',
                     validation: { required: RequiredValidation.required },
                     grid: HalfGrid,
