@@ -7,7 +7,7 @@ import { Autocomplete, TextField, CircularProgress } from '@mui/material';
 import { useDynamicFormContext } from '../../context';
 import type { BaseFieldProps } from './types';
 import type { OptionSchema } from '../../interfaces';
-import { LookupEngine } from '../../engines';
+import { LookupEngine, DependencyEngine } from '../../engines';
 import { apiClient } from '@/services/api';
 
 export const AutocompleteField: React.FC<BaseFieldProps> = ({
@@ -47,7 +47,7 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
             return undefined;
         }
 
-        if (!open && inputValue === '') {
+        if (!DependencyEngine.shouldFetchLookup(field, parentValue, open, inputValue)) {
             return undefined;
         }
 
@@ -120,16 +120,25 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
     );
 
     const firstRender = useRef(true);
+    const previousParentValue = useRef(parentValue);
 
     useEffect(() => {
         if (!field.dependency?.clearOnChange) return;
 
         if (firstRender.current) {
             firstRender.current = false;
+            previousParentValue.current = parentValue;
             return;
         }
 
-        onChange(field.multiple ? [] : null);
+        const prev = previousParentValue.current;
+        const isPrevEmpty = prev === undefined || prev === null || prev === '';
+        
+        if (!isPrevEmpty && prev !== parentValue) {
+            onChange(field.multiple ? [] : null);
+        }
+
+        previousParentValue.current = parentValue;
 
     }, [parentValue]);
 

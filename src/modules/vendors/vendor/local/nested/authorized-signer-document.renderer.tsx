@@ -9,9 +9,10 @@ import { NestedDynamicFormProvider } from '@/modules/form-engine/context';
 import { AuthorizedSignerDocumentEnum } from '@/modules/form-engine/enums/authorized-signer-document.enum';
 
 export const AuthorizedSignerDocumentRenderer: React.FC<any> = React.memo((props) => {
-    const { field } = props;
+    const { field, isDisabled, isReadonly } = props;
     const schema = field.nested?.schema;
     const { items, add, remove } = useNestedForm({ field });
+    
 
     const [expanded, setExpanded] = React.useState<Record<number, boolean>>({});
 
@@ -56,9 +57,7 @@ export const AuthorizedSignerDocumentRenderer: React.FC<any> = React.memo((props
         <Box sx={{ mb: 2 }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                 <Typography variant="subtitle1"> {field.label} </Typography>
-                <IconButton color="primary" sx={{borderRadius: 1}} onClick={handleAdd} disabled={isAddDisabled}> 
-                    <Add /> 
-                </IconButton>
+                {isDisabled || isReadonly ? null : ( <IconButton color="primary" sx={{borderRadius: 1}} onClick={handleAdd} disabled={isAddDisabled}> <Add /> </IconButton> )}
             </Box>
             {rows.length === 0 && ( <Typography variant="body2" color="text.secondary" sx={{ py: 3, textAlign: 'center' }} > No Data </Typography> )}
             {
@@ -102,7 +101,7 @@ export const AuthorizedSignerDocumentRenderer: React.FC<any> = React.memo((props
                                         <Typography fontWeight={600}> {schema.title} #{index + 1} </Typography>
                                         
                                         {/* Contract row cannot be removed */}
-                                        {!isContract && (
+                                        {!isContract && !isDisabled && !isReadonly && (
                                             <IconButton size="small" color="error" onClick={(e) => { e.stopPropagation(); remove(index); }} > 
                                                 <Delete fontSize="small" /> 
                                             </IconButton>

@@ -36,4 +36,25 @@ return allFields.filter(f => f.dependency && f.dependency.parent === changedFiel
       nextValues
     };
   }
+
+  static shouldFetchLookup(
+    field: FieldSchema,
+    parentValue: unknown,
+    open: boolean,
+    inputValue: string
+  ): boolean {
+    if (!field.dependency?.parent) {
+      return open || inputValue !== '';
+    }
+
+    if (open || inputValue !== '') {
+      return true;
+    }
+
+    if (parentValue !== undefined && parentValue !== null && parentValue !== '') {
+      return true;
+    }
+
+    return false;
+  }
 }
