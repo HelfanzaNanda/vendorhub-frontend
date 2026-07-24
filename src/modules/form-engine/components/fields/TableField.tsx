@@ -127,13 +127,31 @@ export const TableField: React.FC<BaseFieldProps> = ({ field }) => {
         tableConfig.columns.forEach(col => {
             const fieldName = typeof col === 'string' ? col : col.field;
             const title = typeof col === 'string' ? col : col.title;
-            const renderFn = typeof col !== 'string' ? col.render : undefined;
+            const render = typeof col !== 'string' ? col.render : undefined;
+            const renderComponent = typeof col !== 'string' ? col.renderComponent : undefined;
             const isSortable = typeof col !== 'string' && col.sortable !== undefined ? col.sortable : tableConfig.sortable !== false;
 
             list.push({
                 accessorKey: fieldName,
                 header: ({ column }: any) => <DataTableColumnHeader column={column} title={title} />,
-                cell: renderFn ? renderFn : ({ getValue }: any) => {
+                cell: ({ getValue, row }: any) => {
+                    if (renderComponent) {
+                        const Component = renderComponent;
+
+                        return (
+                            <Component
+                                value={getValue()}
+                                record={row.original}
+                            />
+                        );
+                    }
+                    if (render) {
+                        return render({
+                            value: getValue(),
+                            record: row.original,
+                        });
+                    }
+
                     const val = getValue();
                     if (val === undefined || val === null || val === '') return '-';
                     if (typeof val === 'object') return Array.isArray(val) ? val.length + ' items' : 'Object';

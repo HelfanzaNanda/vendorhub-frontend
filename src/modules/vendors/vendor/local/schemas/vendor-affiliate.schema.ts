@@ -28,7 +28,7 @@ const AffiliateCompanyInlineSchema: FormSchema = {
       layout: FormLayout.CARD,
       fields: [
         autocompleteField({
-            name: 'affiliateTypeId',
+            name: 'affiliateType',
             label: 'Relationship Type',
             validation: { required: RequiredValidation.required },
             grid: HalfGrid,
@@ -39,13 +39,13 @@ const AffiliateCompanyInlineSchema: FormSchema = {
             }
         }),
         autocompleteField({
-            name: 'businessEntityTypeId',
+            name: 'companyBusinessEntityType',
             label: 'Business Entity',
             validation: { required: RequiredValidation.required },
             grid: HalfGrid,
             lookup: BusinessEntityLookup,
             payload: {
-                key: 'businessEntityTypeId',
+                key: 'companyBusinessEntityTypeId',
                 pick: 'id'
             }
         }),

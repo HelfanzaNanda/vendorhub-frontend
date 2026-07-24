@@ -9,6 +9,10 @@ export class DateUtil {
         return dayjs().add(years, 'years');
     }
 
+    static formatDate(value: string | Date, format = 'DD MMM YYYY'): string {
+        return dayjs(value).format(format);
+    }
+
     static minusYears(years: number): dayjs.Dayjs {
         return dayjs().subtract(years, 'years');
     }

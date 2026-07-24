@@ -13,5 +13,5 @@ export const ReportTypeLookup: LookupSchema = {
         }
     ],
     labelField: 'name',
-    valueField: 'value'
+    valueField: 'id'
 };

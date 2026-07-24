@@ -1,29 +1,41 @@
+import { GroupCell } from '@/modules/form-engine/components/cells';
 import type { TableConfigSchema } from '@/modules/form-engine/interfaces';
+import React from 'react';
 
 export const VendorUserAccessTable: TableConfigSchema = {
   endpoint: `/vendor-user-temps`, // :vendorTempId will be replaced by form context value
   columns: [
-    { field: 'username', title: 'Username' },
-    { field: 'firstname', title: 'First Name' },
-    { field: 'lastname', title: 'Last Name' },
-    { field: 'email', title: 'Email' },
-    { field: 'phone', title: 'Phone' },
-    { field: 'jobTitle', title: 'job Title' },
-    { field: 'roles', title: 'roles', render: (render: any) => {
-        const values = render.getValue();
-        if (values) {
-            return values.join(', ');
+    {
+        field: 'person',
+        title: 'Person',
+        render: ({ record }) =>
+            React.createElement(GroupCell, {
+                items: [
+                    { value: `${record.firstname} - ${record.lastname}`, variant: 'h6' },
+                    { value: record.email },
+                    { value: record.phone },
+                    { value: record.username }
+                ]
+            })
+    },
+    {
+        field: 'area',
+        title: 'Area',
+        render: ({ record }) =>
+            React.createElement(GroupCell, {
+                items: [
+                    { value: record.position?.name, variant: 'h6' },
+                    { value: record.areas?.join(', ') },
+                    { value: `Valid until : ${record.effectiveEndDate}` },
+                ]
+            })
+    },
+    { field: 'roles', title: 'roles', render: ({value, record}) => {
+        if (value) {
+            return value.join(', ');
         }
         return '-';
-    } },
-    { field: 'effectiveEndDate', title: 'Effective End Date' },
-    { field: 'areas', title: 'Area', render: (render: any) => {
-        const values = render.getValue();
-        if (values) {
-            return values.join(', ');
-        }
-        return '-';
-    } },
+    } }
   ],
   sortable: true,
   searchable: true,
