@@ -168,8 +168,8 @@ export const TableField: React.FC<BaseFieldProps> = ({ field }) => {
                 cell: ({ row }: any) => (
                     <DataTableActions
                         onView={tableConfig.actions?.includes('view') ? () => handleOpenModal(row.original, 'VIEW') : undefined}
-                        onEdit={tableConfig.actions?.includes('edit') && !context.readonly ? () => handleOpenModal(row.original, 'EDIT') : undefined}
-                        onDelete={tableConfig.actions?.includes('delete') && !context.readonly ? () => {
+                        onEdit={tableConfig.actions?.includes('edit') && !context.readonly && context.permissions?.canEdit !== false ? () => handleOpenModal(row.original, 'EDIT') : undefined}
+                        onDelete={tableConfig.actions?.includes('delete') && !context.readonly && context.permissions?.canDelete !== false ? () => {
                             setItemToDelete(row.original);
                             setDeleteConfirmOpen(true);
                         } : undefined}
@@ -250,7 +250,7 @@ export const TableField: React.FC<BaseFieldProps> = ({ field }) => {
                                 <Typography variant="body2" color="text.secondary">{String(field.helperText)}</Typography>
                             )}
                         </Box>
-                        {!context.readonly && tableConfig.actions?.includes('edit') && (
+                        {!context.readonly && tableConfig.actions?.includes('edit') && context.permissions?.canCreate !== false && (
                             <Button
                                 variant="contained"
                                 startIcon={<i className="ri-add-line" />}

@@ -25,7 +25,7 @@ import type { FormState, VerificationState } from '../interfaces';
  * can be passed directly to DynamicFormProvider without mapping.
  */
 export const useDynamicForm = (options: UseDynamicFormOptions): DynamicFormContextValue => {
-    const { schema, initialValues = {}, mode = 'CREATE', readonly = false } = options;
+    const { schema, initialValues = {}, mode = 'CREATE', readonly = false, permissions } = options;
 
     const schemaDefaults = SchemaEngine.buildDefaultValues(schema);
 
@@ -54,8 +54,9 @@ export const useDynamicForm = (options: UseDynamicFormOptions): DynamicFormConte
         loading,
         submitting,
         readonly,
+        permissions,
         mode
-    }), [schema, values, initialValues, errors, touched, dirty, mode, readonly, verification, loading, submitting]);
+    }), [schema, values, initialValues, errors, touched, dirty, mode, readonly, permissions, verification, loading, submitting]);
 
     const getValue = useCallback((path: string) => {
         return ObjectUtil.get(values, path);
@@ -176,6 +177,7 @@ export const useDynamicForm = (options: UseDynamicFormOptions): DynamicFormConte
         loading,
         submitting,
         readonly,
+        permissions,
         mode,
         schema,
 

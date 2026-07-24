@@ -3,53 +3,35 @@
 import React, { useMemo, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { TableField } from '@/modules/form-engine/components/fields';
-import { useQueryClient, useIsFetching } from '@tanstack/react-query';
+import { useQueryClient, useIsFetching, useQuery } from '@tanstack/react-query';
+import { api } from '@/services/api';
 import { PersonnelType } from '@/modules/vendors/vendor/common';
 
 export const ShareholderTableRenderer: React.FC<any> = (props) => {
     const { field, context } = props;
     const queryClient = useQueryClient();
-    
-    // The endpoint from the config
-    const endpoint = field.table?.endpoint || `/vendor-personnel-temps?personnelTypeCode=${PersonnelType.SHAREHOLDER}`;
-    
-    // We replace path parameters if any
-    const finalEndpoint = useMemo(() => {
-        let url = endpoint;
-        const matches = url.match(/:[a-zA-Z]+/g);
-        if (matches) {
-            matches.forEach((m: string) => {
-                const key = m.substring(1);
-                const val = context.getValue(key) || context.getValue('id') || context.getValue('vendorTempId') || '';
-                url = url.replace(m, String(val));
-            });
-        }
-        return url;
-    }, [endpoint, context]);
+    const summaryEndpoint = `/vendor-personnel-temps/ownership-summary`;
 
-    const isFetching = useIsFetching({ queryKey: [finalEndpoint] });
-    
-    const { total, remaining } = useMemo(() => {
-        const queries = queryClient.getQueryCache().findAll({ queryKey: [finalEndpoint] });
-        
-        let latestTime = 0;
-        let latestRows: any[] = [];
-        
-        queries.forEach(query => {
-            const data = query.state.data as any;
-            const payload = data?.data || data;
-            const rows = payload?.data || payload?.rows || [];
-            if (Array.isArray(rows) && rows.length > 0 && query.state.dataUpdatedAt >= latestTime) {
-                latestTime = query.state.dataUpdatedAt;
-                latestRows = rows;
-            } else if (Array.isArray(rows) && latestTime === 0) {
-                latestRows = rows;
-            }
-        });
-        
-        const sum = latestRows.reduce((acc, row) => acc + Number(row.ownershipPercentage || row.ownership || 0), 0);
-        return { total: sum, remaining: 100 - sum };
-    }, [isFetching, queryClient, finalEndpoint]);
+    const { data: summaryResponse, refetch: refetchSummary } = useQuery({
+        queryKey: [summaryEndpoint],
+        queryFn: async () => {
+            const res = await api.get(summaryEndpoint);
+            return res.data;
+        }
+    });
+
+    // The TableField fetches its own data. When TableField mutates, it automatically refetches.
+    // To sync our summary, we observe any active fetching on the personnel-temps endpoint (which TableField hits).
+    const isTableFetching = useIsFetching({ queryKey: [field.table?.endpoint || `/vendor-personnel-temps?personnelTypeCode=${PersonnelType.SHAREHOLDER}`] });
+
+    useEffect(() => {
+        if (!isTableFetching) {
+            refetchSummary();
+        }
+    }, [isTableFetching, refetchSummary]);
+
+    const total = summaryResponse?.total ?? 0;
+    const remaining = 100 - total;
     
     const { setError, clearError, getError } = context;
     const currentError = getError(field.name);

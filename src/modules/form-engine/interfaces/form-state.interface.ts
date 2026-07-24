@@ -1,6 +1,14 @@
 import type { FormSchema } from './form-schema.interface';
 import type { VerificationState } from './verification-state.interface';
 
+export interface FormPermissions {
+    canSave?: boolean;
+    canSubmit?: boolean;
+    canCreate?: boolean;
+    canEdit?: boolean;
+    canDelete?: boolean;
+}
+
 /**
  * Single source of truth for the entire Dynamic Form Engine.
  * All runtime state (values, errors, modes, etc.) is unified and managed 
@@ -18,5 +26,6 @@ export interface FormState {
     submitting: boolean;
     verification: Record<string, VerificationState>;
     readonly: boolean;
+    permissions?: FormPermissions;
     mode: 'CREATE' | 'EDIT' | 'VIEW';
 }

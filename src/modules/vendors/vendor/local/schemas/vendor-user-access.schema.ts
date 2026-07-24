@@ -11,13 +11,15 @@ import {
     dateField,
     fileField,
     tableField,
-    DateUtil
+    DateUtil,
+    ConditionOperator,
+    LogicalOperator
 } from '@/modules/form-engine';
 
 import { DocumentType, UserAccessConstants, UserAccessStatus } from '@/modules/vendors/vendor/common';
 import { RequiredValidation } from '@/modules/form-engine/validation';
 import { FullGrid, HalfGrid, QuarterGrid, ThirdGrid, TwoThirdsGrid } from '@/modules/form-engine/grids';
-import { RoleLookup, PositionLookup, AreaLookup, PhoneVerification, EmailVerification } from '@/modules/vendors/shared';
+import { RoleLookup, PositionLookup, AreaLookup, PhoneVerification, EmailVerification, TitleLookup } from '@/modules/vendors/shared';
 import { PhoneVerifyVerification } from '@/modules/vendors/shared/verification/phone.verification';
 import { VendorUserAccessTable } from '@/modules/vendors/shared/tables/vendor-user-access.table';
 
@@ -63,7 +65,13 @@ const UserAccessSchema: FormSchema = {
                     payload: {
                         key: 'positionId',
                         pick: 'id'
-                    }
+                    },
+                    // mapping: [
+                    //     {
+                    //         from: 'defaultRoles',
+                    //         to: 'roles'
+                    //     }
+                    // ]
                 }),
 
                 phoneField({
@@ -102,7 +110,19 @@ const UserAccessSchema: FormSchema = {
                     payload: {
                         key: 'roleIds',
                         pick: 'id'
-                    }
+                    },
+                    // display: {
+                    //     disabled: {
+                    //         operator: LogicalOperator.AND,
+                    //         conditions: [
+                    //             {
+                    //                 field: 'position.name',
+                    //                 operator: ConditionOperator.EQUALS,
+                    //                 value: 'Admin Vendor'
+                    //             }
+                    //         ]
+                    //     }
+                    // }
                 }),
 
                 autocompleteField({

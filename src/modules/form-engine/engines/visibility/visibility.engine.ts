@@ -1,4 +1,5 @@
 import type { FieldSchema, FormState } from '../../interfaces';
+import { FieldType } from '../../enums';
 import { ConditionEvaluator } from '../evaluator/condition.evaluator';
 
 /**
@@ -14,24 +15,30 @@ export class VisibilityEngine {
     }
 
     
-return ConditionEvaluator.evaluate(field.display.visible, formState);
+    return ConditionEvaluator.evaluate(field.display.visible, formState);
   }
 
   static isReadonly(field: FieldSchema, formState: FormState): boolean {
+    if (formState.permissions?.canSave === false && field.type !== FieldType.TABLE) {
+      return true;
+    }
+
     if (!field.display || !field.display.readonly) {
       return false;
     }
 
-    
-return ConditionEvaluator.evaluate(field.display.readonly, formState);
+    return ConditionEvaluator.evaluate(field.display.readonly, formState);
   }
 
   static isDisabled(field: FieldSchema, formState: FormState): boolean {
+    if (formState.permissions?.canSave === false && field.type !== FieldType.TABLE) {
+      return true;
+    }
+
     if (!field.display || !field.display.disabled) {
       return false;
     }
 
-    
-return ConditionEvaluator.evaluate(field.display.disabled, formState);
+    return ConditionEvaluator.evaluate(field.display.disabled, formState);
   }
 }

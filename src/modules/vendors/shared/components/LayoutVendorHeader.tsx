@@ -26,9 +26,7 @@ export default function LayoutVendorHeader({ title, breadcrumbs, actionLabel, ac
                 <Breadcrumbs aria-label="breadcrumb">
                     {breadcrumbs.map((item, index) => {
                         const isLast = index === breadcrumbs.length - 1
-
                         if (isLast) { return (<Typography key={index} color="text.primary"> {item.label} </Typography>) }
-
                         return (<MuiLink key={index} component={Link} underline="hover" color="inherit" href={item.href || '#'} > {item.label} </MuiLink>)
                     })}
                 </Breadcrumbs>
@@ -40,23 +38,11 @@ export default function LayoutVendorHeader({ title, breadcrumbs, actionLabel, ac
             {actionLabel && (
                 <Box>
                     {actionHref ? (
-                        <Button
-                            component={Link}
-                            href={actionHref}
-                            variant="contained"
-                            color="primary"
-                            startIcon={actionIcon}
-                        >
+                        <Button component={Link} href={actionHref} variant="contained" color="primary" startIcon={actionIcon} >
                             {actionLabel}
                         </Button>
                     ) : (
-                        <Button
-                            onClick={onActionClick}
-                            variant="contained"
-                            color="primary"
-                            startIcon={actionIcon}
-                            disabled={actionDisabled}
-                        >
+                        <Button onClick={onActionClick} variant="contained" color="primary" startIcon={actionIcon} disabled={actionDisabled} >
                             {actionLabel}
                         </Button>
                     )}

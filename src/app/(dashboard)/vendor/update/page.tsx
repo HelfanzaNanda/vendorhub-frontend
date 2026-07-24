@@ -18,6 +18,7 @@ import { LocalVendorSchema } from '@/modules/vendors/vendor/local/schemas/vendor
 import LayoutVendorHeader from '@/modules/vendors/shared/components/LayoutVendorHeader'
 import { MainSchema } from '@/modules'
 import { LayoutVendorNavbar } from '@/modules/vendors/shared/components'
+import { VendorUpdateProvider, useVendorUpdateContext } from './context/vendor-update-context'
 
 // Removed conditional button imports
 
@@ -26,13 +27,11 @@ function UpdateVendorPageContent() {
     const router = useRouter()
     const queryClient = useQueryClient()
     const user = useAuthStore((state) => state.user)
-    // const isPreReg = user?.type === 'EXTERNAL' && user?.vendor?.vendorStatus?.code === 'PRE_REGISTRATION'
-    // const activeTab = isPreReg ? 'terms_conditions' : (searchParams.get('tab') || 'terms_conditions')
+    const { data: contextData } = useVendorUpdateContext()
 
 
 
-    // MOCK: Default Vendor Type to LOCAL until API is integrated
-    const vendorType = 'LOCAL'
+    const vendorType = contextData?.info?.vendorType || 'LOCAL'
 
     const getSchemaByVendorType = (type: string) => {
         switch (type) {
@@ -104,7 +103,7 @@ function UpdateVendorPageContent() {
                 actionLabel={'Submit'}
                 actionIcon={submitRegistrationMutation.isPending ? <i className="ri-loader-4-line animate-spin" /> : <i className="ri-send-plane-fill" />}
                 onActionClick={() => submitRegistrationMutation.mutate()}
-                actionDisabled={submitRegistrationMutation.isPending}
+                actionDisabled={submitRegistrationMutation.isPending || !contextData.permission.canSubmit}
             />
             <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'hidden', flexDirection: { xs: 'column', md: 'row' } }}>
                 <Box className="flex flex-col w-full h-full">
@@ -117,6 +116,7 @@ function UpdateVendorPageContent() {
                         <DynamicForm
                             key={selectedSchema.id}
                             schema={selectedSchema.schema}
+                            permissions={contextData?.permission}
                         />
                     </Box>
                 </Box>
@@ -128,7 +128,9 @@ function UpdateVendorPageContent() {
 export default function UpdateVendorPage() {
     return (
         <Suspense fallback={null}>
-            <UpdateVendorPageContent />
+            <VendorUpdateProvider>
+                <UpdateVendorPageContent />
+            </VendorUpdateProvider>
         </Suspense>
     )
 }

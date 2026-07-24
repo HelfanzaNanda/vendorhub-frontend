@@ -5,4 +5,5 @@ export interface UseDynamicFormOptions {
   initialValues?: Record<string, unknown>;
   mode?: 'CREATE' | 'EDIT' | 'VIEW';
   readonly?: boolean;
+  permissions?: import('../interfaces').FormPermissions;
 }

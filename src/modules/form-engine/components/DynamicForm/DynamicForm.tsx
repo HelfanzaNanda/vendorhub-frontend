@@ -12,6 +12,7 @@ export const DynamicForm = React.memo(({
   defaultValues,
   mode,
   readonly,
+  permissions,
   loading,
   className,
   style,
@@ -21,7 +22,8 @@ export const DynamicForm = React.memo(({
     schema,
     initialValues: initialValues || defaultValues,
     mode,
-    readonly
+    readonly,
+    permissions
   });
 
   return (

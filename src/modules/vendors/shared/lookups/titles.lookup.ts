@@ -6,4 +6,5 @@ export const TitleLookup: LookupSchema = {
   method: HttpMethod.GET,
   valueField: 'id',
   labelField: 'name',
+  params: { excludeCodes: 'PERUSAHAAN' }
 };

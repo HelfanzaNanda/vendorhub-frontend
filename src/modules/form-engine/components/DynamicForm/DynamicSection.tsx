@@ -68,7 +68,7 @@ export const DynamicSection: React.FC<DynamicSectionProps> = React.memo(({
                         key={action.id}
                         variant={action.type === 'primary' ? 'contained' : 'outlined'}
                         onClick={() => handleAction(action)}
-                        disabled={isLoading}
+                        disabled={isLoading || context.permissions?.canSave == false}
                         startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : undefined}
                     >
                         {isLoading ? 'Processing...' : action.label}

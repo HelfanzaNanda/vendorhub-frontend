@@ -159,10 +159,10 @@ return false
                 render={({ field }) => (
                   <Autocomplete
                     {...field}
-                    options={categories}
+                    options={categories.map((c: any) => ({ value: c.id, label: c.name }))}
                     loading={loadingCategories}
-                    onChange={(_, newValue) => field.onChange(newValue?.value || '')}
-                    value={categories.find((c: any) => c.value === field.value) || null}
+                    onChange={(_, newValue) => field.onChange(newValue?.id || '')}
+                    value={categories.find((c: any) => c.id === field.value) || null}
                     renderInput={(params) => (
                       <TextField 
                         {...params} 
@@ -182,11 +182,11 @@ return false
                 render={({ field }) => (
                   <Autocomplete
                     {...field}
-                    options={categoryItems}
+                    options={categoryItems.map((c: any) => ({ value: c.id, label: c.name }))}
                     loading={loadingItems}
                     disabled={!vendorCategoryId}
-                    onChange={(_, newValue) => field.onChange(newValue?.value || '')}
-                    value={categoryItems.find((c: any) => c.value === field.value) || null}
+                    onChange={(_, newValue) => field.onChange(newValue?.id || '')}
+                    value={categoryItems.find((c: any) => c.id === field.id) || null}
                     renderInput={(params) => (
                       <TextField 
                         {...params} 

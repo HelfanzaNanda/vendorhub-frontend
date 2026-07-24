@@ -80,7 +80,7 @@ export const DynamicFormResourceAndActions = ({ schema }: { schema: FormSchema }
                     key={action.id}
                     variant={action.type === 'primary' ? 'contained' : 'outlined'}
                     onClick={() => handleAction(action)}
-                    disabled={isLoading || isFetching}
+                    disabled={isLoading || isFetching || (context.permissions?.canSave === false)}
                     startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : undefined}
                 >
                     {isLoading ? 'Processing...' : action.label}

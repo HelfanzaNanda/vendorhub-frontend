@@ -30,7 +30,10 @@ export const ShareholderSchema: FormSchema = {
             label: 'Title',
             validation: { required: RequiredValidation.required }, 
             grid: QuarterGrid,
-            lookup: TitleLookup,
+            lookup: {
+                ...TitleLookup,
+                params: {}
+            },
             payload: {
                 key: 'titleId',
                 pick: 'id'

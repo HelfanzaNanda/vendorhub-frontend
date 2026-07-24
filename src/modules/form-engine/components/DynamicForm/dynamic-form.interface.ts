@@ -8,6 +8,7 @@ export interface DynamicFormProps {
   defaultValues?: Record<string, unknown>; // For backward compatibility
   mode?: 'CREATE' | 'EDIT' | 'VIEW';
   readonly?: boolean;
+  permissions?: import('@/modules/form-engine/interfaces').FormPermissions;
   loading?: boolean;
   className?: string;
   style?: React.CSSProperties;
