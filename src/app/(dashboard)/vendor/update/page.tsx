@@ -19,6 +19,7 @@ import LayoutVendorHeader from '@/modules/vendors/shared/components/LayoutVendor
 import { MainSchema } from '@/modules'
 import { LayoutVendorNavbar } from '@/modules/vendors/shared/components'
 import { VendorUpdateProvider, useVendorUpdateContext } from './context/vendor-update-context'
+import { UnsavedChangesProvider, useUnsavedChanges } from '@/modules/form-engine/hooks/use-unsaved-changes'
 
 // Removed conditional button imports
 
@@ -28,8 +29,7 @@ function UpdateVendorPageContent() {
     const queryClient = useQueryClient()
     const user = useAuthStore((state) => state.user)
     const { data: contextData } = useVendorUpdateContext()
-
-
+    const { checkUnsavedChanges } = useUnsavedChanges()
 
     const vendorType = contextData?.info?.vendorType || 'LOCAL'
 
@@ -71,8 +71,10 @@ function UpdateVendorPageContent() {
 
 
     const handleSelectSchema = (schema: MainSchema) => {
-        setSelectedSchema(schema)
-        router.push(`/vendor/update?tab=${schema.id}`, { scroll: false })
+        checkUnsavedChanges(() => {
+            setSelectedSchema(schema)
+            router.push(`/vendor/update?tab=${schema.id}`, { scroll: false })
+        });
     }
 
     const submitRegistrationMutation = useMutation({
@@ -101,9 +103,9 @@ function UpdateVendorPageContent() {
                     { label: 'Update Profile' },
                 ]}
                 actionLabel={'Submit'}
-                actionIcon={submitRegistrationMutation.isPending ? <i className="ri-loader-4-line animate-spin" /> : <i className="ri-send-plane-fill" />}
-                onActionClick={() => submitRegistrationMutation.mutate()}
-                actionDisabled={submitRegistrationMutation.isPending || !contextData.permission.canSubmit}
+                actionIcon={<i className="ri-send-plane-fill" />}
+                onActionClick={() => submitRegistrationMutation.mutateAsync()}
+                actionDisabled={!contextData.permission.canSubmit}
             />
             <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'hidden', flexDirection: { xs: 'column', md: 'row' } }}>
                 <Box className="flex flex-col w-full h-full">
@@ -129,7 +131,9 @@ export default function UpdateVendorPage() {
     return (
         <Suspense fallback={null}>
             <VendorUpdateProvider>
-                <UpdateVendorPageContent />
+                <UnsavedChangesProvider>
+                    <UpdateVendorPageContent />
+                </UnsavedChangesProvider>
             </VendorUpdateProvider>
         </Suspense>
     )

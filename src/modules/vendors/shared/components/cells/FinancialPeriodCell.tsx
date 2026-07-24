@@ -11,10 +11,12 @@ export function VendorFinancialPeriodCell({ value, record }: TableCellComponentP
     let reportType = record.reportType?.name;
 
     if (reportType === 'ANNUAL') {
-        if (record.financialPeriod.id !== 3) {
-            primary = `${record.year.name} (${record.financialPeriod.name})`
-        }else{
-            primary = `${record.financialPeriod.name} (${DateUtil.formatDate(record.periodFrom, 'MMM YYYY')} - ${DateUtil.formatDate(record.periodTo, 'MMM YYYY')})`;
+        if (record.financialPeriod) {
+            if (record.financialPeriod.id !== 3) {
+                primary = `${record.year.name} (${record.financialPeriod.name})`
+            }else{
+                primary = `${record.financialPeriod.name} (${DateUtil.formatDate(record.periodFrom, 'MMM YYYY')} - ${DateUtil.formatDate(record.periodTo, 'MMM YYYY')})`;
+            }
         }
     } else {
         primary = `${DateUtil.formatDate(record.periodFrom, 'MMM YYYY')} - ${DateUtil.formatDate(record.periodTo, 'MMM YYYY')}`;

@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { createCrudService } from '@/modules/form-engine/services/vendor-crud.service';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { useUnsavedChanges } from '@/modules/form-engine/hooks/use-unsaved-changes';
 
 export interface DynamicSectionProps {
     section: SectionSchema;
@@ -25,7 +26,9 @@ export const DynamicSection: React.FC<DynamicSectionProps> = React.memo(({
 
     const fields = section.fields || [];
 
-    const handleAction = async (action: any) => {
+    const { setIsDirty, registerSaveCallback } = useUnsavedChanges();
+
+    const executeSave = React.useCallback(async (action: any): Promise<boolean> => {
         let isValid = true;
         if (action.validateFields && action.validateFields.length > 0) {
             action.validateFields.forEach((field: string) => {
@@ -39,7 +42,12 @@ export const DynamicSection: React.FC<DynamicSectionProps> = React.memo(({
 
         if (!isValid) {
             toast.error('Please fill in all the required fields');
-            return;
+            return false;
+        }
+
+        if (action.id === 'save' && !context.isDirty) {
+            toast.info('No changes detected.');
+            return false;
         }
 
         setIsLoading(true);
@@ -49,14 +57,35 @@ export const DynamicSection: React.FC<DynamicSectionProps> = React.memo(({
             const service = createCrudService(resource?.save || '');
             await service.save(payload);
             toast.success(`${action.label} successful`);
+            context.markClean(); // Mark clean after successful save
             if (resource?.get) {
                 queryClient.invalidateQueries({ queryKey: [resource.get] });
             }
+            return true;
         } catch (error: any) {
             toast.error(error?.response?.data?.message || error?.message || `Failed to ${action.label.toLowerCase()}`);
+            return false;
         } finally {
             setIsLoading(false);
         }
+    }, [context, queryClient]);
+
+    const hasActions = !!section.actions?.length;
+
+    React.useEffect(() => {
+        if (hasActions) {
+            setIsDirty(context.isDirty);
+            const saveAction = section.actions?.find(a => a.id === 'save') || section.actions?.[0];
+            registerSaveCallback(() => executeSave(saveAction));
+        }
+    }, [context.isDirty, hasActions, setIsDirty, registerSaveCallback, executeSave, section.actions]);
+
+    React.useEffect(() => {
+        return () => setIsDirty(false);
+    }, [setIsDirty]);
+
+    const handleAction = async (action: any) => {
+        await executeSave(action);
     };
 
     const renderActions = () => {

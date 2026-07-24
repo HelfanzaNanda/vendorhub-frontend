@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import type { UseDynamicFormOptions } from './use-dynamic-form.interface';
 import type { DynamicFormContextValue } from '../context/dynamic-form-context.interface';
@@ -12,6 +12,8 @@ import {
 } from '../engines';
 import { ObjectUtil } from '../utils';
 import type { FormState, VerificationState } from '../interfaces';
+import isEqual from 'lodash/isEqual';
+import cloneDeep from 'lodash/cloneDeep';
 
 /**
  * useDynamicForm is the main entry point and single source of truth 
@@ -36,12 +38,15 @@ export const useDynamicForm = (options: UseDynamicFormOptions): DynamicFormConte
     
 
     const [values, setValuesState] = useState<Record<string, unknown>>(mergedValues);
+    const [snapshot, setSnapshot] = useState<Record<string, unknown>>(() => cloneDeep(mergedValues));
     const [errors, setErrorsState] = useState<Record<string, string>>({});
     const [touched, setTouchedState] = useState<Record<string, boolean>>({});
     const [dirty, setDirtyState] = useState<Record<string, boolean>>({});
     const [verification, setVerificationState] = useState<Record<string, VerificationState>>({});
     const [loading] = useState(false);
     const [submitting] = useState(false);
+
+    const isFormDirty = !isEqual(values, snapshot);
 
     const getFormState = useCallback((): FormState => ({
         schema,
@@ -101,7 +106,24 @@ export const useDynamicForm = (options: UseDynamicFormOptions): DynamicFormConte
         setTouchedState({});
         setDirtyState({});
         setVerificationState({});
+        setSnapshot(cloneDeep(mergedValues));
     }, [mergedValues]);
+
+    const markClean = useCallback(() => {
+        setSnapshot(cloneDeep(values));
+    }, [values]);
+
+    const resetDirty = useCallback(() => {
+        setSnapshot(cloneDeep(mergedValues));
+    }, [mergedValues]);
+
+    const setValuesAndClean = useCallback((newValues: Record<string, unknown>) => {
+        setValuesState(prev => {
+            const next = { ...prev, ...newValues };
+            setSnapshot(cloneDeep(next));
+            return next;
+        });
+    }, []);
 
     const validateField = useCallback((path: string) => {
         const field = SchemaEngine.findField(schema, path);
@@ -176,6 +198,10 @@ export const useDynamicForm = (options: UseDynamicFormOptions): DynamicFormConte
         verification,
         loading,
         submitting,
+        isDirty: isFormDirty,
+        markClean,
+        resetDirty,
+        setValuesAndClean,
         readonly,
         permissions,
         mode,

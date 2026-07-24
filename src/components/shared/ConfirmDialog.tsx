@@ -10,6 +10,8 @@ interface ConfirmDialogProps {
   onConfirm: () => void
   isLoading?: boolean
   confirmColor?: 'primary' | 'secondary' | 'error' | 'warning' | 'info' | 'success'
+  cancelLabel?: string
+  confirmLabel?: string
 }
 
 export default function ConfirmDialog({
@@ -20,6 +22,8 @@ export default function ConfirmDialog({
   onConfirm,
   isLoading = false,
   confirmColor = 'primary',
+  cancelLabel = 'Cancel',
+  confirmLabel = 'Confirm',
 }: ConfirmDialogProps) {
   return (
     <Dialog open={open} onClose={() => !isLoading && onClose()}>
@@ -29,7 +33,7 @@ export default function ConfirmDialog({
       </DialogContent>
       <DialogActions className="p-4 pt-0">
         <Button onClick={onClose} color="secondary" disabled={isLoading}>
-          Cancel
+          {cancelLabel}
         </Button>
         <Button
           onClick={onConfirm}
@@ -38,7 +42,7 @@ export default function ConfirmDialog({
           disabled={isLoading}
           sx={{ minWidth: 80 }}
         >
-          {isLoading ? <CircularProgress size={20} color="inherit" /> : 'Confirm'}
+          {isLoading ? <CircularProgress size={20} color="inherit" /> : confirmLabel}
         </Button>
       </DialogActions>
     </Dialog>

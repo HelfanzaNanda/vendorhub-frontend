@@ -7,6 +7,7 @@ import { useDynamicFormContext } from '@/modules/form-engine/context';
 import { createCrudService } from '@/modules/form-engine/services/vendor-crud.service';
 import { api } from '@/services/api';
 import { FormSchema } from '@/modules/form-engine/interfaces';
+import { useUnsavedChanges } from '@/modules/form-engine/hooks/use-unsaved-changes';
 
 export const DynamicFormResourceAndActions = ({ schema }: { schema: FormSchema }) => {
     const context = useDynamicFormContext();
@@ -27,16 +28,16 @@ export const DynamicFormResourceAndActions = ({ schema }: { schema: FormSchema }
         staleTime: Infinity,
     });
 
+    const { setIsDirty, registerSaveCallback } = useUnsavedChanges();
+
     React.useEffect(() => {
         if (fetchedData && context) {
-            Object.entries(fetchedData).forEach(([key, value]) => {
-                context.setValue(key, value);
-            });
+            context.setValuesAndClean(fetchedData as Record<string, unknown>);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchedData]);
 
-    const handleAction = async (action: any) => {
+    const executeSave = React.useCallback(async (action: any): Promise<boolean> => {
         let isValid = true;
         if (action.validateFields && action.validateFields.length > 0) {
             action.validateFields.forEach((field: string) => {
@@ -50,7 +51,12 @@ export const DynamicFormResourceAndActions = ({ schema }: { schema: FormSchema }
 
         if (!isValid) {
             toast.error('Please fill in all the required fields');
-            return;
+            return false;
+        }
+
+        if (action.id === 'save' && !context.isDirty) {
+            toast.info('No changes detected.');
+            return false;
         }
 
         setIsLoading(true);
@@ -58,15 +64,36 @@ export const DynamicFormResourceAndActions = ({ schema }: { schema: FormSchema }
             const payload = context.buildPayload();
             const service = createCrudService(schema.resource?.save || '');
             await service.save(payload);
+            context.markClean(); // Mark clean after successful save
             toast.success(`${action.label} successful`);
             if (schema.resource?.get) {
                 queryClient.invalidateQueries({ queryKey: [schema.resource?.get] });
             }
+            return true;
         } catch (error: any) {
             toast.error(error?.response?.data?.message || error?.message || `Failed to ${action.label.toLowerCase()}`);
+            return false;
         } finally {
             setIsLoading(false);
         }
+    }, [context, schema, queryClient]);
+
+    React.useEffect(() => {
+        if (hasActions) {
+            setIsDirty(context.isDirty);
+            // Default to 'save' action or the first primary action
+            const saveAction = schema.actions?.find(a => a.id === 'save') || schema.actions?.[0];
+            registerSaveCallback(() => executeSave(saveAction));
+        }
+    }, [context.isDirty, hasActions, setIsDirty, registerSaveCallback, executeSave, schema.actions]);
+
+    // Ensure we clean up when this component unmounts
+    React.useEffect(() => {
+        return () => setIsDirty(false);
+    }, [setIsDirty]);
+
+    const handleAction = async (action: any) => {
+        await executeSave(action);
     };
 
     if (!hasActions) {

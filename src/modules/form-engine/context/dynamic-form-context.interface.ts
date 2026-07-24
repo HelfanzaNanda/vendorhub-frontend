@@ -15,6 +15,11 @@ export interface DynamicFormContextValue extends FormState {
   setVerification: (path: string, state: VerificationState) => void;
   touch: (path: string) => void;
   reset: () => void;
+  
+  isDirty: boolean;
+  markClean: () => void;
+  resetDirty: () => void;
+  setValuesAndClean: (newValues: Record<string, unknown>) => void;
 
   validate: () => boolean;
   validateField: (path: string) => boolean;

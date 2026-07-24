@@ -27,6 +27,11 @@ const ModalFormInner: React.FC<{
     const form = useDynamicForm({ schema, initialValues, mode, readonly: mode === 'VIEW' });
 
     const handleFormSubmit = async () => {
+        if (mode === 'EDIT' && !form.isDirty) {
+            toast.info('No changes detected.');
+            return;
+        }
+
         const isValid = await form.validate();
         if (isValid) {
             onSave(form.buildPayload());
