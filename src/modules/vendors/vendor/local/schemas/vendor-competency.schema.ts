@@ -9,7 +9,8 @@ import {
   fileField,
   tableField,
   multiLookupField,
-  treeAutocompleteField
+  treeAutocompleteField,
+  FieldType
 } from '@/modules/form-engine';
 
 import { CompetencyConstants, DocumentType, CustomerConstants, BusinessLicenseConstants } from '@/modules/vendors/vendor/common';
@@ -21,6 +22,17 @@ import { VendorCompetencyTable } from '@/modules/vendors/shared/tables/vendor-co
 import { toast } from 'sonner';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/services/api';
+
+const customerReferencesField = formField({
+    name: 'customerReferences',
+    label: 'Customer References',
+    grid: FullGrid,
+    nested: {
+    multiple: true,
+    schema: CustomerReferenceSchema
+    }
+})
+customerReferencesField.type = FieldType.NESTED;
 
 const CompetencyInlineSchema: FormSchema = {
   id: CompetencyConstants.SECTION_COMPETENCY_ID,
@@ -94,15 +106,7 @@ const CompetencyInlineSchema: FormSchema = {
       code: CustomerConstants.SECTION_CODE,
       layout: FormLayout.CARD,
       fields: [
-        formField({
-          name: 'customerReferences',
-          label: 'Customer References',
-          grid: FullGrid,
-          nested: {
-            multiple: true,
-            schema: CustomerReferenceSchema
-          }
-        })
+        customerReferencesField
       ]
     }
   ]

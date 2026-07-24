@@ -31,16 +31,16 @@ export const FieldRenderer: React.FC<FieldRendererProps> = React.memo((props) =>
         return null;
     }
     
-    if (field.type === FieldType.FORM) {
-        if (field.nested?.schema) {
-            return (
-                <NestedFormRenderer
-                    field={field}
-                    schema={field.nested.schema}
-                />
-            );
-        }
-    }
+    // if (field.type === FieldType.FORM) {
+    //     if (field.nested?.schema) {
+    //         return (
+    //             <NestedFormRenderer
+    //                 field={field}
+    //                 schema={field.nested.schema}
+    //             />
+    //         );
+    //     }
+    // }
 
     const Renderer = fieldRendererRegistry[field.type] as React.ElementType;
 

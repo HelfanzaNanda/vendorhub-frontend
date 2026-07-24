@@ -29,7 +29,7 @@ export const VendorBankTable: TableConfigSchema = {
             })
     },
     { field: 'currency.name', title: 'Currency' },
-    { field: 'file.originalFilename', title: 'File' },
+    { field: 'file.originalName', title: 'File' },
   ],
   sortable: true,
   searchable: true,

@@ -26,6 +26,7 @@ import type { RendererRegistry } from './renderer-registry.interface';
 import { MultiLookupField } from '../../components/fields/MultiLookupField';
 import { TreeAutocompleteField } from '../../components/fields/tree/TreeAutocompleteField';
 import { AuthorizedSignerDocumentRenderer } from '@/modules/vendors/vendor/local/nested/authorized-signer-document.renderer';
+import { NestedFormRenderer } from '../nested';
 
 export const fieldRendererRegistry: RendererRegistry = {
   [FieldType.TEXT]: TextField,
@@ -51,5 +52,6 @@ export const fieldRendererRegistry: RendererRegistry = {
   [FieldType.TABLE]: TableField,
   [FieldType.MULTI_LOOKUP]: MultiLookupField,
   [FieldType.TREE_AUTOCOMPLETE]: TreeAutocompleteField,
-  [FieldType.AUTHORIZED_SIGNER_DOCUMENT_NESTED]: AuthorizedSignerDocumentRenderer
+  [FieldType.AUTHORIZED_SIGNER_DOCUMENT_NESTED]: AuthorizedSignerDocumentRenderer,
+  [FieldType.NESTED]: NestedFormRenderer
 };

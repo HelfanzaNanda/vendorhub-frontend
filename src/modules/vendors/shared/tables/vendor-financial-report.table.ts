@@ -8,7 +8,7 @@ export const VendorFinancialReportTable: TableConfigSchema = {
     { field: 'reportType.name', title: 'reportType', renderComponent : VendorFinancialPeriodCell},
     { field: 'auditStatus.name', title: 'Audit Status' },
     { field: 'currency.name', title: 'Currency' },
-    { field: 'file.filename', title: 'File' },
+    { field: 'file.originalName', title: 'File' },
   ],
   sortable: true,
   searchable: true,

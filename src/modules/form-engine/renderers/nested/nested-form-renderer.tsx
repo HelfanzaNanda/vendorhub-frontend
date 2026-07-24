@@ -9,8 +9,10 @@ import { useNestedForm } from '../../hooks';
 import type { NestedFormRendererProps } from './nested-form-renderer.interface';
 import { NestedDynamicFormProvider } from '../../context';
 
-export const NestedFormRenderer: React.FC<NestedFormRendererProps> = React.memo((props) => {
-    const { field, schema } = props;
+export const NestedFormRenderer: React.FC<any> = React.memo((props) => {
+    const { field, isDisabled, isReadonly  } = props;
+    const schema = field.nested?.schema;
+
     const { items, multiple, add, remove } = useNestedForm({ field });
 
     const [expanded, setExpanded] = React.useState<Record<number, boolean>>({});
@@ -20,7 +22,7 @@ export const NestedFormRenderer: React.FC<NestedFormRendererProps> = React.memo(
             ...prev,
             [index]: !prev[index]
         }));
-    };
+    };    
 
     const rows = items as any[];
 
@@ -47,7 +49,7 @@ export const NestedFormRenderer: React.FC<NestedFormRendererProps> = React.memo(
             <Box sx={{ mb: 2 }}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                     <Typography variant="subtitle1"> {field.label} </Typography>
-                    <IconButton color="primary" sx={{borderRadius: 1}} onClick={() => handleAdd()}> <Add /> </IconButton>
+                    {isDisabled || isReadonly ? null : <IconButton color="primary" sx={{borderRadius: 1}} onClick={() => handleAdd()}> <Add /> </IconButton>} 
                 </Box>
                 {rows.length === 0 && ( <Typography variant="body2" color="text.secondary" sx={{ py: 3, textAlign: 'center' }} > No Data </Typography> )}
                 {
@@ -57,7 +59,7 @@ export const NestedFormRenderer: React.FC<NestedFormRendererProps> = React.memo(
                                 <AccordionSummary expandIcon={<ExpandMore />} >
                                     <Box display="flex" justifyContent="space-between" alignItems="center" width="100%" >
                                         <Typography fontWeight={600}> {schema.title} #{index + 1} </Typography>
-                                        <IconButton size="small" color="error" onClick={(e) => { e.stopPropagation(); remove(index); }} > <Delete fontSize="small" /> </IconButton>
+                                        {isDisabled || isReadonly ? null : <IconButton size="small" color="error" onClick={(e) => { e.stopPropagation(); remove(index); }} > <Delete fontSize="small" /> </IconButton>}
                                     </Box>
                                 </AccordionSummary>
                                 <AccordionDetails> <FormRenderer schema={schema} /> </AccordionDetails>
