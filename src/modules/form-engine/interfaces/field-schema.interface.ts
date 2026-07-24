@@ -20,7 +20,7 @@ export interface FieldSchema {
   id: string;
   code: string;
   name: string;
-  label: string;
+//   label: string;
   type: FieldType;
   component: DynamicComponent;
   defaultValue?: unknown;

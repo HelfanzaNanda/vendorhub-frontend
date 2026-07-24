@@ -7,7 +7,7 @@ export const CompetencyLookup: LookupSchema = {
   method: HttpMethod.GET,
 
     valueField: 'id',
-    labelField: 'label',
+    labelField: 'name',
 
     childrenField: 'children',
     selectableField: 'selectable',

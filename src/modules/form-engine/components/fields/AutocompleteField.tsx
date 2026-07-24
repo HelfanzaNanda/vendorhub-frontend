@@ -8,6 +8,7 @@ import { useDynamicFormContext } from '../../context';
 import type { BaseFieldProps } from './types';
 import type { OptionSchema } from '../../interfaces';
 import { LookupEngine, DependencyEngine } from '../../engines';
+import { useMappingEffect } from '../../hooks';
 import { apiClient } from '@/services/api';
 
 export const AutocompleteField: React.FC<BaseFieldProps> = ({
@@ -147,6 +148,25 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
 
     const dependencyDisabled = field.dependency?.disableWhenEmpty && (parentValue == null || parentValue === '');
 
+    // Execute mapping effect when value changes programmatically or manually
+    // In AutocompleteField, value is either the selected option object, an array of objects, or primitive
+    // But since `isOptionEqualToValue` matches it, let's pass the matching option if `value` is an ID
+    // Wait, Autocomplete typically stores the full object when onChange is fired.
+    // However, if the backend restores the ID, we might need to find the matching option from `options`.
+    const resolvedValue = React.useMemo(() => {
+        if (value === null || value === undefined) return value;
+        if (Array.isArray(value)) {
+             return value.map(val => {
+                 if (typeof val === 'object' && val !== null) return val;
+                 return options.find(opt => (opt as Record<string, any>)[valueField] === val) || val;
+             });
+        }
+        if (typeof value === 'object' && value !== null) return value;
+        return options.find(opt => (opt as Record<string, any>)[valueField] === value) || value;
+    }, [value, options, valueField]);
+
+    useMappingEffect(field, resolvedValue);
+
     return (
         <Autocomplete
             id={name}
@@ -161,12 +181,7 @@ export const AutocompleteField: React.FC<BaseFieldProps> = ({
             value={value ?? (field.multiple ? [] : null)}
             onChange={(event, newValue) => {
                 onChange(newValue);
-                field.mapping?.forEach(item => {
-                    context.setValue(
-                        item.to,
-                        (newValue as Record<string, any>)?.[item.from] ?? null
-                    );
-                });
+                // Mapping is now handled automatically by useMappingEffect
             }}
             onBlur={onBlur}
             onInputChange={(event, newInputValue) => {

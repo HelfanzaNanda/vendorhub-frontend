@@ -18,6 +18,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useDynamicFormContext } from '../../context';
 import { AutocompleteField } from './AutocompleteField';
 import type { BaseFieldProps } from './types';
+import { useMappingEffect } from '../../hooks';
 import { DataTable, DataTableColumnHeader } from '@/components/common/DataTable';
 
 export const MultiLookupField: React.FC<BaseFieldProps> = (props) => {
@@ -32,9 +33,10 @@ export const MultiLookupField: React.FC<BaseFieldProps> = (props) => {
     } = props;
 
     const context = useDynamicFormContext();
-
     
     const rows = Array.isArray(value) ? value : [];    
+
+    useMappingEffect(field, rows);
 
     const handleSelect = (selected: any) => {
         if (!selected) return;

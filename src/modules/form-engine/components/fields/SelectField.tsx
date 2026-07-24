@@ -4,11 +4,18 @@ import { FormControl, InputLabel, Select, MenuItem, FormHelperText } from '@mui/
 
 import type { BaseFieldProps } from './types';
 import type { OptionSchema } from '../../interfaces';
+import { useMappingEffect } from '../../hooks';
 
 export const SelectField: React.FC<BaseFieldProps> = ({
   name, value, onChange, onBlur, ref, field, error, isReadonly, isDisabled, loading
 }) => {
   const options = (field.props?.options as OptionSchema[]) || [];
+
+  const selectedOption = React.useMemo(() => {
+      return options.find(opt => (opt.value || opt.id) === value);
+  }, [value, options]);
+
+  useMappingEffect(field, selectedOption);
 
   return (
     <FormControl fullWidth error={!!error} required={field.validation?.required} disabled={isDisabled || loading}>

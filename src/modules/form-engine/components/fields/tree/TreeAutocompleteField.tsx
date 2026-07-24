@@ -11,6 +11,7 @@ import { LookupEngine, TreeEngine } from '../../../engines';
 import { useDynamicFormContext } from '../../../context';
 import type { TreeNode } from '../../../interfaces';
 import { ObjectUtil } from '@/modules/form-engine/utils';
+import { useMappingEffect } from '../../../hooks';
 
 export const TreeAutocompleteField: React.FC<BaseFieldProps> = ({
     name, value, onChange, ref, field, error, isReadonly, isDisabled 
@@ -49,16 +50,35 @@ export const TreeAutocompleteField: React.FC<BaseFieldProps> = ({
         load();
     }, []);
 
-    // const selected = value ? TreeEngine.findById( tree, value as number ) : null;
-    const selected = (value as TreeNode | null) ?? TreeEngine.findById(tree, value as number);
+    const selected = React.useMemo(() => {
+        if (value === null || value === undefined || value === '') return field.multiple ? [] : null;
+        if (Array.isArray(value)) {
+            return value.map(v => {
+                if (typeof v === 'object' && v !== null) return v;
+                return TreeEngine.findById(tree, v as number | string);
+            }).filter(Boolean);
+        }
+        if (typeof value === 'object' && value !== null) return value;
+        return TreeEngine.findById(tree, value as number | string);
+    }, [value, tree, field.multiple]);
+
+    useMappingEffect(field, selected);
+
+    const displayValue = React.useMemo(() => {
+        if (Array.isArray(selected)) {
+            return selected.map(s => s.name).join(', ');
+        }
+        return selected?.name ?? '';
+    }, [selected]);
+
     return (
         <>
             <TextField
                 fullWidth
                 inputRef={ref}
                 name={name}
-                label={field.label}
-                value={selected?.label ?? ''}
+                label={field.name}
+                value={displayValue}
                 error={!!error}
                 helperText={error ?? field.helperText}
                 onClick={(e) => {
@@ -78,18 +98,30 @@ export const TreeAutocompleteField: React.FC<BaseFieldProps> = ({
             <TreePopover
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
-                value={value as number}
+                value={value as any}
                 tree={tree}
+                multiple={field.multiple}
                 onClose={() => setAnchorEl(null)}
                 onSelect={(node) => {
-                    onChange(node);
-                     field.mapping?.forEach(item => {
-                        context.setValue(
-                            item.to,
-                            ObjectUtil.get(node, item.from)
+                    if (field.multiple) {
+                        const currentValues = Array.isArray(value) ? [...value] : [];
+                        const exists = currentValues.some(v => 
+                            (typeof v === 'object' ? v.id : v) === node.id
                         );
-
-                    });
+                        
+                        let newValues;
+                        if (exists) {
+                            newValues = currentValues.filter(v => 
+                                (typeof v === 'object' ? v.id : v) !== node.id
+                            );
+                        } else {
+                            newValues = [...currentValues, node];
+                        }
+                        onChange(newValues);
+                    } else {
+                        onChange(node);
+                    }
+                    // Mapping is now handled automatically by useMappingEffect
                 }}
             />
         </>

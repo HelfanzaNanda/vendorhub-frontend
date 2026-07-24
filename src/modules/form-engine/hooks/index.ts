@@ -5,3 +5,4 @@ export * from './use-nested-form';
 export * from './use-nested-form.interface';
 
 export * from './use-crud-table';
+export * from './use-mapping-effect';

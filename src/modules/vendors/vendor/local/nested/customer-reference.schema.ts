@@ -12,7 +12,7 @@ import {
 import { RequiredValidation } from '@/modules/form-engine/validation';
 import { FullGrid, HalfGrid } from '@/modules/form-engine/grids';
 import { CustomerConstants, DocumentType } from '../../common';
-import { YearLookup } from '@/modules/vendors/shared';
+import { AreaLookup, YearLookup } from '@/modules/vendors/shared';
 
 
 
@@ -52,14 +52,24 @@ export const CustomerReferenceSchema: FormSchema = {
             validation: { required: RequiredValidation.required }, 
             grid: HalfGrid
         }),
+        autocompleteField({
+            name: 'areas',
+            label: 'Working Area',
+            validation: { required: RequiredValidation.required },
+            grid: HalfGrid,
+            multiple: true,
+            lookup: AreaLookup,
+            payload: {
+                key: 'areaIds',
+                pick: 'id'
+            }
+        }),
         textareaField({
             name: 'description',
             label: 'Project Description',
             validation: { required: RequiredValidation.required }, 
             grid: FullGrid
         }),
-        
-        
         fileField({ 
           name: 'file', 
           label: 'Attachment', 
@@ -69,7 +79,7 @@ export const CustomerReferenceSchema: FormSchema = {
             documentTypeCode: DocumentType.CUSTOMER_REFERENCE
           }, 
           payload: {
-            key: 'fileid',
+            key: 'fileId',
             pick: 'id'
           }
         }),

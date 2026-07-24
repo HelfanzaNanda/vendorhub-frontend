@@ -10,7 +10,8 @@ import {
     ListItemButton,
     ListItemText,
     Popover,
-    Radio
+    Radio,
+    Checkbox
 } from '@mui/material';
 
 import { TreeSearch } from './TreeSearch';
@@ -21,14 +22,15 @@ import { TreeEngine } from '@/modules/form-engine/engines';
 interface Props {
     open: boolean;
     anchorEl: HTMLElement | null;
-    value: number | string | null;
+    value: number | string | (number | string | TreeNode)[] | null;
+    multiple?: boolean;
     tree: TreeNode[];
     onClose: () => void;
     onSelect: (node: TreeNode) => void;
 }
 
 export const TreePopover: React.FC<Props> = ({
-    open, anchorEl, value, tree, onClose, onSelect
+    open, anchorEl, value, tree, multiple, onClose, onSelect
 }) => {
     const [keyword, setKeyword] = useState('');
     const [expanded, setExpanded] = useState<Record<number | string, boolean>>({});
@@ -50,7 +52,9 @@ export const TreePopover: React.FC<Props> = ({
                         onClick={() => {
                             if (node.selectable) {
                                 onSelect(node);
-                                onClose();
+                                if (!multiple) {
+                                    onClose();
+                                }
                             } else if (hasChildren) {
                                 toggle(node.id);
                             }
@@ -75,14 +79,21 @@ export const TreePopover: React.FC<Props> = ({
                         {
 
                             node.selectable && (
-                                <Radio
-                                    checked={value === node.id}
-                                    size="small"
-                                />
+                                multiple ? (
+                                    <Checkbox
+                                        checked={Array.isArray(value) ? value.some(v => (typeof v === 'object' ? v.id : v) === node.id) : false}
+                                        size="small"
+                                    />
+                                ) : (
+                                    <Radio
+                                        checked={value === node.id || (typeof value === 'object' && value !== null && (value as any).id === node.id)}
+                                        size="small"
+                                    />
+                                )
                             )
                         }
 
-                        <ListItemText primary={node.label}
+                        <ListItemText primary={node.name}
                             primaryTypographyProps={{
                                 fontWeight: node.selectable ? 400 : 600
                             }}

@@ -19,9 +19,6 @@ import { FullGrid, HalfGrid, ThirdGrid } from '@/modules/form-engine/grids';
 import { CustomerReferenceSchema } from '../nested';
 import { RequiredValidation } from '@/modules/form-engine/validation';
 import { VendorCompetencyTable } from '@/modules/vendors/shared/tables/vendor-competency.table';
-import { toast } from 'sonner';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { api } from '@/services/api';
 
 const customerReferencesField = formField({
     name: 'customerReferences',
@@ -48,28 +45,28 @@ const CompetencyInlineSchema: FormSchema = {
       layout: FormLayout.CARD,
       fields: [
         treeAutocompleteField({
-            name:'competencyIds',
+            name:'subCategoryItem',
             label:'Search Competency',
             lookup: CompetencyLookup,
             grid: FullGrid,
-            multiple:true,
+            // multiple:true,
             payload:    {
-                key:'subCompetencyItemId',
+                key:'subCategoryItemId',
                 pick:'id'
             },
             mapping: [
                 {
-                    from: 'parent.label',
+                    from: 'parent.name',
                     to: 'category'
                 },
 
                 {
-                    from: 'parent.parent.label',
+                    from: 'parent.parent.name',
                     to: 'subCategory'
                 },
 
                 {
-                    from: 'label',
+                    from: 'name',
                     to: 'item'
                 }
 
